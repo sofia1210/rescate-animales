@@ -1,21 +1,20 @@
 @extends('layouts.admin')
-{{-- NOTA: Este código asume que tu plantilla 'layouts.admin' carga Bootstrap 5 y Font Awesome. --}}
 
-@section('title', 'Animales - Rescate Animales')
+@section('title', 'Gestión de Animales - Rescate Animales')
 
 @php
-    // --- 1. DATOS HARDCODEADOS DIRECTAMENTE EN LA VISTA ---
+    // --- DATOS HARDCODEADOS DIRECTAMENTE EN LA VISTA ---
     $animales = collect([
         (object)[
             'id' => 1,
             'nombre' => 'Sada',
-            'especie' => 'Asdas',
-            'raza' => 'Sadda',
+            'especie' => 'Canino',
+            'raza' => 'Labrador',
             'sexo' => 'Macho',
             'estado_salud' => 'Malo',
             'fecha_ingreso' => now()->parse('2025-09-01'),
             'tipo' => 'Animal Doméstico',
-            'imagen' => asset('Fotos/OIP.jpg'), // Asegúrate que la ruta a tu imagen sea correcta
+            'imagen' => asset('Fotos/OIP.jpg'),
             'rescatista' => 'Rescatista Temporal',
             'direccion' => 'Calle Paitití, Centro, Santa Cruz De La Sierra, Provincia Andrés Ibáñez, Santa Cruz, Bolivia',
             'alimentacion_tipo' => 'Carnívoro',
@@ -30,7 +29,7 @@
             'estado_salud' => 'Muy Bueno',
             'fecha_ingreso' => now()->subDays(5),
             'tipo' => 'Animal Silvestre',
-            'imagen' => asset('Fotos/R.jpg'), // Asegúrate que la ruta a tu imagen sea correcta
+            'imagen' => asset('Fotos/R.jpg'),
             'rescatista' => 'Lucas',
             'direccion' => 'Parque Nacional Amboró, Buena Vista, Santa Cruz',
             'alimentacion_tipo' => 'Carnívoro',
@@ -38,7 +37,7 @@
         ],
     ]);
 
-    // Simulación de variables de filtro para que la vista no dé error
+    // Simulación de variables de filtro
     $nombre = request('nombre');
     $tipo = request('tipo', 'Todos');
     $estado = request('estado', 'Todos');
@@ -51,139 +50,116 @@
 @endphp
 
 @section('content')
+<!-- Content Header (Page header) -->
+<div class="content-header">
 <div class="container-fluid">
-
-    {{-- TÍTULO DE LA PÁGINA --}}
-    <h1 class="display-6 mb-4">Listado de Animales</h1>
-
-    {{-- CONTENEDOR PARA BÚSQUEDA Y FILTROS --}}
-    <div class="card shadow-sm border-0 mb-4">
-        <div class="card-body">
-            <form action="" method="GET">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="w-50">
-                        <input type="text" name="nombre" class="form-control" placeholder="Buscar por nombre" value="{{ $nombre ?? '' }}">
-                    </div>
-                    {{-- BOTÓN QUE INICIA EL FLUJO --}}
-<a href="#" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal">
-    <i class="fas fa-plus me-2"></i> Agregar Animal
-</a>
-
-
-<div class="modal fade" id="seleccionarRescatistaModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 1rem;">
-            <div class="modal-header">
-                <h5 class="modal-title">Seleccionar Rescatista</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    <i class="fas fa-paw text-primary mr-2"></i>
+                    Gestión de Animales
+                </h1>
             </div>
-            <div class="modal-body">
-                <div class="d-flex gap-2 mb-3">
-                    <input type="text" class="form-control" placeholder="Buscar por nombre o teléfono...">
-                    <button class="btn btn-success flex-shrink-0"><i class="fas fa-plus me-1"></i> Agregar</button>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                    <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
+                    <li class="breadcrumb-item active">Animales</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
+        
+        <!-- Search and Filter Card -->
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-search mr-2"></i>
+                    Búsqueda y Filtros
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal">
+                        <i class="fas fa-plus mr-1"></i> Agregar Animal
+                    </button>
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
                 </div>
-                <ul class="list-group list-group-flush">
-                    @foreach ($rescatistas as $rescatista)
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <div>
-                                <div class="fw-bold">{{ $rescatista->nombre }}</div>
-                                <small class="text-muted">{{ $rescatista->telefono }}</small>
+            </div>
+            <div class="card-body">
+                <form action="" method="GET">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label for="nombre">Buscar por nombre</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-search"></i>
+                                        </span>
+                    </div>
+                                    <input type="text" 
+                                           name="nombre" 
+                                           id="nombre"
+                                           class="form-control" 
+                                           placeholder="Nombre del animal..." 
+                                           value="{{ $nombre ?? '' }}">
+                    </div>
                             </div>
-                            <button class="btn btn-sm btn-success btn-seleccionar-rescatista"
-                                    data-rescatista-id="{{ $rescatista->id }}"
-                                    data-rescatista-nombre="{{ $rescatista->nombre }}">
-                                Seleccionar
+                    </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Tipo de Animal</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="tipo" value="Todos" id="tipo_todos" {{ $tipo === 'Todos' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-primary" for="tipo_todos">Todos</label>
+                                    
+                                    <input type="radio" class="btn-check" name="tipo" value="Doméstico" id="tipo_domestico" {{ $tipo === 'Doméstico' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-success" for="tipo_domestico">Doméstico</label>
+                                    
+                                    <input type="radio" class="btn-check" name="tipo" value="Silvestre" id="tipo_silvestre" {{ $tipo === 'Silvestre' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-warning" for="tipo_silvestre">Silvestre</label>
+            </div>
+        </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-group">
+                                <label>Estado de Salud</label>
+                                <div class="btn-group w-100" role="group">
+                                    <input type="radio" class="btn-check" name="estado" value="Todos" id="estado_todos" {{ $estado === 'Todos' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-secondary" for="estado_todos">Todos</label>
+                                    
+                                    <input type="radio" class="btn-check" name="estado" value="Muy Bueno" id="estado_muy_bueno" {{ $estado === 'Muy Bueno' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-success" for="estado_muy_bueno">Excelente</label>
+                                    
+                                    <input type="radio" class="btn-check" name="estado" value="Bueno" id="estado_bueno" {{ $estado === 'Bueno' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-info" for="estado_bueno">Bueno</label>
+                                    
+                                    <input type="radio" class="btn-check" name="estado" value="Estable" id="estado_estable" {{ $estado === 'Estable' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-warning" for="estado_estable">Estable</label>
+    </div>
+</div>
+                </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search mr-1"></i> Buscar
                             </button>
-                        </li>
-                    @endforeach
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="agregarAnimalModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
-        <div class="modal-content" style="border-radius: 1.5rem;">
-            <div class="modal-header">
-                <div>
-                    <h5 class="modal-title fw-bold">Agregar Animal</h5>
-                    <div class="d-flex align-items-center gap-2 mt-2">
-                        <span class="badge bg-light text-dark border"><small>Campos obligatorios marcados con *</small></span>
-                        <span class="badge bg-primary" id="rescuerNameBadge">Rescatista: ...</span>
-                    </div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form class="row g-4">
-                    <div class="col-lg-6">
-                        <div class="card card-custom card-info-bg h-100"><div class="card-body">
-                            <h5 class="card-title mb-4"><i class="fas fa-user text-primary me-2"></i>Información Básica</h5>
-                            <div class="mb-3"><label class="form-label">Nombre *</label><input type="text" class="form-control" placeholder="ej. Pequeño Jaguar"></div>
-                            <div class="mb-3"><label class="form-label">Tipo *</label><select class="form-select"><option selected>Selecciona una opción</option></select></div>
-                            <div class="mb-3"><label class="form-label">Especie *</label><select class="form-select"><option selected>Selecciona una opción</option></select></div>
-                            <div class="mb-3"><label class="form-label">Raza *</label><input type="text" class="form-control" placeholder="ej. Jaguar"></div>
-                            <div class="mb-3"><label class="form-label">Sexo *</label><select class="form-select"><option selected>Selecciona una opción</option></select></div>
-                        </div></div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card card-custom card-info-bg h-100"><div class="card-body">
-                            <h5 class="card-title mb-4"><i class="fas fa-map-marker-alt text-primary me-2"></i>Información del Rescate</h5>
-                            <div class="mb-3"><label class="form-label">Fecha de Rescate *</label><input type="date" class="form-control"></div>
-                            <div class="mb-3"><label class="form-label">Ubicación del Rescate *</label><input type="text" class="form-control"></div>
-                            <label class="form-label">Ubicación en el mapa *</label>
-                            <div class="input-group mb-3"><span class="input-group-text">Ayuda</span><button class="btn btn-success" type="button"><i class="fas fa-location-arrow me-2"></i>Mi ubicación</button></div>
-                            <img src="{{ asset('Fotos/Patota    .png') }}" alt="Mapa" class="img-fluid rounded border">
-                        </div></div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card card-custom card-feeding-bg h-100"><div class="card-body">
-                            <h5 class="card-title mb-4"><i class="fas fa-heartbeat text-warning me-2"></i>Salud y Cuidados</h5>
-                            <div class="mb-3"><label class="form-label">Estado de Salud *</label><select class="form-select"><option selected>Selecciona una opción</option></select></div>
-                            <div class="mb-3"><label class="form-label">Tipo de Alimentación *</label><select class="form-select"><option selected>Selecciona una opción</option></select></div>
-                        </div></div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="card card-custom card-image-bg h-100"><div class="card-body">
-                            <h5 class="card-title mb-4"><i class="fas fa-image text-pink me-2"></i>Multimedia</h5>
-                            <label class="form-label">Foto del Animal (Opcional)</label>
-                            <div class="image-upload-box text-center p-5 border-2 border-dashed rounded-3">
-                                <i class="fas fa-cloud-upload-alt fa-3x text-success mb-3"></i><p class="text-success">Click para subir o arrastra una imagen</p><small class="text-muted">PNG, JPG, JPEG</small>
-                            </div>
-                        </div></div>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-success btn-lg w-100"><i class="fas fa-check me-2"></i>Agregar Animal</button>
-            </div>
-        </div>
-    </div>
-</div>
-                </div>
-                <div class="mb-2 d-flex align-items-center">
-                    <strong class="me-3">Tipo:</strong>
-                    <div class="btn-group" role="group">
-                        <button type="submit" name="tipo" value="Todos" class="btn btn-sm {{ $tipo === 'Todos' ? 'btn-success' : 'btn-outline-secondary' }}">Todos</button>
-                        <button type="submit" name="tipo" value="Doméstico" class="btn btn-sm {{ $tipo === 'Doméstico' ? 'btn-success' : 'btn-outline-secondary' }}">Doméstico</button>
-                        <button type="submit" name="tipo" value="Silvestre" class="btn btn-sm {{ $tipo === 'Silvestre' ? 'btn-success' : 'btn-outline-secondary' }}">Silvestre</button>
-                    </div>
-                </div>
-                 <div class="d-flex align-items-center">
-                    <strong class="me-3">Estado:</strong>
-                    <div class="btn-group" role="group">
-                        <button type="submit" name="estado" value="Todos" class="btn btn-sm {{ $estado === 'Todos' ? 'btn-success' : 'btn-outline-secondary' }}">Todos</button>
-                        <button type="submit" name="estado" value="Muy Bueno" class="btn btn-sm {{ $estado === 'Muy Bueno' ? 'btn-success' : 'btn-outline-secondary' }}">Muy Bueno</button>
-                        <button type="submit" name="estado" value="Bueno" class="btn btn-sm {{ $estado === 'Bueno' ? 'btn-success' : 'btn-outline-secondary' }}">Bueno</button>
-                        <button type="submit" name="estado" value="Estable" class="btn btn-sm {{ $estado === 'Estable' ? 'btn-success' : 'btn-outline-secondary' }}">Estable</button>
+                            <a href="{{ request()->url() }}" class="btn btn-secondary">
+                                <i class="fas fa-times mr-1"></i> Limpiar
+                            </a>
                     </div>
                 </div>
             </form>
         </div>
     </div>
 
-    {{-- LISTADO DE ANIMALES --}}
+        <!-- Animals List -->
     <div class="row">
         @forelse ($animales as $animal)
             <div class="col-md-4 col-lg-3 mb-4">
@@ -217,17 +193,242 @@
                 </div>
             </div>
         @empty
-            <div class="col"><div class="alert alert-info text-center">No hay animales para mostrar.</div></div>
+                <div class="col">
+                    <div class="alert alert-info text-center">
+                        <i class="fas fa-paw fa-3x text-muted mb-3"></i>
+                        <h4 class="text-muted">No hay animales para mostrar.</h4>
+                        <p class="text-muted">Comienza agregando tu primer animal al sistema.</p>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal">
+                            <i class="fas fa-plus mr-1"></i> Agregar Primer Animal
+                        </button>
+                    </div>
+                </div>
         @endforelse
+        </div>
+    </div>
+</section>
+
+<!-- Modal Seleccionar Rescatista -->
+<div class="modal fade" id="seleccionarRescatistaModal" tabindex="-1" role="dialog" aria-labelledby="seleccionarRescatistaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h5 class="modal-title text-white" id="seleccionarRescatistaModalLabel">
+                    <i class="fas fa-user-plus mr-2"></i>Seleccionar Rescatista
+                </h5>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">
+                            <i class="fas fa-search"></i>
+                        </span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Buscar por nombre o teléfono...">
+                </div>
+                <button class="btn btn-success btn-sm mb-3">
+                    <i class="fas fa-plus mr-1"></i> Agregar Nuevo Rescatista
+                </button>
+                <div class="list-group">
+                    @foreach ($rescatistas as $rescatista)
+                        <div class="list-group-item d-flex justify-content-between align-items-center">
+                            <div>
+                                <h6 class="mb-1">{{ $rescatista->nombre }}</h6>
+                                <small class="text-muted">{{ $rescatista->telefono }}</small>
+                            </div>
+                            <button class="btn btn-success btn-sm btn-seleccionar-rescatista"
+                                    data-rescatista-id="{{ $rescatista->id }}"
+                                    data-rescatista-nombre="{{ $rescatista->nombre }}">
+                                <i class="fas fa-check mr-1"></i>Seleccionar
+                            </button>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-{{-- ================================================================= --}}
-{{--                       MODALES INTEGRADOS                          --}}
-{{-- ================================================================= --}}
+<!-- Modal Agregar Animal -->
+<div class="modal fade" id="agregarAnimalModal" tabindex="-1" role="dialog" aria-labelledby="agregarAnimalModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title text-white" id="agregarAnimalModalLabel">
+                    <i class="fas fa-plus mr-2"></i>Agregar Nuevo Animal
+                </h5>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <strong>Rescatista:</strong> <span id="rescuerNameBadge">...</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="animalForm">
+                    <div class="row">
+                        <!-- Información Básica -->
+                        <div class="col-lg-6">
+                            <div class="card card-primary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-info-circle mr-2"></i>Información Básica
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="nombre_animal">Nombre del Animal *</label>
+                                        <input type="text" class="form-control" id="nombre_animal" name="nombre" placeholder="ej. Pequeño Jaguar" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tipo_animal">Tipo de Animal *</label>
+                                        <select class="form-control" id="tipo_animal" name="tipo" required>
+                                            <option value="">Selecciona una opción</option>
+                                            <option value="Doméstico">Animal Doméstico</option>
+                                            <option value="Silvestre">Animal Silvestre</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="especie_animal">Especie *</label>
+                                        <select class="form-control" id="especie_animal" name="especie" required>
+                                            <option value="">Selecciona una opción</option>
+                                            <option value="Canino">Canino</option>
+                                            <option value="Felino">Felino</option>
+                                            <option value="Ave">Ave</option>
+                                            <option value="Reptil">Reptil</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="raza_animal">Raza *</label>
+                                        <input type="text" class="form-control" id="raza_animal" name="raza" placeholder="ej. Labrador" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="sexo_animal">Sexo *</label>
+                                        <select class="form-control" id="sexo_animal" name="sexo" required>
+                                            <option value="">Selecciona una opción</option>
+                                            <option value="Macho">Macho</option>
+                                            <option value="Hembra">Hembra</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
-<div class="modal fade" id="animalDetailsModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+                        <!-- Información del Rescate -->
+                        <div class="col-lg-6">
+                            <div class="card card-info card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-map-marker-alt mr-2"></i>Información del Rescate
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="fecha_rescate">Fecha de Rescate *</label>
+                                        <input type="date" class="form-control" id="fecha_rescate" name="fecha_rescate" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ubicacion_rescate">Ubicación del Rescate *</label>
+                                        <textarea class="form-control" id="ubicacion_rescate" name="ubicacion_rescate" rows="3" placeholder="Dirección completa del rescate" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Ubicación en el mapa</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-map"></i>
+                                                </span>
+                                            </div>
+                                            <button type="button" class="btn btn-success">
+                                                <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Salud y Cuidados -->
+                        <div class="col-lg-6">
+                            <div class="card card-warning card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-heartbeat mr-2"></i>Salud y Cuidados
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="estado_salud">Estado de Salud *</label>
+                                        <select class="form-control" id="estado_salud" name="estado_salud" required>
+                                            <option value="">Selecciona una opción</option>
+                                            <option value="Muy Bueno">Muy Bueno</option>
+                                            <option value="Bueno">Bueno</option>
+                                            <option value="Estable">Estable</option>
+                                            <option value="Malo">Malo</option>
+                                            <option value="Muy Malo">Muy Malo</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tipo_alimentacion">Tipo de Alimentación *</label>
+                                        <select class="form-control" id="tipo_alimentacion" name="tipo_alimentacion" required>
+                                            <option value="">Selecciona una opción</option>
+                                            <option value="Carnívoro">Carnívoro</option>
+                                            <option value="Herbívoro">Herbívoro</option>
+                                            <option value="Omnívoro">Omnívoro</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Multimedia -->
+                        <div class="col-lg-6">
+                            <div class="card card-secondary card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-image mr-2"></i>Multimedia
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label>Foto del Animal (Opcional)</label>
+                                        <div class="image-upload-box text-center p-4 border-2 border-dashed rounded" style="border-color: #dee2e6;">
+                                            <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                            <p class="text-muted mb-2">Click para subir o arrastra una imagen</p>
+                                            <small class="text-muted">PNG, JPG, JPEG (Máx. 5MB)</small>
+                                            <input type="file" class="d-none" id="imagen_animal" name="imagen" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="guardarAnimal">
+                    <i class="fas fa-save mr-1"></i>Guardar Animal
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Detalles del Animal -->
+<div class="modal fade" id="animalDetailsModal" tabindex="-1" role="dialog" aria-labelledby="animalDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content" style="border-radius: 1.5rem; background-color: #f8f9fa;">
             <div class="modal-header bg-white border-0 px-4 pt-4 pb-3">
                 <div class="d-flex align-items-center">
@@ -250,9 +451,9 @@
             <div class="modal-body p-4">
                 <div class="card-header bg-white p-0 pt-1 mb-4 rounded-top">
                     <ul class="nav nav-tabs" id="animal-details-tabs" role="tablist">
-                        <li class="nav-item"><a class="nav-link active" id="info-tab" data-bs-toggle="tab" href="#info-content" role="tab">Información General</a></li>
-                        <li class="nav-item"><a class="nav-link" id="location-tab" data-bs-toggle="tab" href="#location-content" role="tab">Ubicación</a></li>
-                        <li class="nav-item"><a class="nav-link" id="actions-tab" data-bs-toggle="tab" href="#actions-content" role="tab">Acciones</a></li>
+                        <li class="nav-item"><a class="nav-link active" id="info-tab" data-toggle="tab" href="#info-content" role="tab">Información General</a></li>
+                        <li class="nav-item"><a class="nav-link" id="location-tab" data-toggle="tab" href="#location-content" role="tab">Ubicación</a></li>
+                        <li class="nav-item"><a class="nav-link" id="actions-tab" data-toggle="tab" href="#actions-content" role="tab">Acciones</a></li>
                     </ul>
                 </div>
                 <div class="tab-content" id="animal-tabs-content">
@@ -278,7 +479,7 @@
                         <div class="row g-4"><div class="col-md-5"><div class="card h-100"><div class="card-body">
                             <h6 class="card-title fw-bold mb-3">Dirección de Rescate</h6>
                             <ul class="list-unstyled" id="modalAnimalDireccion"></ul><hr><p class="text-muted mt-2 small"><b>Rescatado por:</b> <span id="modalAnimalRescatista">...</span></p>
-                        </div></div></div><div class="col-md-7"><img src="{{ asset('imagenes/mapa-placeholder.png') }}" alt="Mapa" class="img-fluid rounded border h-100" style="object-fit: cover;"></div></div>
+                        </div></div></div><div class="col-md-7"><img src="{{ asset('Fotos/Patota.png') }}" alt="Mapa" class="img-fluid rounded border h-100" style="object-fit: cover;"></div></div>
                     </div></div>
                     <div class="tab-pane fade" id="actions-content" role="tabpanel"><div class="row g-3">
                         <div class="col-lg-4 col-md-6"><a href="#" class="action-box bg-success"><i class="fas fa-file-medical"></i><div><span>Evaluaciones Médicas</span><small>Ver historial médico</small></div></a></div>
@@ -293,45 +494,150 @@
     </div>
 </div>
 
-<div class="modal fade" id="changeStatusModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content" style="border-radius: 1.5rem;">
-            <div class="modal-header border-0">
-                <div class="d-flex align-items-center">
-                    <div class="me-3"><span class="fa-stack fa-2x"><i class="fas fa-circle fa-stack-2x text-success" style="opacity: 0.1;"></i><i class="fas fa-user-shield fa-stack-1x text-success"></i></span></div>
-                    <div><h5 class="modal-title fw-bold">Cambiar Estado de Salud</h5><span class="badge bg-success" id="changeStatusAnimalName">...</span></div>
-                </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- Modal Cambiar Estado -->
+<div class="modal fade" id="changeStatusModal" tabindex="-1" role="dialog" aria-labelledby="changeStatusModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-warning">
+                <h5 class="modal-title text-white" id="changeStatusModalLabel">
+                    <i class="fas fa-edit mr-2"></i>Cambiar Estado de Salud
+                </h5>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <div class="modal-body px-4">
-                <div class="p-3 mb-4 rounded-3" style="background-color: #f8f9fa;">
-                    <p class="text-muted mb-2"><i class="fas fa-info-circle text-success me-2"></i>Estado de Salud Actual</p>
-                    <span class="badge fs-6 border text-success bg-white py-2 px-3" id="currentStatusBadge">...</span>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <strong>Animal:</strong> <span id="changeStatusAnimalName">...</span>
                 </div>
-                <p class="fw-bold text-dark">Nuevo Estado de Salud</p>
-                <div class="row g-3">
-                    <div class="col-md-6"><label class="status-option"><input type="radio" name="health_status" value="Estable" class="d-none"><div class="status-card"><h6><span class="status-dot bg-warning"></span>Estable</h6><p class="text-muted small">Condición estable.</p></div></label></div>
-                    <div class="col-md-6"><label class="status-option"><input type="radio" name="health_status" value="Muy Bueno" class="d-none"><div class="status-card"><h6><span class="status-dot bg-success"></span>Muy Bueno</h6><p class="text-muted small">Excelente condición.</p></div></label></div>
-                    <div class="col-md-6"><label class="status-option"><input type="radio" name="health_status" value="Bueno" class="d-none"><div class="status-card"><h6><span class="status-dot bg-primary"></span>Bueno</h6><p class="text-muted small">Buena condición.</p></div></label></div>
-                    <div class="col-md-6"><label class="status-option"><input type="radio" name="health_status" value="Malo" class="d-none"><div class="status-card"><h6><span class="status-dot" style="background-color: #fd7e14;"></span>Malo</h6><p class="text-muted small">Requiere atención.</p></div></label></div>
-                    <div class="col-md-6"><label class="status-option"><input type="radio" name="health_status" value="Muy Malo" class="d-none"><div class="status-card"><h6><span class="status-dot bg-danger"></span>Muy Malo</h6><p class="text-muted small">Condición crítica.</p></div></label></div>
+                
+                <div class="form-group">
+                    <label>Nuevo Estado de Salud</label>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="estado_muy_bueno" name="health_status" value="Muy Bueno">
+                                <label class="custom-control-label" for="estado_muy_bueno">
+                                    <span class="badge badge-success mr-2">Muy Bueno</span>Excelente condición
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="estado_bueno" name="health_status" value="Bueno">
+                                <label class="custom-control-label" for="estado_bueno">
+                                    <span class="badge badge-info mr-2">Bueno</span>Buena condición
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="estado_estable" name="health_status" value="Estable">
+                                <label class="custom-control-label" for="estado_estable">
+                                    <span class="badge badge-warning mr-2">Estable</span>Condición estable
+                                </label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <div class="custom-control custom-radio">
+                                <input type="radio" class="custom-control-input" id="estado_malo" name="health_status" value="Malo">
+                                <label class="custom-control-label" for="estado_malo">
+                                    <span class="badge badge-danger mr-2">Malo</span>Requiere atención
+                                </label>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="modal-footer border-0 p-4">
-                <button type="button" class="btn btn-outline-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary w-100">Cambiar Estado</button>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-warning" id="confirmarCambioEstado">
+                    <i class="fas fa-save mr-1"></i>Cambiar Estado
+                </button>
             </div>
         </div>
     </div>
-</div>
-
-<div class="modal fade" id="addAnimalModal" tabindex="-1" aria-hidden="true">
-    {{-- Tu modal para agregar animal va aquí --}}
 </div>
 @endsection
 
 @section('css')
 <style>
+    .widget-user-2 .widget-user-header {
+        padding: 1rem;
+    }
+    
+    .widget-user-2 .widget-user-image {
+        position: absolute;
+        top: 15px;
+        left: 15px;
+        font-size: 90px;
+        line-height: 90px;
+        color: #fff;
+        text-align: center;
+        border-radius: 50%;
+        width: 90px;
+        height: 90px;
+    }
+    
+    .widget-user-2 .widget-user-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+    
+    .image-upload-box {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .image-upload-box:hover {
+        border-color: #007bff !important;
+        background-color: #f8f9fa;
+    }
+    
+    .card {
+        box-shadow: 0 0 1px rgba(0,0,0,.125), 0 1px 3px rgba(0,0,0,.2);
+        border: 0;
+    }
+    
+    .card-header {
+        border-bottom: 1px solid rgba(0,0,0,.125);
+    }
+    
+    .btn-check:checked + .btn-outline-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+        color: #fff;
+    }
+    
+    .btn-check:checked + .btn-outline-success {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: #fff;
+    }
+    
+    .btn-check:checked + .btn-outline-warning {
+        background-color: #ffc107;
+        border-color: #ffc107;
+        color: #212529;
+    }
+    
+    .btn-check:checked + .btn-outline-info {
+        background-color: #17a2b8;
+        border-color: #17a2b8;
+        color: #fff;
+    }
+    
+    .btn-check:checked + .btn-outline-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: #fff;
+    }
+    
     .nav-tabs { border-bottom: 2px solid #dee2e6 !important; }
     .nav-tabs .nav-link { border: 0; border-bottom: 3px solid transparent; color: #6c757d; padding: 1rem; }
     .nav-tabs .nav-link.active { border-bottom-color: #28a745; color: #28a745; font-weight: bold; }
@@ -348,71 +654,124 @@
     .bg-purple { background-color: #6f42c1; }
     .bg-orange { background-color: #fd7e14; }
     .bg-blue { background-color: #0d6efd; }
-    .status-option .status-card { padding: 1rem; border: 2px solid #e9ecef; border-radius: 0.75rem; cursor: pointer; transition: all 0.2s ease-in-out; position: relative; }
-    .status-option .status-card:hover { border-color: #adb5bd; }
-    .status-option input:checked + .status-card { border-color: #0d6efd; box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25); }
-    .status-option input:checked + .status-card::before { content: '✔'; position: absolute; top: 1rem; right: 1rem; color: #0d6efd; font-weight: bold; }
-    .status-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 0.5rem; vertical-align: middle; }
 </style>
 @endsection
 
 @section('js')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    // --- INSTANCIAS DE TODOS LOS MODALES ---
-    const animalDetailsModalEl = document.getElementById('animalDetailsModal');
-    const changeStatusModalEl = document.getElementById('changeStatusModal');
-    const seleccionarRescatistaModalEl = document.getElementById('seleccionarRescatistaModal');
-    const agregarAnimalModalEl = document.getElementById('agregarAnimalModal');
-
-    const animalDetailsModal = new bootstrap.Modal(animalDetailsModalEl);
-    const changeStatusModal = new bootstrap.Modal(changeStatusModalEl);
-    const seleccionarRescatistaModal = new bootstrap.Modal(seleccionarRescatistaModalEl);
-    const agregarAnimalModal = new bootstrap.Modal(agregarAnimalModalEl);
-
-    // --- LÓGICA PARA EL FLUJO DE AGREGAR ANIMAL (CORREGIDA) ---
-
-    // Variable para guardar el nombre del rescatista entre eventos
+$(document).ready(function() {
+    // Variables para los modales
     let nombreRescatistaSeleccionado = null;
 
-    // 1. Escuchamos el clic en CUALQUIER botón "Seleccionar"
-    document.querySelectorAll('.btn-seleccionar-rescatista').forEach(button => {
-        button.addEventListener('click', function () {
-            // Guardamos el nombre del rescatista seleccionado
-            nombreRescatistaSeleccionado = this.dataset.rescatistaNombre;
-            
-            // Y simplemente cerramos el primer modal
-            seleccionarRescatistaModal.hide();
-        });
+    // Manejo del flujo de agregar animal
+    $('.btn-seleccionar-rescatista').on('click', function(e) {
+        e.preventDefault();
+        nombreRescatistaSeleccionado = $(this).data('rescatista-nombre');
+        var modal = bootstrap.Modal.getInstance(document.getElementById('seleccionarRescatistaModal'));
+        modal.hide();
     });
-
-    // 2. Escuchamos el evento 'hidden.bs.modal', que se dispara DESPUÉS de que el modal de rescatistas se cierra
-    seleccionarRescatistaModalEl.addEventListener('hidden.bs.modal', function () {
-        // Si guardamos un nombre (es decir, si se hizo clic en "Seleccionar" y no en la 'X')
+    
+    $('#seleccionarRescatistaModal').on('hidden.bs.modal', function() {
         if (nombreRescatistaSeleccionado) {
-            // Actualizamos la insignia en el segundo modal
-            const rescuerNameBadge = agregarAnimalModalEl.querySelector('#rescuerNameBadge');
-            rescuerNameBadge.textContent = `Rescatista: ${nombreRescatistaSeleccionado}`;
-            
-            // Y AHORA, de forma segura, mostramos el segundo modal
-            agregarAnimalModal.show();
-            
-            // Limpiamos la variable para la próxima vez
+            $('#rescuerNameBadge').text('Rescatista: ' + nombreRescatistaSeleccionado);
+            setTimeout(() => {
+                var agregarModal = new bootstrap.Modal(document.getElementById('agregarAnimalModal'));
+                agregarModal.show();
+            }, 100);
             nombreRescatistaSeleccionado = null;
         }
     });
 
-    // --- (El resto de tu código JS para los otros modales no cambia) ---
-    animalDetailsModalEl.addEventListener('show.bs.modal', function (event) {
-        // ... (código para llenar el modal de detalles)
+    // Manejo de la imagen de upload
+    $('.image-upload-box').on('click', function() {
+        $('#imagen_animal').click();
     });
-    if (changeStatusModalEl) {
-        changeStatusModalEl.addEventListener('show.bs.modal', function (event) {
-            // ... (código para llenar el modal de cambiar estado)
-        });
+    
+    $('#imagen_animal').on('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                $('.image-upload-box').html(`
+                    <img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">
+                    <p class="text-success mt-2">Imagen seleccionada</p>
+                `);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    
+    // Manejo del modal de detalles
+    $('.view-details-btn').on('click', function() {
+        const data = $(this).data();
+        
+        // Información básica
+        $('#modalAnimalNombre').text(data.nombre);
+        $('#modalAnimalImagen').attr('src', data.imagen);
+        $('#modalAnimalEspecie').text(data.especie);
+        $('#modalAnimalEspecieText').text(data.especie);
+        $('#modalAnimalRaza').text(data.raza);
+        $('#modalAnimalSexo').text(data.sexo);
+        $('#modalAnimalEstado').text(data.estado_salud);
+        $('#modalAnimalIngreso').text(data.fecha_ingreso);
+        
+        // Badges
+        $('#modalAnimalTipoBadge').text(data.tipo).removeClass().addClass('badge badge-' + getTipoClass(data.tipo));
+        $('#modalAnimalEstadoBadge').text(data.estado_salud).removeClass().addClass('badge badge-' + getEstadoClass(data.estado_salud));
+        
+        // Información adicional
+        $('#modalAlimentacionTipo').text(data.alimentacion_tipo);
+        $('#modalAlimentacionCantidad').text(data.alimentacion_cantidad);
+        $('#modalAnimalRescatista').text(data.rescatista);
+        $('#modalAnimalDireccion').html('<li>' + data.direccion + '</li>');
+        $('#modalEstadoTipo').text(data.tipo);
+        $('#modalEstadoActual').text(data.estado_salud);
+        
+        $('#changeStatusAnimalName').text(data.nombre);
+    });
+    
+    // Función para obtener la clase del estado
+    function getEstadoClass(estado) {
+        switch(estado) {
+            case 'Muy Bueno': return 'success';
+            case 'Bueno': return 'info';
+            case 'Estable': return 'warning';
+            case 'Malo': return 'danger';
+            case 'Muy Malo': return 'danger';
+            default: return 'secondary';
+        }
     }
-
-    function updateBadgeClass(element, text, classes) { /* ... */ }
+    
+    // Función para obtener la clase del tipo
+    function getTipoClass(tipo) {
+        switch(tipo) {
+            case 'Animal Doméstico': return 'success';
+            case 'Animal Silvestre': return 'warning';
+            default: return 'secondary';
+        }
+    }
+    
+    // Guardar animal
+    $('#guardarAnimal').on('click', function() {
+        // Aquí iría la lógica para guardar el animal
+        alert('Animal guardado exitosamente');
+        var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
+        modal.hide();
+        // Recargar la página o actualizar la lista
+        location.reload();
+    });
+    
+    // Confirmar cambio de estado
+    $('#confirmarCambioEstado').on('click', function() {
+        const nuevoEstado = $('input[name="health_status"]:checked').val();
+        if (nuevoEstado) {
+            alert('Estado cambiado a: ' + nuevoEstado);
+            var modal = bootstrap.Modal.getInstance(document.getElementById('changeStatusModal'));
+            modal.hide();
+        } else {
+            alert('Por favor selecciona un estado');
+        }
+    });
 });
 </script>
 @endsection

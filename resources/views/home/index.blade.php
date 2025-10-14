@@ -1,37 +1,36 @@
 @extends('layouts.admin')
 
-@section('title', 'Home - Rescate Animales')
+@section('title', 'Dashboard - Rescate Animales')
 
-@push('styles')
-<style>
-    /* Estilos personalizados para las tarjetas */
-    .custom-card {
-        border-radius: 15px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-        transition: all 0.3s ease-in-out;
-        border: none;
-    }
-    .custom-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.12);
-    }
-    .custom-card .card-body {
-        padding: 1.5rem;
-    }
-    .custom-card .card-title {
-        font-weight: 600;
-        color: #333;
-    }
-    .custom-card .card-text {
-        color: #666;
-    }
-    .custom-card .icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
-        color: #007bff;
-    }
-</style>
-@endpush
+@php
+    // Datos para el dashboard
+    $totalAnimales = 25;
+    $animalesRescatados = 18;
+    $animalesAdoptados = 12;
+    $animalesEnTratamiento = 6;
+    
+    $estadosSalud = [
+        'Muy Bueno' => 8,
+        'Bueno' => 10,
+        'Estable' => 4,
+        'Malo' => 2,
+        'Muy Malo' => 1
+    ];
+    
+    $tiposAnimales = [
+        'Domésticos' => 15,
+        'Silvestres' => 10
+    ];
+    
+    $rescatesPorMes = [
+        'Enero' => 5,
+        'Febrero' => 8,
+        'Marzo' => 12,
+        'Abril' => 7,
+        'Mayo' => 9,
+        'Junio' => 11
+    ];
+@endphp
 
 @section('content')
 <!-- Content Header (Page header) -->
@@ -62,13 +61,13 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-info">
                     <div class="inner">
-                        <h3>25</h3>
+                        <h3>{{ $totalAnimales }}</h3>
                         <p>Total Animales</p>
                     </div>
                     <div class="icon">
                         <i class="fas fa-paw"></i>
                     </div>
-                    <a href="#" class="small-box-footer">
+                    <a href="{{ route('animales.index') }}" class="small-box-footer">
                         Más información <i class="fas fa-arrow-circle-right"></i>
                     </a>
                 </div>
@@ -76,7 +75,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-success">
                     <div class="inner">
-                        <h3>18</h3>
+                        <h3>{{ $animalesRescatados }}</h3>
                         <p>Rescatados Este Mes</p>
                     </div>
                     <div class="icon">
@@ -90,7 +89,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-warning">
                     <div class="inner">
-                        <h3>12</h3>
+                        <h3>{{ $animalesAdoptados }}</h3>
                         <p>Adoptados</p>
                     </div>
                     <div class="icon">
@@ -104,7 +103,7 @@
             <div class="col-lg-3 col-6">
                 <div class="small-box bg-danger">
                     <div class="inner">
-                        <h3>6</h3>
+                        <h3>{{ $animalesEnTratamiento }}</h3>
                         <p>En Tratamiento</p>
                     </div>
                     <div class="icon">
@@ -182,6 +181,90 @@
             </div>
         </div>
 
+        <!-- Estadísticas Adicionales -->
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card card-warning card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            Rescates Esta Semana
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-warning">8</h4>
+                                    <small class="text-muted">Rescates</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-success">3</h4>
+                                    <small class="text-muted">Adopciones</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card card-danger card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-exclamation-triangle mr-2"></i>
+                            Animales en Riesgo
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-danger">2</h4>
+                                    <small class="text-muted">Estado Crítico</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-warning">5</h4>
+                                    <small class="text-muted">Requieren Atención</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card card-secondary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-users mr-2"></i>
+                            Rescatistas Activos
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-primary">12</h4>
+                                    <small class="text-muted">Voluntarios</small>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="text-center">
+                                    <h4 class="text-info">5</h4>
+                                    <small class="text-muted">Veterinarios</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Gráficos Adicionales -->
         <div class="row">
             <div class="col-lg-6">
@@ -218,6 +301,66 @@
                     </div>
                     <div class="card-body">
                         <canvas id="gastosCategoriaChart" style="height: 300px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Más Gráficos -->
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-line mr-2"></i>
+                            Eficiencia de Rescates
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="eficienciaRescatesChart" style="height: 250px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card card-warning card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-area mr-2"></i>
+                            Tiempo de Recuperación
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="tiempoRecuperacionChart" style="height: 250px;"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card card-secondary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-chart-radar mr-2"></i>
+                            Distribución por Edad
+                        </h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="distribucionEdadChart" style="height: 250px;"></canvas>
                     </div>
                 </div>
             </div>
@@ -641,7 +784,7 @@ $(document).ready(function() {
         data: {
             labels: ['Muy Bueno', 'Bueno', 'Estable', 'Malo', 'Muy Malo'],
             datasets: [{
-                data: [8, 10, 4, 2, 1],
+                data: [{{ implode(',', array_values($estadosSalud)) }}],
                 backgroundColor: [
                     '#28a745',
                     '#17a2b8',
@@ -672,7 +815,7 @@ $(document).ready(function() {
             labels: ['Domésticos', 'Silvestres'],
             datasets: [{
                 label: 'Cantidad',
-                data: [15, 10],
+                data: [{{ implode(',', array_values($tiposAnimales)) }}],
                 backgroundColor: [
                     '#28a745',
                     '#ffc107'
@@ -705,10 +848,10 @@ $(document).ready(function() {
     new Chart(rescatesPorMesCtx, {
         type: 'line',
         data: {
-            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
+            labels: [{{ implode(',', array_map(function($mes) { return "'$mes'"; }, array_keys($rescatesPorMes))) }}],
             datasets: [{
                 label: 'Rescates',
-                data: [5, 8, 12, 7, 9, 11],
+                data: [{{ implode(',', array_values($rescatesPorMes)) }}],
                 borderColor: '#17a2b8',
                 backgroundColor: 'rgba(23, 162, 184, 0.1)',
                 borderWidth: 3,
@@ -775,6 +918,116 @@ $(document).ready(function() {
                         '#17a2b8',
                         '#6c757d'
                     ]
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Eficiencia de Rescates
+    const eficienciaRescatesCtx = document.getElementById('eficienciaRescatesChart');
+    if (eficienciaRescatesCtx) {
+        new Chart(eficienciaRescatesCtx.getContext('2d'), {
+            type: 'line',
+            data: {
+                labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                datasets: [{
+                    label: 'Rescates Exitosos',
+                    data: [85, 92, 88, 95, 90, 94],
+                    borderColor: '#17a2b8',
+                    backgroundColor: 'rgba(23, 162, 184, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Tiempo de Recuperación
+    const tiempoRecuperacionCtx = document.getElementById('tiempoRecuperacionChart');
+    if (tiempoRecuperacionCtx) {
+        new Chart(tiempoRecuperacionCtx.getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: ['1-7 días', '8-14 días', '15-30 días', '31-60 días', '60+ días'],
+                datasets: [{
+                    label: 'Animales',
+                    data: [8, 12, 15, 6, 2],
+                    backgroundColor: [
+                        '#28a745',
+                        '#17a2b8',
+                        '#ffc107',
+                        '#fd7e14',
+                        '#dc3545'
+                    ],
+                    borderColor: [
+                        '#1e7e34',
+                        '#138496',
+                        '#e0a800',
+                        '#d39e00',
+                        '#c82333'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    }
+
+    // Gráfico de Distribución por Edad
+    const distribucionEdadCtx = document.getElementById('distribucionEdadChart');
+    if (distribucionEdadCtx) {
+        new Chart(distribucionEdadCtx.getContext('2d'), {
+            type: 'doughnut',
+            data: {
+                labels: ['Cachorros (0-1 año)', 'Jóvenes (1-3 años)', 'Adultos (3-7 años)', 'Senior (7+ años)'],
+                datasets: [{
+                    data: [8, 12, 15, 5],
+                    backgroundColor: [
+                        '#ffc107',
+                        '#28a745',
+                        '#17a2b8',
+                        '#6c757d'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#fff'
                 }]
             },
             options: {
