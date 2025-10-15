@@ -140,9 +140,7 @@
                                     <button type="submit" class="btn btn-primary flex-fill">
                                         <i class="fas fa-search mr-2"></i> Buscar
                                     </button>
-                                    <a href="{{ request()->url() }}" class="btn btn-secondary flex-fill">
-                                        <i class="fas fa-times mr-2"></i> Limpiar
-                                    </a>
+                                    
                                 </div>
                             </div>
                         </div>
@@ -526,24 +524,24 @@
                         <h5 class="text-primary">Acciones Disponibles</h5>
                         <div class="row">
                             <div class="col-6 mb-2">
-                                <button class="btn btn-success btn-sm btn-block">
-                                    <i class="fas fa-file-medical"></i> Evaluación Médica
-                                </button>
+                                <a href="{{ route('animales.seleccionar-veterinario-evaluacion') }}" class="btn btn-success btn-block">
+                                    <i class="fas fa-file-medical mr-2"></i> Evaluación Médica
+                                </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <button class="btn btn-info btn-sm btn-block">
-                                    <i class="fas fa-map-marker-alt"></i> Ver Ubicación
-                                </button>
+                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block">
+                                    <i class="fas fa-map-marker-alt mr-2"></i> Ver Ubicación
+                                </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <button class="btn btn-warning btn-sm btn-block">
-                                    <i class="fas fa-edit"></i> Editar Datos
-                                </button>
+                                <a href="{{ route('animales.editar-datos') }}" class="btn btn-warning btn-block">
+                                    <i class="fas fa-edit mr-2"></i> Editar Datos
+                                </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <button class="btn btn-primary btn-sm btn-block">
-                                    <i class="fas fa-heart"></i> Tratamiento
-                                </button>
+                                <a href="{{ route('animales.seleccionar-veterinario-tratamiento') }}" class="btn btn-primary btn-block">
+                                    <i class="fas fa-heart mr-2"></i> Tratamiento
+                                </a>
                             </div>
                         </div>
                     </div>

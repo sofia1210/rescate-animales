@@ -110,13 +110,11 @@
                     <div class="col-md-3">
                         <div class="form-group">
                             <label>&nbsp;</label>
-                            <div class="d-flex gap-2">
+                            <div class="d-flex gap-">
                                 <button type="submit" class="btn btn-primary flex-fill">
                                     <i class="fas fa-search mr-2"></i> Buscar
                                 </button>
-                                <a href="{{ request()->url() }}" class="btn btn-secondary flex-fill">
-                                    <i class="fas fa-times mr-2"></i> Limpiar
-                                </a>
+                               
                             </div>
                         </div>
                     </div>
@@ -184,12 +182,11 @@
             <div class="modal-header border-0">
                 <div>
                     <h5 class="modal-title fw-bold">Liberar Animal</h5>
-                    <div class="d-flex align-items-center gap-2 mt-2">
-                        <span class="badge bg-light text-dark border"><small>Campos obligatorios marcados con *</small></span>
-                        <span class="badge bg-success" id="modalAnimalNameBadge">...</span>
-                    </div>
+                    
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close text-black" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
     <div class="card card-custom card-info-bg">

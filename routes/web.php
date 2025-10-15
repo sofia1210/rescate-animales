@@ -171,3 +171,35 @@ Route::post('/reporte-rapido', function (Request $request) {
     
     return view('ReporteRapido.confirmacion', compact('reporte'));
 })->name('reporte-rapido.store');
+
+// --- Rutas de Acciones de Animales ---
+
+// Seleccionar Veterinario para Evaluación Médica
+Route::get('/animales/seleccionar-veterinario-evaluacion', function () {
+    return view('Animales.seleccionar-veterinario-evaluacion');
+})->name('animales.seleccionar-veterinario-evaluacion');
+
+// Evaluación Médica
+Route::get('/animales/evaluacion-medica', function () {
+    return view('Animales.evaluacion-medica');
+})->name('animales.evaluacion-medica');
+
+// Seleccionar Veterinario para Tratamiento
+Route::get('/animales/seleccionar-veterinario-tratamiento', function () {
+    return view('Animales.seleccionar-veterinario-tratamiento');
+})->name('animales.seleccionar-veterinario-tratamiento');
+
+// Ver Ubicación
+Route::get('/animales/ver-ubicacion', function () {
+    return view('Animales.ver-ubicacion');
+})->name('animales.ver-ubicacion');
+
+// Editar Datos
+Route::get('/animales/editar-datos', function () {
+    return view('Animales.editar-datos');
+})->name('animales.editar-datos');
+
+// Tratamiento
+Route::get('/animales/tratamiento', function () {
+    return view('Animales.tratamiento');
+})->name('animales.tratamiento');

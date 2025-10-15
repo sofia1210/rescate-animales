@@ -466,74 +466,7 @@
         </div>
 
         <!-- Cards de Resumen por Especie -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-dog mr-2"></i>
-                            Resumen Caninos
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-info">12</h4>
-                                    <small class="text-muted">Total</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-success">8</h4>
-                                    <small class="text-muted">Adoptados</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-warning">4</h4>
-                                    <small class="text-muted">En proceso</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card card-warning card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-cat mr-2"></i>
-                            Resumen Felinos
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-warning">8</h4>
-                                    <small class="text-muted">Total</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-success">5</h4>
-                                    <small class="text-muted">Adoptados</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-info">3</h4>
-                                    <small class="text-muted">En proceso</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
+       
         <!-- Recent Activity -->
         <div class="row">
             <div class="col-lg-8">

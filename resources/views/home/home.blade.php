@@ -128,9 +128,7 @@
                             Estado de Salud de los Animales
                         </h3>
                         <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="card-body">
@@ -148,9 +146,7 @@
                             Distribución por Tipo
                         </h3>
                         <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="card-body">
@@ -161,235 +157,8 @@
         </div>
 
         <!-- Rescates por Mes Chart -->
-        <div class="row">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-line mr-2"></i>
-                            Rescates por Mes
-                        </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="rescatesPorMesChart" style="height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Gráficos Adicionales -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-bar mr-2"></i>
-                            Adopciones por Mes
-                        </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="adopcionesPorMesChart" style="height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card card-danger card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-2"></i>
-                            Gastos por Categoría
-                        </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="gastosCategoriaChart" style="height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cards de Métricas Avanzadas -->
-        <div class="row">
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-heartbeat mr-2"></i>
-                            Tasa de Supervivencia
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="text-center">
-                                    <h2 class="text-primary">94%</h2>
-                                    <p class="text-muted mb-0">Animales recuperados</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress mt-3">
-                            <div class="progress-bar bg-primary" style="width: 94%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-home mr-2"></i>
-                            Tasa de Adopción
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="text-center">
-                                    <h2 class="text-success">78%</h2>
-                                    <p class="text-muted mb-0">Animales adoptados</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress mt-3">
-                            <div class="progress-bar bg-success" style="width: 78%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-warning card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-clock mr-2"></i>
-                            Tiempo Promedio
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="text-center">
-                                    <h2 class="text-warning">15</h2>
-                                    <p class="text-muted mb-0">Días hasta adopción</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress mt-3">
-                            <div class="progress-bar bg-warning" style="width: 65%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-3 col-md-6">
-                <div class="card card-danger card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-exclamation-triangle mr-2"></i>
-                            Casos Urgentes
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="text-center">
-                                    <h2 class="text-danger">7</h2>
-                                    <p class="text-muted mb-0">Requieren atención</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="progress mt-3">
-                            <div class="progress-bar bg-danger" style="width: 35%"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cards de Resumen por Especie -->
-        <div class="row">
-            <div class="col-lg-6">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-dog mr-2"></i>
-                            Resumen Caninos
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-info">12</h4>
-                                    <small class="text-muted">Total</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-success">8</h4>
-                                    <small class="text-muted">Adoptados</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-warning">4</h4>
-                                    <small class="text-muted">En proceso</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="col-lg-6">
-                <div class="card card-warning card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-cat mr-2"></i>
-                            Resumen Felinos
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-warning">8</h4>
-                                    <small class="text-muted">Total</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-success">5</h4>
-                                    <small class="text-muted">Adoptados</small>
-                                </div>
-                            </div>
-                            <div class="col-4">
-                                <div class="text-center">
-                                    <h4 class="text-info">3</h4>
-                                    <small class="text-muted">En proceso</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+       
+        
 
         <!-- Recent Activity -->
         <div class="row">
@@ -401,9 +170,7 @@
                             Actividad Reciente
                         </h3>
                         <div class="card-tools">
-                            <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                                <i class="fas fa-minus"></i>
-                            </button>
+                            
                         </div>
                     </div>
                     <div class="card-body">
