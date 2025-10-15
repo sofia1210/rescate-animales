@@ -27,7 +27,7 @@
                 <p class="text-muted mb-0">Periodo: 1/9/2025 - 5/10/2025</p>
             </div>
             <a href="#" class="btn btn-primary mt-2 mt-md-0">
-                <i class="fas fa-file-pdf"></i> Exportar PDF
+                <i class="fas fa-file-pdf mr-2"></i> Exportar PDF
             </a>
         </div>
     </div>

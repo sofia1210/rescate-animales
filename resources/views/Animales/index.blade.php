@@ -93,7 +93,7 @@
             <div class="card-body">
                 <form action="" method="GET">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label for="nombre">Buscar por nombre</label>
                                 <div class="input-group">
@@ -101,77 +101,69 @@
                                         <span class="input-group-text">
                                             <i class="fas fa-search"></i>
                                         </span>
-                    </div>
+                                    </div>
                                     <input type="text" 
                                            name="nombre" 
                                            id="nombre"
                                            class="form-control" 
                                            placeholder="Nombre del animal..." 
                                            value="{{ $nombre ?? '' }}">
-                    </div>
+                                </div>
                             </div>
-                    </div>
-                        <div class="col-md-4">
+                        </div>
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Tipo de Animal</label>
-                                <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="tipo" value="Todos" id="tipo_todos" {{ $tipo === 'Todos' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-primary" for="tipo_todos">Todos</label>
-                                    
-                                    <input type="radio" class="btn-check" name="tipo" value="Doméstico" id="tipo_domestico" {{ $tipo === 'Doméstico' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-success" for="tipo_domestico">Doméstico</label>
-                                    
-                                    <input type="radio" class="btn-check" name="tipo" value="Silvestre" id="tipo_silvestre" {{ $tipo === 'Silvestre' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-warning" for="tipo_silvestre">Silvestre</label>
-            </div>
-        </div>
+                                <select name="tipo" class="form-control select2" style="width: 100%;">
+                                    <option value="Todos" {{ $tipo === 'Todos' ? 'selected' : '' }}>Todos los tipos</option>
+                                    <option value="Doméstico" {{ $tipo === 'Doméstico' ? 'selected' : '' }}>Doméstico</option>
+                                    <option value="Silvestre" {{ $tipo === 'Silvestre' ? 'selected' : '' }}>Silvestre</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="form-group">
                                 <label>Estado de Salud</label>
-                                <div class="btn-group w-100" role="group">
-                                    <input type="radio" class="btn-check" name="estado" value="Todos" id="estado_todos" {{ $estado === 'Todos' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-secondary" for="estado_todos">Todos</label>
-                                    
-                                    <input type="radio" class="btn-check" name="estado" value="Muy Bueno" id="estado_muy_bueno" {{ $estado === 'Muy Bueno' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-success" for="estado_muy_bueno">Excelente</label>
-                                    
-                                    <input type="radio" class="btn-check" name="estado" value="Bueno" id="estado_bueno" {{ $estado === 'Bueno' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-info" for="estado_bueno">Bueno</label>
-                                    
-                                    <input type="radio" class="btn-check" name="estado" value="Estable" id="estado_estable" {{ $estado === 'Estable' ? 'checked' : '' }}>
-                                    <label class="btn btn-outline-warning" for="estado_estable">Estable</label>
-    </div>
-</div>
-                </div>
+                                <select name="estado" class="form-control select2" style="width: 100%;">
+                                    <option value="Todos" {{ $estado === 'Todos' ? 'selected' : '' }}>Todos los estados</option>
+                                    <option value="Muy Bueno" {{ $estado === 'Muy Bueno' ? 'selected' : '' }}>Excelente</option>
+                                    <option value="Bueno" {{ $estado === 'Bueno' ? 'selected' : '' }}>Bueno</option>
+                                    <option value="Estable" {{ $estado === 'Estable' ? 'selected' : '' }}>Estable</option>
+                                    <option value="Malo" {{ $estado === 'Malo' ? 'selected' : '' }}>Malo</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>&nbsp;</label>
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-fill">
+                                        <i class="fas fa-search mr-2"></i> Buscar
+                                    </button>
+                                    <a href="{{ request()->url() }}" class="btn btn-secondary flex-fill">
+                                        <i class="fas fa-times mr-2"></i> Limpiar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="row">
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-search mr-1"></i> Buscar
-                            </button>
-                            <a href="{{ request()->url() }}" class="btn btn-secondary">
-                                <i class="fas fa-times mr-1"></i> Limpiar
-                            </a>
-                    </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
-    </div>
 
         <!-- Animals List -->
     <div class="row">
         @forelse ($animales as $animal)
             <div class="col-md-4 col-lg-3 mb-4">
-                <div class="card h-100 shadow-sm">
-                    <img src="{{ $animal->imagen }}" class="card-img-top" alt="Foto de {{ $animal->nombre }}" style="height: 200px; object-fit: cover;">
+                <div class="card h-100 shadow-sm card card-primary card-outline">
+                    <img src="{{ $animal->imagen }}" class="card-img-top" alt="Foto de {{ $animal->nombre }}" style="height: 200px; width: 85%; justify-content: center; display: block; margin: 0 auto; margin-top: 20px;">
                     <div class="card-body">
                         <h5 class="card-title fw-bold">{{ $animal->nombre }}</h5>
                         <p class="card-text mb-1"><strong>Especie:</strong> {{ $animal->especie }}</p>
                         <p class="card-text mb-1"><strong>Tipo:</strong> {{ $animal->tipo }}</p>
                     </div>
                     <div class="card-footer bg-white border-0 pb-3">
-                        <button type="button" class="btn btn-primary btn-sm w-100 view-details-btn" 
+                        <button type="button" class="btn btn-primary w-100 view-details-btn" 
                                 data-bs-toggle="modal" 
                                 data-bs-target="#animalDetailsModal"
                                 data-id="{{ $animal->id }}"
@@ -187,7 +179,7 @@
                                 data-direccion="{{ $animal->direccion }}"
                                 data-alimentacion_tipo="{{ $animal->alimentacion_tipo }}"
                                 data-alimentacion_cantidad="{{ $animal->alimentacion_cantidad }}">
-                            <i class="fas fa-eye me-1"></i> Ver Detalles
+                            <i class="fas fa-eye me-2"></i> Ver Detalles
                         </button>
                     </div>
                 </div>
@@ -239,9 +231,12 @@
                                 <h6 class="mb-1">{{ $rescatista->nombre }}</h6>
                                 <small class="text-muted">{{ $rescatista->telefono }}</small>
                             </div>
-                            <button class="btn btn-success btn-sm btn-seleccionar-rescatista"
+                            <button class="btn btn-success btn-sm"
+                                    data-bs-toggle="modal" 
+                                    data-bs-target="#agregarAnimalModal"
                                     data-rescatista-id="{{ $rescatista->id }}"
-                                    data-rescatista-nombre="{{ $rescatista->nombre }}">
+                                    data-rescatista-nombre="{{ $rescatista->nombre }}"
+                                    onclick="seleccionarRescatista('{{ $rescatista->nombre }}')">
                                 <i class="fas fa-check mr-1"></i>Seleccionar
                             </button>
                         </div>
@@ -254,7 +249,7 @@
 
 <!-- Modal Agregar Animal -->
 <div class="modal fade" id="agregarAnimalModal" tabindex="-1" role="dialog" aria-labelledby="agregarAnimalModalLabel" aria-hidden="true" data-backdrop="static" data-keyboard="false">
-    <div class="modal-dialog modal-xl" role="document">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h5 class="modal-title text-white" id="agregarAnimalModalLabel">
@@ -264,7 +259,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
                 <div class="row">
                     <div class="col-12 mb-3">
                         <div class="alert alert-info">
@@ -342,16 +337,20 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Ubicación en el mapa</label>
-                                        <div class="input-group">
+                                        <div class="input-group mb-2">
                                             <div class="input-group-prepend">
                                                 <span class="input-group-text">
                                                     <i class="fas fa-map"></i>
                                                 </span>
                                             </div>
-                                            <button type="button" class="btn btn-success">
+                                            <button type="button" class="btn btn-success" onclick="obtenerUbicacion()">
                                                 <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
                                             </button>
                                         </div>
+                                        <div id="mapaRescate" style="height: 250px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
+                                        <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta del rescate</small>
+                                        <input type="hidden" id="latitud_rescate" name="latitud_rescate">
+                                        <input type="hidden" id="longitud_rescate" name="longitud_rescate">
                                     </div>
                                 </div>
                             </div>
@@ -411,6 +410,23 @@
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Observaciones -->
+                        <div class="col-12">
+                            <div class="card card-light card-outline">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-clipboard-list mr-2"></i>Observaciones Adicionales
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="observaciones">Notas sobre el animal (Opcional)</label>
+                                        <textarea class="form-control" id="observaciones" name="observaciones" rows="4" placeholder="Describe el estado del animal, comportamiento, necesidades especiales, etc."></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -429,66 +445,114 @@
 <!-- Modal Detalles del Animal -->
 <div class="modal fade" id="animalDetailsModal" tabindex="-1" role="dialog" aria-labelledby="animalDetailsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-scrollable" role="document">
-        <div class="modal-content" style="border-radius: 1.5rem; background-color: #f8f9fa;">
-            <div class="modal-header bg-white border-0 px-4 pt-4 pb-3">
-                <div class="d-flex align-items-center">
-                    <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
-                    <div>
-                        <h4 class="modal-title" id="modalAnimalNombre"><b>...</b></h4>
-                        <div class="mt-1 d-flex align-items-center gap-2">
-                            <span class="badge" id="modalAnimalTipoBadge">...</span>
-                            <span class="text-muted">•</span>
-                            <span class="text-muted" id="modalAnimalEspecieText">...</span>
-                            <span class="text-muted">•</span>
-                            <span class="badge" id="modalAnimalEstadoBadge">...</span>
-                        </div>
-                    </div>
-                </div>
-                <button type="button" class="btn btn-success" id="changeStatusBtn" data-bs-toggle="modal" data-bs-target="#changeStatusModal">
-                    <i class="fas fa-check-circle me-1"></i> Cambiar Estado de Salud
+        <div class="modal-content">
+            <div class="modal-header bg-primary">
+                <h4 class="modal-title text-white" id="modalAnimalNombre">
+                    <i class="fas fa-paw mr-2"></i>Detalles del Animal
+                </h4>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body p-4">
-                <div class="card-header bg-white p-0 pt-1 mb-4 rounded-top">
-                    <ul class="nav nav-tabs" id="animal-details-tabs" role="tablist">
-                        <li class="nav-item"><a class="nav-link active" id="info-tab" data-toggle="tab" href="#info-content" role="tab">Información General</a></li>
-                        <li class="nav-item"><a class="nav-link" id="location-tab" data-toggle="tab" href="#location-content" role="tab">Ubicación</a></li>
-                        <li class="nav-item"><a class="nav-link" id="actions-tab" data-toggle="tab" href="#actions-content" role="tab">Acciones</a></li>
-                    </ul>
-                </div>
-                <div class="tab-content" id="animal-tabs-content">
-                    <div class="tab-pane fade show active" id="info-content" role="tabpanel">
-                        <div class="row g-4">
-                            <div class="col-lg-6"><div class="card h-100 card-custom card-info-bg"><div class="card-body">
-                                <h5 class="card-title mb-3"><i class="fas fa-info-circle text-primary me-2"></i>Información Básica</h5>
-                                <dl class="row"><dt class="col-sm-5 text-muted">Especie:</dt><dd class="col-sm-7 fw-bold" id="modalAnimalEspecie">...</dd><dt class="col-sm-5 text-muted">Raza:</dt><dd class="col-sm-7 fw-bold" id="modalAnimalRaza">...</dd><dt class="col-sm-5 text-muted">Sexo:</dt><dd class="col-sm-7 fw-bold" id="modalAnimalSexo">...</dd><dt class="col-sm-5 text-muted">Estado de Salud:</dt><dd class="col-sm-7 fw-bold" id="modalAnimalEstado">...</dd><dt class="col-sm-5 text-muted">Fecha de Ingreso:</dt><dd class="col-sm-7 fw-bold" id="modalAnimalIngreso">...</dd></dl>
-                            </div></div></div>
-                            <div class="col-lg-6"><div class="card h-100 card-custom card-image-bg"><div class="card-body p-2"><img src="" class="img-fluid rounded-3 w-100 h-100" style="object-fit: cover;" alt="Foto del Animal" id="modalAnimalImagen"></div></div></div>
-                            <div class="col-lg-6"><div class="card h-100 card-custom card-feeding-bg"><div class="card-body">
-                                <h5 class="card-title mb-3"><i class="fas fa-drumstick-bite text-warning me-2"></i>Alimentación</h5>
-                                <dl class="row"><dt class="col-sm-5 text-muted">Tipo:</dt><dd class="col-sm-7 fw-bold" id="modalAlimentacionTipo">...</dd><dt class="col-sm-5 text-muted">Cantidad:</dt><dd class="col-sm-7 fw-bold" id="modalAlimentacionCantidad">...</dd></dl>
-                            </div></div></div>
-                            <div class="col-lg-6"><div class="card h-100 card-custom card-feeding-bg"><div class="card-body">
-                                <h5 class="card-title mb-3"><i class="fas fa-heartbeat text-warning me-2"></i>Estado Actual</h5>
-                                <dl class="row"><dt class="col-sm-5 text-muted">Tipo:</dt><dd class="col-sm-7 fw-bold" id="modalEstadoTipo">...</dd><dt class="col-sm-5 text-muted">Estado:</dt><dd class="col-sm-7 fw-bold" id="modalEstadoActual">...</dd></dl>
-                            </div></div></div>
+                <div class="row">
+                    <div class="col-md-5">
+                        <div class="text-center mb-3">
+                            <img src="{{ asset('Fotos/OIP.jpg') }}" class="img-fluid rounded shadow" style="max-height: 350px; width: 100%; object-fit: cover;" alt="Foto del animal">
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="location-content" role="tabpanel"><div class="p-4 rounded-3" style="background-color: #f0f9f4;">
-                        <h4 class="mb-4"><i class="fas fa-map-marker-alt me-2"></i>Ubicación de Rescate</h4>
-                        <div class="row g-4"><div class="col-md-5"><div class="card h-100"><div class="card-body">
-                            <h6 class="card-title fw-bold mb-3">Dirección de Rescate</h6>
-                            <ul class="list-unstyled" id="modalAnimalDireccion"></ul><hr><p class="text-muted mt-2 small"><b>Rescatado por:</b> <span id="modalAnimalRescatista">...</span></p>
-                        </div></div></div><div class="col-md-7"><img src="{{ asset('Fotos/Patota.png') }}" alt="Mapa" class="img-fluid rounded border h-100" style="object-fit: cover;"></div></div>
-                    </div></div>
-                    <div class="tab-pane fade" id="actions-content" role="tabpanel"><div class="row g-3">
-                        <div class="col-lg-4 col-md-6"><a href="#" class="action-box bg-success"><i class="fas fa-file-medical"></i><div><span>Evaluaciones Médicas</span><small>Ver historial médico</small></div></a></div>
-                        <div class="col-lg-4 col-md-6"><a href="#" class="action-box bg-success"><i class="fas fa-plus"></i><div><span>Ubicación</span><small>Gestionar ubicaciones</small></div></a></div>
-                        <div class="col-lg-4 col-md-6"><a href="#" class="action-box bg-purple"><i class="fas fa-truck-moving"></i><div><span>Traslados</span><small>Historial de movimientos</small></div></a></div>
-                        <div class="col-lg-4 col-md-6"><a href="#" class="action-box bg-orange"><i class="fas fa-heart"></i><div><span>Tratamiento</span><small>Nuevo tratamiento</small></div></a></div>
-                        <div class="col-lg-4 col-md-6"><a href="#" class="action-box bg-blue"><i class="fas fa-user"></i><div><span>Rescatista</span><small>Ver información</small></div></a></div>
-                    </div></div>
+                    <div class="col-md-7">
+                        <h4 class="text-primary mb-3">Sada</h4>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <p><strong>Especie:</strong> Canino</p>
+                                <p><strong>Raza:</strong> Labrador</p>
+                                <p><strong>Sexo:</strong> Macho</p>
+                            </div>
+                            <div class="col-sm-6">
+                                <p><strong>Estado de Salud:</strong> <span class="badge badge-warning">Malo</span></p>
+                                <p><strong>Fecha de Ingreso:</strong> 01/09/2025</p>
+                                <p><strong>Tipo:</strong> <span class="badge badge-success">Doméstico</span></p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary">Información de Rescate</h5>
+                        <p><strong>Rescatista:</strong> Rescatista Temporal</p>
+                        <p><strong>Ubicación:</strong> Calle Paitití, Centro, Santa Cruz De La Sierra</p>
+                        <p><strong>Fecha de Rescate:</strong> 01/09/2025</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-primary">Alimentación</h5>
+                        <p><strong>Tipo:</strong> Carnívoro</p>
+                        <p><strong>Cantidad:</strong> Diaria</p>
+                        <p><strong>Estado Nutricional:</strong> <span class="badge badge-info">Regular</span></p>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <h5 class="text-primary">Ubicación de Rescate</h5>
+                        <div class="card">
+                            <div class="card-body">
+                                <p><strong>Dirección:</strong> Calle Paitití, Centro, Santa Cruz De La Sierra, Provincia Andrés Ibáñez, Santa Cruz, Bolivia</p>
+                                <p><strong>Coordenadas:</strong> -17.7833, -63.1833</p>
+                                <p><strong>Zona:</strong> Centro Urbano</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h5 class="text-primary">Acciones Disponibles</h5>
+                        <div class="row">
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-success btn-sm btn-block">
+                                    <i class="fas fa-file-medical"></i> Evaluación Médica
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-info btn-sm btn-block">
+                                    <i class="fas fa-map-marker-alt"></i> Ver Ubicación
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-warning btn-sm btn-block">
+                                    <i class="fas fa-edit"></i> Editar Datos
+                                </button>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <button class="btn btn-primary btn-sm btn-block">
+                                    <i class="fas fa-heart"></i> Tratamiento
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <div class="row">
+                    <div class="col-12">
+                        <h5 class="text-primary">Observaciones</h5>
+                        <div class="alert alert-info">
+                            <p class="mb-0">Animal rescatado en mal estado de salud. Requiere atención veterinaria inmediata. Se encuentra en observación para determinar el tratamiento adecuado.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Cerrar
+                </button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changeStatusModal">
+                    <i class="fas fa-edit mr-1"></i>Cambiar Estado
+                </button>
             </div>
         </div>
     </div>
@@ -659,31 +723,94 @@
 
 @section('js')
 <script>
+// Función global para seleccionar rescatista
+function seleccionarRescatista(nombreRescatista) {
+    console.log('Rescatista seleccionado:', nombreRescatista);
+    $('#rescuerNameBadge').text('Rescatista: ' + nombreRescatista);
+}
+
+// Variables globales para el mapa
+var mapaRescate = null;
+var marcadorRescate = null;
+
+// Función para obtener ubicación actual
+function obtenerUbicacion() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var lat = position.coords.latitude;
+            var lng = position.coords.longitude;
+            
+            // Centrar el mapa en la ubicación actual
+            mapaRescate.setView([lat, lng], 15);
+            
+            // Agregar marcador
+            if (marcadorRescate) {
+                mapaRescate.removeLayer(marcadorRescate);
+            }
+            marcadorRescate = L.marker([lat, lng]).addTo(mapaRescate);
+            
+            // Actualizar campos ocultos
+            document.getElementById('latitud_rescate').value = lat;
+            document.getElementById('longitud_rescate').value = lng;
+            
+            console.log('Ubicación obtenida:', lat, lng);
+        }, function(error) {
+            console.error('Error al obtener ubicación:', error);
+            alert('No se pudo obtener tu ubicación. Puedes marcar la ubicación manualmente en el mapa.');
+        });
+    } else {
+        alert('La geolocalización no está disponible en este navegador.');
+    }
+}
+
 $(document).ready(function() {
+    console.log('JavaScript de animales cargado correctamente');
+    
+    // Inicializar Select2 para los filtros
+    $('.select2').select2({
+        theme: 'default',
+        width: '100%'
+    });
+    
     // Variables para los modales
     let nombreRescatistaSeleccionado = null;
 
-    // Manejo del flujo de agregar animal
-    $('.btn-seleccionar-rescatista').on('click', function(e) {
-        e.preventDefault();
-        nombreRescatistaSeleccionado = $(this).data('rescatista-nombre');
-        var modal = bootstrap.Modal.getInstance(document.getElementById('seleccionarRescatistaModal'));
-        modal.hide();
-    });
-    
-    $('#seleccionarRescatistaModal').on('hidden.bs.modal', function() {
-        if (nombreRescatistaSeleccionado) {
-            $('#rescuerNameBadge').text('Rescatista: ' + nombreRescatistaSeleccionado);
-            setTimeout(() => {
-                var agregarModal = new bootstrap.Modal(document.getElementById('agregarAnimalModal'));
-                agregarModal.show();
-            }, 100);
-            nombreRescatistaSeleccionado = null;
+    // Verificar que los elementos existen
+    console.log('Modal de agregar animal existe:', document.getElementById('agregarAnimalModal') ? 'SÍ' : 'NO');
+    console.log('Bootstrap disponible:', typeof bootstrap !== 'undefined' ? 'SÍ' : 'NO');
+    console.log('jQuery disponible:', typeof $ !== 'undefined' ? 'SÍ' : 'NO');
+
+    // Inicializar mapa cuando se abra el modal de agregar animal
+    $('#agregarAnimalModal').on('shown.bs.modal', function() {
+        console.log('Modal de agregar animal abierto, inicializando mapa...');
+        
+        // Inicializar mapa si no existe
+        if (!mapaRescate) {
+            mapaRescate = L.map('mapaRescate').setView([-17.7833, -63.1833], 13);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(mapaRescate);
+            
+            // Agregar marcador al hacer clic en el mapa
+            mapaRescate.on('click', function(e) {
+                if (marcadorRescate) {
+                    mapaRescate.removeLayer(marcadorRescate);
+                }
+                
+                marcadorRescate = L.marker(e.latlng).addTo(mapaRescate);
+                
+                // Guardar coordenadas en los campos ocultos
+                document.getElementById('latitud_rescate').value = e.latlng.lat;
+                document.getElementById('longitud_rescate').value = e.latlng.lng;
+                
+                console.log('Ubicación marcada:', e.latlng.lat, e.latlng.lng);
+            });
         }
     });
 
     // Manejo de la imagen de upload
-    $('.image-upload-box').on('click', function() {
+    $(document).on('click', '.image-upload-box', function() {
         $('#imagen_animal').click();
     });
     
@@ -698,6 +825,46 @@ $(document).ready(function() {
                 `);
             };
             reader.readAsDataURL(file);
+        }
+    });
+
+    // Manejo del botón guardar animal
+    $('#guardarAnimal').on('click', function() {
+        console.log('Botón guardar animal clickeado');
+        
+        // Validar formulario
+        const form = document.getElementById('animalForm');
+        if (form.checkValidity()) {
+            // Recopilar datos del formulario
+            const formData = new FormData(form);
+            const animalData = {};
+            
+            for (let [key, value] of formData.entries()) {
+                animalData[key] = value;
+            }
+            
+            console.log('Datos del animal:', animalData);
+            
+            // Simular guardado
+            alert('Animal guardado exitosamente: ' + animalData.nombre);
+            
+            // Cerrar modal
+            var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
+            if (modal) {
+                modal.hide();
+            }
+            
+            // Limpiar formulario
+            form.reset();
+            $('.image-upload-box').html(`
+                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                <p class="text-muted mb-2">Click para subir o arrastra una imagen</p>
+                <small class="text-muted">PNG, JPG, JPEG (Máx. 5MB)</small>
+            `);
+            
+        } else {
+            alert('Por favor completa todos los campos obligatorios');
+            form.reportValidity();
         }
     });
     
@@ -732,14 +899,7 @@ $(document).ready(function() {
     
     // Función para obtener la clase del estado
     function getEstadoClass(estado) {
-        switch(estado) {
-            case 'Muy Bueno': return 'success';
-            case 'Bueno': return 'info';
-            case 'Estable': return 'warning';
-            case 'Malo': return 'danger';
-            case 'Muy Malo': return 'danger';
-            default: return 'secondary';
-        }
+        return 'secondary';
     }
     
     // Función para obtener la clase del tipo

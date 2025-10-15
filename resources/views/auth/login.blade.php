@@ -56,6 +56,14 @@
                 </div>
             </form>
 
+            <div class="row mt-3">
+                <div class="col-12">
+                    <a href="{{ route('reporte-rapido') }}" class="btn btn-warning btn-block">
+                        <i class="fas fa-exclamation-triangle"></i> Reporte Rápido
+                    </a>
+                </div>
+            </div>
+            
             <p class="mb-0 mt-3">
                 <a href="{{ route('register') }}" class="text-center">Registrar una nueva cuenta</a>
             </p>

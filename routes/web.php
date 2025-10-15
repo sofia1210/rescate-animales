@@ -131,3 +131,43 @@ Route::get('/adopciones', function () {
 Route::get('/reportes', function () {
     return view('Reportes.Reportes');
 })->name('reportes.index');
+
+// --- Rutas de Reporte Rápido ---
+
+// Mostrar formulario de reporte rápido
+Route::get('/reporte-rapido', function () {
+    return view('ReporteRapido.index');
+})->name('reporte-rapido');
+
+// Procesar reporte rápido
+Route::post('/reporte-rapido', function (Request $request) {
+    // Validar datos del formulario
+    $request->validate([
+        'tipo_emergencia' => 'required|in:incendio,otro',
+        'tipo_usuario' => 'required|in:reportante,rescatista',
+        'cantidad_animales' => 'required|integer|min:1',
+        'tipo_animal' => 'nullable|in:domesticos,silvestres,mixtos',
+        'observaciones' => 'nullable|string|max:1000',
+        'latitud' => 'required|numeric',
+        'longitud' => 'required|numeric',
+        'ci' => 'required_if:tipo_usuario,rescatista|nullable|string|max:20'
+    ]);
+
+    // Simular guardado del reporte (en un proyecto real, aquí guardarías en la base de datos)
+    $reporte = [
+        'tipo_emergencia' => $request->tipo_emergencia,
+        'tipo_usuario' => $request->tipo_usuario,
+        'cantidad_animales' => $request->cantidad_animales,
+        'tipo_animal' => $request->tipo_animal,
+        'observaciones' => $request->observaciones,
+        'latitud' => $request->latitud,
+        'longitud' => $request->longitud,
+        'ci' => $request->ci,
+        'fecha_reporte' => now()
+    ];
+
+    // Aquí podrías guardar en la base de datos, enviar notificaciones, etc.
+    // Por ahora solo mostramos la confirmación
+    
+    return view('ReporteRapido.confirmacion', compact('reporte'));
+})->name('reporte-rapido.store');
