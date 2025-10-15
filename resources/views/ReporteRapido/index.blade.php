@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reporte Rápido - Rescate Animales</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('Fotos/Patota.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('Fotos/Patota.png') }}">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -142,7 +146,7 @@
                                             <!-- Cantidad de animales -->
                                             <div class="form-group">
                                                 <label for="cantidad_animales">Cantidad de animales</label>
-                                                <input type="number" class="form-control" id="cantidad_animales" name="cantidad_animales" min="1" required>
+                                                <input type="number" class="form-control" id="cantidad_animales" name="cantidad_animales" placeholder="Ingrese un número" min="1" required>
                                             </div>
 
                                             <!-- Tipo de animales -->
@@ -202,6 +206,37 @@
         </div>
         <strong>Copyright &copy; 2024 <a href="#">Rescate Animales</a>.</strong> Todos los derechos reservados.
     </footer>
+</div>
+
+<!-- Modal de Confirmación -->
+<div class="modal fade" id="modal-default" style="display: none;" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirmar Envío de Reporte</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="text-center">
+                    <i class="fas fa-exclamation-triangle fa-3x text-warning mb-3"></i>
+                    <p class="mb-3">¿Está seguro de que desea enviar este reporte de emergencia?</p>
+                    <div class="alert alert-warning">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        <strong>Importante:</strong> Una vez enviado, el reporte será procesado por nuestro equipo de rescate.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-danger" id="confirmarEnvio">
+                    <i class="fas fa-paper-plane mr-2"></i>Enviar Reporte
+                </button>
+            </div>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
 </div>
 
 <!-- jQuery -->
@@ -264,12 +299,17 @@
             return false;
         }
         
-        // Mostrar mensaje de confirmación
-        if (confirm('¿Está seguro de que desea enviar este reporte de emergencia?')) {
-            // El formulario se enviará normalmente
-        } else {
-            e.preventDefault();
-        }
+        // Mostrar modal de confirmación
+        e.preventDefault();
+        $('#modal-default').modal('show');
+    });
+
+    // Manejar confirmación del modal
+    document.getElementById('confirmarEnvio').addEventListener('click', function() {
+        $('#modal-default').modal('hide');
+        
+        // Enviar el formulario normalmente - el servidor se encargará de redirigir
+        document.getElementById('reporteForm').submit();
     });
 </script>
 </body>

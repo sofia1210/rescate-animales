@@ -7,20 +7,20 @@
     $animales = collect([
         (object)[
             'id' => 1,
-            'nombre' => 'Jaguar',
-            'especie' => 'Felino',
-            'raza' => 'Jaguar',
+            'nombre' => 'Lorito',
+            'especie' => 'Ave',
+            'raza' => 'Loro',
             'estado_salud' => 'Muy Bueno',
             'tipo' => 'Silvestre',
             'imagen' => asset('Fotos/R.jpg'), // Asegúrate que la ruta sea correcta
         ],
         (object)[
             'id' => 2,
-            'nombre' => 'Sada',
-            'especie' => 'Asdas',
-            'raza' => 'Sadda',
+            'nombre' => 'Jaguarcito',
+            'especie' => 'Felino',
+            'raza' => 'Jaguar',
             'estado_salud' => 'Bueno',
-            'tipo' => 'Doméstico',
+            'tipo' => 'Silvestre',
             'imagen' => asset('Fotos/OIP.jpg'), // Asegúrate que la ruta sea correcta
         ],
     ]);
@@ -56,7 +56,7 @@
         <div class="card-header">
             <h3 class="card-title">
                 <i class="fas fa-search mr-2"></i>
-                Búsqueda y Filtros
+                Búsqueda
             </h3>
             <div class="card-tools">
                 <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -174,55 +174,86 @@
     </section>
 
 {{-- ================================================================= --}}
-{{--                       MODAL INTEGRADO                             --}}
+{{--                       MODAL LIBERAR ANIMAL                        --}}
 {{-- ================================================================= --}}
 <div class="modal fade" id="liberarAnimalModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content" style="border-radius: 1.5rem;">
-            <div class="modal-header border-0">
-                <div>
-                    <h5 class="modal-title fw-bold">Liberar Animal</h5>
-                    
-                </div>
-                <button type="button" class="close text-black" data-bs-dismiss="modal" aria-label="Close">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h4 class="modal-title text-white">
+                    <i class="fas fa-dove mr-2"></i>Liberar Animal
+                </h4>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-    <div class="card card-custom card-info-bg">
-        <div class="card-body">
-            <h6 class="card-title fw-bold mb-3">
-                <i class="fas fa-map-marker-alt me-2 text-primary"></i>Ubicación de Liberación
-            </h6>
+                <!-- Información del Animal -->
+                <div class="card card-info card-outline mb-3">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-paw mr-2"></i>Animal a Liberar
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <dl class="row">
+                                    <dt class="col-sm-4">Nombre:</dt>
+                                    <dd class="col-sm-8"><span id="modalAnimalNameBadge" class="badge bg-primary">...</span></dd>
+                                    <dt class="col-sm-4">Estado:</dt>
+                                    <dd class="col-sm-8"><span class="badge bg-success">Listo para liberación</span></dd>
+                                </dl>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-dove fa-3x text-success"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <button class="btn btn-primary mb-3 w-100" onclick="obtenerUbicacionAdopcion()">
-                <i class="fas fa-location-arrow me-2"></i>Usar mi ubicación actual
-            </button>
+                <!-- Ubicación de Liberación -->
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-map-marker-alt mr-2"></i>Ubicación de Liberación
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            <strong>Importante:</strong> Seleccione la ubicación exacta donde será liberado el animal.
+                        </div>
 
-            <p class="text-center text-muted small mb-3">o haz clic en el mapa</p>
+                        <button class="btn btn-primary mb-3 w-100" onclick="obtenerUbicacionAdopcion()">
+                            <i class="fas fa-location-arrow mr-2"></i>Usar mi ubicación actual
+                        </button>
 
-            <!-- Mapa estático -->
-            <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
-                <iframe
-                    width="100%"
-                    height="100%"
-                    frameborder="0"
-                    style="border:0;"
-                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15839.459814786098!2d-63.1821!3d-17.7833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sbo!4v1684261534658!5m2!1ses!2sbo"
-                    allowfullscreen
-                    loading="lazy">
-                </iframe>
+                        <p class="text-center text-muted small mb-3">o haz clic en el mapa para seleccionar la ubicación</p>
+
+                        <!-- Mapa -->
+                        <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                frameborder="0"
+                                style="border:0;"
+                                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15839.459814786098!2d-63.1821!3d-17.7833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sbo!4v1684261534658!5m2!1ses!2sbo"
+                                allowfullscreen
+                                loading="lazy">
+                            </iframe>
+                        </div>
+
+                        <input type="hidden" id="latitud_adopcion" name="latitud_adopcion">
+                        <input type="hidden" id="longitud_adopcion" name="longitud_adopcion">
+                    </div>
+                </div>
             </div>
 
-            <input type="hidden" id="latitud_adopcion" name="latitud_adopcion">
-            <input type="hidden" id="longitud_adopcion" name="longitud_adopcion">
-        </div>
-    </div>
-</div>
-
-            <div class="modal-footer border-0">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar Liberación</button>
+            <div class="modal-footer justify-content-end">
+                <button type="button" class="btn btn-success">
+                    <i class="fas fa-dove mr-2"></i>Confirmar Liberación
+                </button>
             </div>
         </div>
     </div>
@@ -231,9 +262,7 @@
 
 @section('css')
 <style>
-    /* Estilos para el nuevo diseño del modal de ubicación */
-    .card-custom { border: 1px solid rgba(0,0,0,.08); box-shadow: 0 0.125rem 0.25rem rgba(0,0,0,.075); }
-    .card-info-bg { background: linear-gradient(135deg, #eef5ff 0%, #f8f9ff 100%); }
+    /* Estilos adicionales si son necesarios */
 </style>
 @endsection
 
@@ -282,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function () {
     
     const liberarAnimalModal = document.getElementById('liberarAnimalModal');
     
-    liberarAnimalModal.addEventListener('show.bs.modal', function (event) {
+    $('#liberarAnimalModal').on('show.bs.modal', function (event) {
         // El botón que fue presionado
         const button = event.relatedTarget;
         

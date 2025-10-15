@@ -70,7 +70,7 @@
                     <div class="card-header"><h3 class="card-title"><i class="fas fa-tag"></i> Especies más registradas</h3></div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <div class="d-flex justify-content-between"><span>Asdas</span><span>1</span></div>
+                            <div class="d-flex justify-content-between"><span>Jaguarcito</span><span>1</span></div>
                             <div class="progress" style="height: 20px;"><div class="progress-bar bg-info" role="progressbar" style="width: 100%;"></div></div>
                         </div>
                         <div class="mb-3">

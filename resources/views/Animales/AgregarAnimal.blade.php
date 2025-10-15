@@ -24,7 +24,7 @@
                 {{-- HEADER DEL MODAL --}}
                 <div class="modal-header">
                     <div class="d-flex align-items-center">
-                        <button type="button" class="btn-close me-3" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="close me-3" data-dismiss="modal" aria-label="Close">&times;</button>
                         <div>
                             <h4 class="modal-title" id="animalDetailsModalLabel"><b>Jaguar</b></h4>
                             <div class="mt-1">
@@ -192,7 +192,7 @@
 
                 {{-- FOOTER DEL MODAL --}}
                 <div class="modal-footer justify-content-end">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <!-- No buttons needed - only X button in header -->
                 </div>
             </div>
         </div>

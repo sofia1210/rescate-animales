@@ -7,9 +7,9 @@
     $animales = collect([
         (object)[
             'id' => 1,
-            'nombre' => 'Sada',
-            'especie' => 'Canino',
-            'raza' => 'Labrador',
+            'nombre' => 'Jaguarcito',
+            'especie' => 'Felino',
+            'raza' => 'Jaguar',
             'sexo' => 'Macho',
             'estado_salud' => 'Malo',
             'fecha_ingreso' => now()->parse('2025-09-01'),
@@ -79,7 +79,7 @@
             <div class="card-header">
                 <h3 class="card-title">
                     <i class="fas fa-search mr-2"></i>
-                    Búsqueda y Filtros
+                    Búsqueda
                 </h3>
                 <div class="card-tools">
                     <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal">
@@ -443,9 +443,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times mr-1"></i>Cancelar
-                </button>
+                
                 <button type="button" class="btn btn-success" id="guardarAnimal">
                     <i class="fas fa-save mr-1"></i>Guardar Animal
                 </button>
@@ -558,10 +556,7 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    <i class="fas fa-times mr-1"></i>Cerrar
-                </button>
+            <div class="modal-footer justify-content-end">
                 <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changeStatusModal">
                     <i class="fas fa-edit mr-1"></i>Cambiar Estado
                 </button>
@@ -627,7 +622,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
                     <i class="fas fa-times mr-1"></i>Cancelar
                 </button>
                 <button type="button" class="btn btn-warning" id="confirmarCambioEstado">

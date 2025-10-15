@@ -4,6 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Reporte Enviado - Rescate Animales</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ asset('Fotos/Patota.png') }}">
+    <link rel="shortcut icon" type="image/png" href="{{ asset('Fotos/Patota.png') }}">
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -26,37 +30,13 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             padding: 40px;
             text-align: center;
-            max-width: 500px;
+            max-width: 800px;
             width: 100%;
         }
         .success-icon {
             font-size: 4rem;
             color: #28a745;
             margin-bottom: 20px;
-        }
-        .report-details {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-            text-align: left;
-        }
-        .detail-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 5px 0;
-            border-bottom: 1px solid #e9ecef;
-        }
-        .detail-item:last-child {
-            border-bottom: none;
-        }
-        .detail-label {
-            font-weight: bold;
-            color: #495057;
-        }
-        .detail-value {
-            color: #6c757d;
         }
     </style>
 </head>
@@ -69,95 +49,120 @@
         
         <h2 class="text-success mb-3">¡Reporte Enviado Exitosamente!</h2>
         <p class="text-muted mb-4">Su reporte de emergencia ha sido registrado y será procesado por nuestro equipo de rescate.</p>
-        
-        <div class="report-details">
-            <h5 class="mb-3"><i class="fas fa-info-circle"></i> Detalles del Reporte</h5>
-            
-            <div class="detail-item">
-                <span class="detail-label">Tipo de Emergencia:</span>
-                <span class="detail-value">
-                    @if($reporte['tipo_emergencia'] == 'incendio')
-                        <i class="fas fa-fire text-danger"></i> Incendio
-                    @else
-                        <i class="fas fa-exclamation-circle text-warning"></i> Otra Emergencia
-                    @endif
-                </span>
+        <!-- Card de Detalles del Reporte -->
+        <div class="card card-primary card-outline mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-info-circle mr-2"></i>Detalles del Reporte
+                </h3>
             </div>
-            
-            <div class="detail-item">
-                <span class="detail-label">Tipo de Usuario:</span>
-                <span class="detail-value">
-                    @if($reporte['tipo_usuario'] == 'rescatista')
-                        <i class="fas fa-heart text-danger"></i> Rescatista
-                    @else
-                        <i class="fas fa-user"></i> Reportante
-                    @endif
-                </span>
-            </div>
-            
-            @if($reporte['tipo_usuario'] == 'rescatista' && $reporte['ci'])
-            <div class="detail-item">
-                <span class="detail-label">Cédula de Identidad:</span>
-                <span class="detail-value">{{ $reporte['ci'] }}</span>
-            </div>
-            @endif
-            
-            <div class="detail-item">
-                <span class="detail-label">Cantidad de Animales:</span>
-                <span class="detail-value">{{ $reporte['cantidad_animales'] }}</span>
-            </div>
-            
-            @if($reporte['tipo_animal'])
-            <div class="detail-item">
-                <span class="detail-label">Tipo de Animales:</span>
-                <span class="detail-value">
-                    @if($reporte['tipo_animal'] == 'domesticos')
-                        <i class="fas fa-home"></i> Domésticos
-                    @elseif($reporte['tipo_animal'] == 'silvestres')
-                        <i class="fas fa-tree"></i> Silvestres
-                    @else
-                        <i class="fas fa-paw"></i> Mixtos
-                    @endif
-                </span>
-            </div>
-            @endif
-            
-            @if($reporte['observaciones'])
-            <div class="detail-item">
-                <span class="detail-label">Observaciones:</span>
-                <span class="detail-value">{{ $reporte['observaciones'] }}</span>
-            </div>
-            @endif
-            
-            <div class="detail-item">
-                <span class="detail-label">Ubicación:</span>
-                <span class="detail-value">
-                    <i class="fas fa-map-marker-alt text-danger"></i> 
-                    {{ $reporte['latitud'] }}, {{ $reporte['longitud'] }}
-                </span>
-            </div>
-            
-            <div class="detail-item">
-                <span class="detail-label">Fecha y Hora:</span>
-                <span class="detail-value">{{ now()->format('d/m/Y H:i:s') }}</span>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <dl class="row">
+                            <dt class="col-sm-5">Tipo de Emergencia:</dt>
+                            <dd class="col-sm-7">
+                                @if($reporte['tipo_emergencia'] == 'incendio')
+                                    <i class="fas fa-fire text-danger mr-1"></i> Incendio
+                                @else
+                                    <i class="fas fa-exclamation-circle text-warning mr-1"></i> Otra Emergencia
+                                @endif
+                            </dd>
+                            
+                            <dt class="col-sm-5">Tipo de Usuario:</dt>
+                            <dd class="col-sm-7">
+                                @if($reporte['tipo_usuario'] == 'rescatista')
+                                    <i class="fas fa-heart text-danger mr-1"></i> Rescatista
+                                @else
+                                    <i class="fas fa-user mr-1"></i> Reportante
+                                @endif
+                            </dd>
+                            
+                            @if($reporte['tipo_usuario'] == 'rescatista' && $reporte['ci'])
+                            <dt class="col-sm-5">Cédula de Identidad:</dt>
+                            <dd class="col-sm-7">{{ $reporte['ci'] }}</dd>
+                            @endif
+                            
+                            <dt class="col-sm-5">Cantidad de Animales:</dt>
+                            <dd class="col-sm-7">{{ $reporte['cantidad_animales'] }}</dd>
+                        </dl>
+                    </div>
+                    <div class="col-md-6">
+                        <dl class="row">
+                            @if($reporte['tipo_animal'])
+                            <dt class="col-sm-5">Tipo de Animales:</dt>
+                            <dd class="col-sm-7">
+                                @if($reporte['tipo_animal'] == 'domesticos')
+                                    <i class="fas fa-home mr-1"></i> Domésticos
+                                @elseif($reporte['tipo_animal'] == 'silvestres')
+                                    <i class="fas fa-tree mr-1"></i> Silvestres
+                                @else
+                                    <i class="fas fa-paw mr-1"></i> Mixtos
+                                @endif
+                            </dd>
+                            @endif
+                            
+                            <dt class="col-sm-5">Ubicación:</dt>
+                            <dd class="col-sm-7">
+                                <i class="fas fa-map-marker-alt text-danger mr-1"></i> 
+                                {{ $reporte['latitud'] }}, {{ $reporte['longitud'] }}
+                            </dd>
+                            
+                            <dt class="col-sm-5">Fecha y Hora:</dt>
+                            <dd class="col-sm-7">{{ now()->format('d/m/Y H:i:s') }}</dd>
+                        </dl>
+                    </div>
+                </div>
+                
+                @if($reporte['observaciones'])
+                <div class="row mt-3">
+                    <div class="col-12">
+                        <h5><i class="fas fa-comment mr-2"></i>Observaciones:</h5>
+                        <div class="alert alert-info">
+                            {{ $reporte['observaciones'] }}
+                        </div>
+                    </div>
+                </div>
+                @endif
             </div>
         </div>
         
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i>
-            <strong>Importante:</strong> Nuestro equipo de rescate revisará su reporte y se pondrá en contacto si es necesario. 
-            En caso de emergencia extrema, llame inmediatamente a los servicios de emergencia locales.
+        <!-- Card de Información Importante -->
+        <div class="card card-warning card-outline mb-4">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-user-plus mr-2"></i>¿Desea hacer seguimiento de su reporte?
+                </h3>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <strong>Beneficios de registrarse:</strong>
+                </div>
+                <ul class="list-unstyled">
+                    <li><i class="fas fa-check text-success mr-2"></i>Recibir actualizaciones sobre el estado de su reporte</li>
+                    <li><i class="fas fa-check text-success mr-2"></i>Acceso al historial de sus reportes</li>
+                    <li><i class="fas fa-check text-success mr-2"></i>Notificaciones sobre el progreso del rescate</li>
+                    <li><i class="fas fa-check text-success mr-2"></i>Participar en futuras actividades de rescate</li>
+                </ul>
+            </div>
         </div>
         
+        <!-- Botones de Acción -->
         <div class="row mt-4">
-            <div class="col-6">
-                <a href="{{ route('reporte-rapido') }}" class="btn btn-outline-primary btn-block">
-                    <i class="fas fa-plus"></i> Nuevo Reporte
+            <div class="col-md-4 mb-2">
+                <a href="{{ route('reporte-rapido') }}" class="btn btn-outline-primary btn-block btn-lg">
+                    <i class="fas fa-plus mr-2"></i> Nuevo Reporte
                 </a>
             </div>
-            <div class="col-6">
-                <a href="{{ route('login') }}" class="btn btn-primary btn-block">
-                    <i class="fas fa-home"></i> Volver al Login
+            <div class="col-md-4 mb-2">
+                <a href="{{ route('register') }}" class="btn btn-primary btn-block btn-lg">
+                    <i class="fas fa-user-plus mr-2"></i> Registrarse
+                </a>
+            </div>
+            <div class="col-md-4 mb-2">
+                <a href="{{ route('login') }}" class="btn btn-success btn-block btn-lg">
+                    <i class="fas fa-sign-in-alt mr-2"></i> Iniciar Sesión
                 </a>
             </div>
         </div>

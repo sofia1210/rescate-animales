@@ -19,7 +19,7 @@
                         <span class="badge bg-success">Jaguar</span>
                     </div>
                 </div>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">&times;</button>
             </div>
 
             {{-- BODY --}}
@@ -88,7 +88,7 @@
 
             {{-- FOOTER --}}
             <div class="modal-footer border-0 p-4">
-                <button type="button" class="btn btn-outline-secondary w-100" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-outline-secondary w-100" data-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-secondary w-100 disabled">Cambiar Estado</button>
             </div>
         </div>

@@ -213,9 +213,7 @@
         <h5 class="modal-title" id="agregarTratamientoModalLabel">
           <i class="fas fa-notes-medical me-2"></i> Nuevo Tratamiento Médico
         </h5>
-        <button type="button" class="close-x" data-bs-dismiss="modal" aria-label="Close">
-    ×
-</button>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">&times;</button>
       </div>
 
       <div class="modal-body bg-light">

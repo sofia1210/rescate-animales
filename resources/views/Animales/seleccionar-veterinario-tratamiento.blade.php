@@ -178,8 +178,7 @@
                 <h5 class="modal-title text-white" id="agregarVeterinarioModalLabel">
                     <i class="fas fa-user-plus mr-2"></i>Agregar Nuevo Veterinario
                 </h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close">
-
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -240,9 +239,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fas fa-times mr-1"></i> Cancelar
-                </button>
+                
                 <button type="button" class="btn btn-success" onclick="guardarVeterinario()">
                     <i class="fas fa-save mr-1"></i> Guardar Veterinario
                 </button>

@@ -43,11 +43,11 @@
                         </div>
                     </div>
                     <div class="col-md-9">
-                        <h4 class="text-primary mb-3">Sada</h4>
+                        <h4 class="text-primary mb-3">Jaguarcito</h4>
                         <div class="row">
                             <div class="col-sm-6">
-                                <p><strong>Especie:</strong> Canino</p>
-                                <p><strong>Raza:</strong> Labrador</p>
+                                <p><strong>Especie:</strong> Felino</p>
+                                <p><strong>Raza:</strong> Jaguar</p>
                                 <p><strong>Sexo:</strong> Macho</p>
                             </div>
                             <div class="col-sm-6">
