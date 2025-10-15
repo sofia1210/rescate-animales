@@ -336,22 +336,36 @@
                                         <textarea class="form-control" id="ubicacion_rescate" name="ubicacion_rescate" rows="3" placeholder="Dirección completa del rescate" required></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Ubicación en el mapa</label>
-                                        <div class="input-group mb-2">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-map"></i>
-                                                </span>
-                                            </div>
-                                            <button type="button" class="btn btn-success" onclick="obtenerUbicacion()">
-                                                <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
-                                            </button>
-                                        </div>
-                                        <div id="mapaRescate" style="height: 250px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
-                                        <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta del rescate</small>
-                                        <input type="hidden" id="latitud_rescate" name="latitud_rescate">
-                                        <input type="hidden" id="longitud_rescate" name="longitud_rescate">
-                                    </div>
+    <label>Ubicación en el mapa</label>
+    <div class="input-group mb-2">
+        <div class="input-group-prepend">
+            <span class="input-group-text">
+                <i class="fas fa-map"></i>
+            </span>
+        </div>
+        <button type="button" class="btn btn-success" onclick="obtenerUbicacion()">
+            <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
+        </button>
+    </div>
+
+    <!-- Mapa estático -->
+    <div id="mapaRescate" style="height: 250px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
+        <iframe
+            width="100%"
+            height="100%"
+            frameborder="0"
+            style="border:0;"
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d24184.116851415733!2d-58.3816!3d-34.6037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2s!4v1684261534658!5m2!1ses!2s"
+            allowfullscreen
+            loading="lazy">
+        </iframe>
+    </div>
+
+    <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta del rescate</small>
+    <input type="hidden" id="latitud_rescate" name="latitud_rescate">
+    <input type="hidden" id="longitud_rescate" name="longitud_rescate">
+</div>
+
                                 </div>
                             </div>
                         </div>

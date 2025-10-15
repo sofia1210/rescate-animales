@@ -131,10 +131,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-7">
-                                            {{-- Placeholder para el mapa --}}
-                                            <img src="/imagenes/mapa-placeholder.png" alt="Mapa de ubicación" class="img-fluid rounded border">
-                                        </div>
+                                        <div class="col-md-6">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Ubicación del Reporte</h3>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="map" class="map-container"></div>
+                                        <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta</small>
+                                    </div>
+                                </div>
+                            </div>
                                     </div>
                                 </div>
                                 

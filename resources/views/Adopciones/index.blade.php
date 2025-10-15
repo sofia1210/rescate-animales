@@ -192,17 +192,37 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="card card-custom card-info-bg">
-                    <div class="card-body">
-                        <h6 class="card-title fw-bold mb-3"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Ubicación de Liberación</h6>
-                        <button class="btn btn-primary mb-3 w-100" onclick="obtenerUbicacionAdopcion()"><i class="fas fa-location-arrow me-2"></i>Usar mi ubicación actual</button>
-                        <p class="text-center text-muted small mb-3">o haz clic en el mapa</p>
-                        <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
-                        <input type="hidden" id="latitud_adopcion" name="latitud_adopcion">
-                        <input type="hidden" id="longitud_adopcion" name="longitud_adopcion">
-                    </div>
-                </div>
+    <div class="card card-custom card-info-bg">
+        <div class="card-body">
+            <h6 class="card-title fw-bold mb-3">
+                <i class="fas fa-map-marker-alt me-2 text-primary"></i>Ubicación de Liberación
+            </h6>
+
+            <button class="btn btn-primary mb-3 w-100" onclick="obtenerUbicacionAdopcion()">
+                <i class="fas fa-location-arrow me-2"></i>Usar mi ubicación actual
+            </button>
+
+            <p class="text-center text-muted small mb-3">o haz clic en el mapa</p>
+
+            <!-- Mapa estático -->
+            <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
+                <iframe
+                    width="100%"
+                    height="100%"
+                    frameborder="0"
+                    style="border:0;"
+                    src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15839.459814786098!2d-63.1821!3d-17.7833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sbo!4v1684261534658!5m2!1ses!2sbo"
+                    allowfullscreen
+                    loading="lazy">
+                </iframe>
             </div>
+
+            <input type="hidden" id="latitud_adopcion" name="latitud_adopcion">
+            <input type="hidden" id="longitud_adopcion" name="longitud_adopcion">
+        </div>
+    </div>
+</div>
+
             <div class="modal-footer border-0">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 <button type="button" class="btn btn-primary">Guardar Liberación</button>
