@@ -4,6 +4,7 @@
 
 @section('css')
 <style>
+    /* Estilos de la línea de tiempo, se mantienen */
     .timeline {
         position: relative;
         padding: 0;
@@ -110,7 +111,6 @@
 @endsection
 
 @section('content')
-<!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -131,10 +131,8 @@
     </div>
 </div>
 
-<!-- Main content -->
 <section class="content">
     <div class="container-fluid">
-        <!-- Animal Info Card -->
         <div class="card card-primary card-outline">
             <div class="card-header">
                 <h3 class="card-title">
@@ -168,254 +166,273 @@
             </div>
         </div>
 
-        <!-- Location Info -->
         <div class="row">
-            <!-- Map -->
-            <div class="col-lg-8">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-map mr-2"></i>
-                            Ubicación del Rescate
-                        </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-primary btn-sm" onclick="obtenerMiUbicacion()">
-                                <i class="fas fa-location-arrow mr-1"></i> Mi Ubicación
-                            </button>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="mapaUbicacion" style="height: 400px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Location Details -->
-            <div class="col-lg-4">
-                <div class="card card-warning card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            Detalles de Ubicación
-                        </h3>
-                    </div>
-                    <div class="card-body">
-                        <div class="info-box">
-                            <span class="info-box-icon bg-primary">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Dirección</span>
-                                <span class="info-box-number">Calle Paitití, Centro</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box">
-                            <span class="info-box-icon bg-success">
-                                <i class="fas fa-city"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Ciudad</span>
-                                <span class="info-box-number">Santa Cruz De La Sierra</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box">
-                            <span class="info-box-icon bg-info">
-                                <i class="fas fa-map"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Coordenadas</span>
-                                <span class="info-box-number">-17.7833, -63.1833</span>
-                            </div>
-                        </div>
-
-                        <div class="info-box">
-                            <span class="info-box-icon bg-warning">
-                                <i class="fas fa-map-pin"></i>
-                            </span>
-                            <div class="info-box-content">
-                                <span class="info-box-text">Zona</span>
-                                <span class="info-box-number">Centro Urbano</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                
-            </div>
-        </div>
-        <div class="col-md-6 text-right-bottom">
-                                <a href="{{ route('animales.index') }}" class="btn btn-secondary">
-                                    <i class="fas fa-arrow-left mr-2"></i> Volver a Animales
+            <div class="col-12">
+                <div class="card card-tabs">
+                    <div class="card-header p-0 pt-1">
+                        <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="nav-link active" id="ubicacion-actual-tab" data-bs-toggle="tab" href="#ubicacion-actual" role="tab" aria-controls="ubicacion-actual" aria-selected="true">
+                                    <i class="fas fa-map mr-1"></i> Ubicación Actual
                                 </a>
-                </div>
-
-        <!-- Transfer History -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-truck-moving mr-2"></i>
-                            Historial de Traslados
-                        </h3>
-                        <div class="card-tools">
-                            <button type="button" class="btn btn-success btn-sm" onclick="mostrarRutaCompleta()">
-                                <i class="fas fa-route mr-1"></i> Ver Ruta Completa
-                            </button>
-                        </div>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="historial-traslados-tab" data-bs-toggle="tab" href="#historial-traslados" role="tab" aria-controls="historial-traslados" aria-selected="false">
+                                    <i class="fas fa-truck-moving mr-1"></i> Historial de Traslados
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" id="mapa-traslados-tab" data-bs-toggle="tab" href="#mapa-traslados" role="tab" aria-controls="mapa-traslados" aria-selected="false">
+                                    <i class="fas fa-route mr-1"></i> Mapa de Ruta
+                                </a>
+                            </li>
+                        </ul>
                     </div>
                     <div class="card-body">
-                        <div class="timeline">
-                            <!-- Transfer 1 -->
-                            <div class="time-label">
-                                <span class="bg-primary">01/09/2025</span>
+                        <div class="tab-content" id="custom-tabs-three-tabContent">
+                            
+                            <div class="tab-pane fade show active" id="ubicacion-actual" role="tabpanel" aria-labelledby="ubicacion-actual-tab">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="card card-info card-outline mb-0">
+                                            <div class="card-header">
+                                                <h3 class="card-title">
+                                                    <i class="fas fa-map-marker-alt mr-2"></i>
+                                                    Punto de Rescate
+                                                </h3>
+                                                <div class="card-tools">
+                                                    <button type="button" class="btn btn-primary btn-sm" onclick="obtenerMiUbicacion()">
+                                                        <i class="fas fa-location-arrow mr-1"></i> Mi Ubicación
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <div id="mapaUbicacion" style="height: 400px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-4">
+                                        <div class="card card-warning card-outline mb-0">
+                                            <div class="card-header">
+                                                <h3 class="card-title">
+                                                    <i class="fas fa-info-circle mr-2"></i>
+                                                    Detalles de Ubicación
+                                                </h3>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="info-box">
+                                                    <span class="info-box-icon bg-primary">
+                                                        <i class="fas fa-map-marker-alt"></i>
+                                                    </span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Dirección</span>
+                                                        <span class="info-box-number">Calle Paitití, Centro</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="info-box">
+                                                    <span class="info-box-icon bg-success">
+                                                        <i class="fas fa-city"></i>
+                                                    </span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Ciudad</span>
+                                                        <span class="info-box-number">Santa Cruz De La Sierra</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="info-box">
+                                                    <span class="info-box-icon bg-info">
+                                                        <i class="fas fa-map"></i>
+                                                    </span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Coordenadas</span>
+                                                        <span class="info-box-number">-17.7833, -63.1833</span>
+                                                    </div>
+                                                </div>
+
+                                                <div class="info-box">
+                                                    <span class="info-box-icon bg-warning">
+                                                        <i class="fas fa-map-pin"></i>
+                                                    </span>
+                                                    <div class="info-box-content">
+                                                        <span class="info-box-text">Zona</span>
+                                                        <span class="info-box-number">Centro Urbano</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div>
-                                <i class="fas fa-map-marker-alt bg-primary"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> 08:30</span>
-                                    <h3 class="timeline-header">Punto de Rescate</h3>
-                                    <div class="timeline-body">
-                                        <p><strong>Ubicación:</strong> Calle Paitití, Centro, Santa Cruz</p>
-                                        <p><strong>Rescatista:</strong> Rescatista Temporal</p>
-                                        <p><strong>Estado:</strong> Animal encontrado en mal estado</p>
+                            
+                            <div class="tab-pane fade" id="historial-traslados" role="tabpanel" aria-labelledby="historial-traslados-tab">
+                                <div class="card card-success card-outline mb-0">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-history mr-2"></i>
+                                            Cronología del Rescate
+                                        </h3>
+                                        <div class="card-tools">
+                                            <button type="button" class="btn btn-success btn-sm" onclick="cambiarATabRuta()">
+                                                <i class="fas fa-route mr-1"></i> Ver Ruta Completa
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="timeline">
+                                            <div class="time-label">
+                                                <span class="bg-primary">01/09/2025</span>
+                                            </div>
+                                            <div>
+                                                <i class="fas fa-map-marker-alt bg-primary"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fas fa-clock"></i> 08:30</span>
+                                                    <h3 class="timeline-header">Punto de Rescate</h3>
+                                                    <div class="timeline-body">
+                                                        <p><strong>Ubicación:</strong> Calle Paitití, Centro, Santa Cruz</p>
+                                                        <p><strong>Rescatista:</strong> Rescatista Temporal</p>
+                                                        <p><strong>Estado:</strong> Animal encontrado en mal estado</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <i class="fas fa-truck bg-warning"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fas fa-clock"></i> 09:15</span>
+                                                    <h3 class="timeline-header">Traslado al Centro Veterinario</h3>
+                                                    <div class="timeline-body">
+                                                        <p><strong>Desde:</strong> Calle Paitití, Centro</p>
+                                                        <p><strong>Hasta:</strong> Clínica Veterinaria "San Roque"</p>
+                                                        <p><strong>Duración:</strong> 25 minutos</p>
+                                                        <p><strong>Distancia:</strong> 3.2 km</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <i class="fas fa-hospital bg-info"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fas fa-clock"></i> 10:00</span>
+                                                    <h3 class="timeline-header">Evaluación Médica</h3>
+                                                    <div class="timeline-body">
+                                                        <p><strong>Ubicación:</strong> Clínica Veterinaria "San Roque"</p>
+                                                        <p><strong>Veterinario:</strong> Dr. Carlos Mendoza</p>
+                                                        <p><strong>Diagnóstico:</strong> Deshidratación y desnutrición</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <i class="fas fa-truck bg-warning"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fas fa-clock"></i> 14:30</span>
+                                                    <h3 class="timeline-header">Traslado al Refugio</h3>
+                                                    <div class="timeline-body">
+                                                        <p><strong>Desde:</strong> Clínica Veterinaria "San Roque"</p>
+                                                        <p><strong>Hasta:</strong> Refugio "Patitas Felices"</p>
+                                                        <p><strong>Duración:</strong> 35 minutos</p>
+                                                        <p><strong>Distancia:</strong> 8.7 km</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <i class="fas fa-home bg-success"></i>
+                                                <div class="timeline-item">
+                                                    <span class="time"><i class="fas fa-clock"></i> 15:05</span>
+                                                    <h3 class="timeline-header">Ubicación Actual</h3>
+                                                    <div class="timeline-body">
+                                                        <p><strong>Ubicación:</strong> Refugio "Patitas Felices"</p>
+                                                        <p><strong>Estado:</strong> En recuperación</p>
+                                                        <p><strong>Cuidador:</strong> María González</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Transfer 2 -->
-                            <div>
-                                <i class="fas fa-truck bg-warning"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> 09:15</span>
-                                    <h3 class="timeline-header">Traslado al Centro Veterinario</h3>
-                                    <div class="timeline-body">
-                                        <p><strong>Desde:</strong> Calle Paitití, Centro</p>
-                                        <p><strong>Hasta:</strong> Clínica Veterinaria "San Roque"</p>
-                                        <p><strong>Duración:</strong> 25 minutos</p>
-                                        <p><strong>Distancia:</strong> 3.2 km</p>
+                            <div class="tab-pane fade" id="mapa-traslados" role="tabpanel" aria-labelledby="mapa-traslados-tab">
+                                <div class="card card-info card-outline mb-0">
+                                    <div class="card-header">
+                                        <h3 class="card-title">
+                                            <i class="fas fa-route mr-2"></i>
+                                            Mapa de Traslados
+                                        </h3>
+                                        <div class="card-tools">
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-info btn-sm" onclick="mostrarTodosLosPuntos()">
+                                                    <i class="fas fa-eye mr-1"></i> Todos los Puntos
+                                                </button>
+                                                <button type="button" class="btn btn-success btn-sm" onclick="mostrarRutaCompleta()">
+                                                    <i class="fas fa-route mr-1"></i> Ver Ruta
+                                                </button>
+                                                <button type="button" class="btn btn-warning btn-sm" onclick="limpiarMapa()">
+                                                    <i class="fas fa-eraser mr-1"></i> Limpiar
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div id="mapaTraslados" style="height: 500px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
+                                        <div class="mt-3">
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <div class="info-box bg-primary">
+                                                        <span class="info-box-icon"><i class="fas fa-map-marker-alt"></i></span>
+                                                        <div class="info-box-content">
+                                                            <span class="info-box-text">Punto de Rescate</span>
+                                                            <span class="info-box-number">1</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="info-box bg-warning">
+                                                        <span class="info-box-icon"><i class="fas fa-truck"></i></span>
+                                                        <div class="info-box-content">
+                                                            <span class="info-box-text">Traslados</span>
+                                                            <span class="info-box-number">2</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="info-box bg-info">
+                                                        <span class="info-box-icon"><i class="fas fa-hospital"></i></span>
+                                                        <div class="info-box-content">
+                                                            <span class="info-box-text">Centros Médicos</span>
+                                                            <span class="info-box-number">1</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="info-box bg-success">
+                                                        <span class="info-box-icon"><i class="fas fa-home"></i></span>
+                                                        <div class="info-box-content">
+                                                            <span class="info-box-text">Ubicación Actual</span>
+                                                            <span class="info-box-number">1</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Transfer 3 -->
-                            <div>
-                                <i class="fas fa-hospital bg-info"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> 10:00</span>
-                                    <h3 class="timeline-header">Evaluación Médica</h3>
-                                    <div class="timeline-body">
-                                        <p><strong>Ubicación:</strong> Clínica Veterinaria "San Roque"</p>
-                                        <p><strong>Veterinario:</strong> Dr. Carlos Mendoza</p>
-                                        <p><strong>Diagnóstico:</strong> Deshidratación y desnutrición</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Transfer 4 -->
-                            <div>
-                                <i class="fas fa-truck bg-warning"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> 14:30</span>
-                                    <h3 class="timeline-header">Traslado al Refugio</h3>
-                                    <div class="timeline-body">
-                                        <p><strong>Desde:</strong> Clínica Veterinaria "San Roque"</p>
-                                        <p><strong>Hasta:</strong> Refugio "Patitas Felices"</p>
-                                        <p><strong>Duración:</strong> 35 minutos</p>
-                                        <p><strong>Distancia:</strong> 8.7 km</p>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Current Location -->
-                            <div>
-                                <i class="fas fa-home bg-success"></i>
-                                <div class="timeline-item">
-                                    <span class="time"><i class="fas fa-clock"></i> 15:05</span>
-                                    <h3 class="timeline-header">Ubicación Actual</h3>
-                                    <div class="timeline-body">
-                                        <p><strong>Ubicación:</strong> Refugio "Patitas Felices"</p>
-                                        <p><strong>Estado:</strong> En recuperación</p>
-                                        <p><strong>Cuidador:</strong> María González</p>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Map with Transfer Routes -->
-        <div class="row mt-4">
-            <div class="col-12">
-                <div class="card card-info card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-route mr-2"></i>
-                            Mapa de Traslados
-                        </h3>
-                        <div class="card-tools">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-info btn-sm" onclick="mostrarTodosLosPuntos()">
-                                    <i class="fas fa-eye mr-1"></i> Todos los Puntos
-                                </button>
-                                <button type="button" class="btn btn-success btn-sm" onclick="mostrarRutaCompleta()">
-                                    <i class="fas fa-route mr-1"></i> Ver Ruta
-                                </button>
-                                <button type="button" class="btn btn-warning btn-sm" onclick="limpiarMapa()">
-                                    <i class="fas fa-eraser mr-1"></i> Limpiar
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <div id="mapaTraslados" style="height: 500px; border-radius: 8px; border: 1px solid #dee2e6;"></div>
-                        <div class="mt-3">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="info-box bg-primary">
-                                        <span class="info-box-icon"><i class="fas fa-map-marker-alt"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Punto de Rescate</span>
-                                            <span class="info-box-number">1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="info-box bg-warning">
-                                        <span class="info-box-icon"><i class="fas fa-truck"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Traslados</span>
-                                            <span class="info-box-number">2</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="info-box bg-info">
-                                        <span class="info-box-icon"><i class="fas fa-hospital"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Centros Médicos</span>
-                                            <span class="info-box-number">1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="info-box bg-success">
-                                        <span class="info-box-icon"><i class="fas fa-home"></i></span>
-                                        <div class="info-box-content">
-                                            <span class="info-box-text">Ubicación Actual</span>
-                                            <span class="info-box-number">1</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="row mt-3">
+            <div class="col-12 text-right">
+                <a href="{{ route('animales.index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left mr-2"></i> Volver a Animales
+                </a>
             </div>
         </div>
     </div>
@@ -431,7 +448,10 @@ var mapaTraslados = null;
 var marcadoresTraslados = [];
 var rutasTraslados = [];
 
-// Datos hardcodeados de traslados
+// Variable de control para el dibujo de la ruta
+var dibujarRutaAlAbrirMapa = false;
+
+// Datos hardcodeados de traslados, se mantienen
 var trasladosData = [
     {
         id: 1,
@@ -478,16 +498,13 @@ function obtenerMiUbicacion() {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
             
-            // Centrar el mapa en la ubicación actual
             mapaUbicacion.setView([lat, lng], 15);
             
-            // Agregar marcador de ubicación actual
             if (marcadorUbicacion) {
                 mapaUbicacion.removeLayer(marcadorUbicacion);
             }
             marcadorUbicacion = L.marker([lat, lng]).addTo(mapaUbicacion);
-            
-            console.log('Ubicación actual:', lat, lng);
+            marcadorUbicacion.bindPopup('<b>Mi Ubicación Actual</b>').openPopup(); 
         }, function(error) {
             console.error('Error al obtener ubicación:', error);
             alert('No se pudo obtener tu ubicación actual.');
@@ -523,7 +540,6 @@ function mostrarTodosLosPuntos() {
         marcadoresTraslados.push(marcador);
     });
     
-    // Ajustar vista para mostrar todos los puntos
     var grupo = new L.featureGroup(marcadoresTraslados);
     mapaTraslados.fitBounds(grupo.getBounds().pad(0.1));
 }
@@ -548,34 +564,47 @@ function mostrarRutaCompleta() {
     
     rutasTraslados.push(ruta);
     
+    // Función para calcular el rumbo (bearing) para las flechas
+    function calculateBearing(lat1, lon1, lat2, lon2) {
+        lat1 = lat1 * Math.PI / 180;
+        lon1 = lon1 * Math.PI / 180;
+        lat2 = lat2 * Math.PI / 180;
+        lon2 = lon2 * Math.PI / 180;
+
+        var dLon = lon2 - lon1;
+        var y = Math.sin(dLon) * Math.cos(lat2);
+        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+        var brng = Math.atan2(y, x);
+
+        brng = brng * 180 / Math.PI;
+        return (brng + 360) % 360; 
+    }
+
     // Agregar flechas direccionales
     for (var i = 0; i < puntosRuta.length - 1; i++) {
         var puntoInicio = puntosRuta[i];
         var puntoFin = puntosRuta[i + 1];
         
-        // Calcular ángulo
-        var angulo = Math.atan2(puntoFin[1] - puntoInicio[1], puntoFin[0] - puntoInicio[0]) * 180 / Math.PI;
+        var latIntermedia = (puntoInicio[0] + puntoFin[0]) / 2;
+        var lngIntermedia = (puntoInicio[1] + puntoFin[1]) / 2;
         
-        // Crear flecha
         var flecha = L.divIcon({
             className: 'custom-div-icon',
-            html: `<div style="transform: rotate(${angulo}deg); color: #3388ff; font-size: 20px;"><i class="fas fa-arrow-right"></i></div>`,
+            html: `<div style="background: none; color: #3388ff; font-size: 20px; text-shadow: 1px 1px 2px white;"><i class="fas fa-arrow-right"></i></div>`,
             iconSize: [20, 20],
             iconAnchor: [10, 10]
         });
         
-        // Posición intermedia para la flecha
-        var latIntermedia = (puntoInicio[0] + puntoFin[0]) / 2;
-        var lngIntermedia = (puntoInicio[1] + puntoFin[1]) / 2;
-        
-        L.marker([latIntermedia, lngIntermedia], {icon: flecha}).addTo(mapaTraslados);
+        L.marker([latIntermedia, lngIntermedia], {
+            icon: flecha,
+            rotationAngle: calculateBearing(puntoInicio[0], puntoInicio[1], puntoFin[0], puntoFin[1])
+        }).addTo(mapaTraslados);
     }
     
     // Mostrar información de la ruta
     var distanciaTotal = calcularDistanciaTotal();
     var tiempoTotal = calcularTiempoTotal();
     
-    // Agregar información de la ruta al mapa
     var infoRuta = L.control({position: 'topright'});
     infoRuta.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'info-ruta');
@@ -583,7 +612,7 @@ function mostrarRutaCompleta() {
             <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
                 <h6><i class="fas fa-route"></i> Información de la Ruta</h6>
                 <p><strong>Distancia Total:</strong> ${distanciaTotal} km</p>
-                <p><strong>Tiempo Total:</strong> ${tiempoTotal}</p>
+                <p><strong>Tiempo Total Estimado:</strong> ${tiempoTotal}</p>
                 <p><strong>Traslados:</strong> ${trasladosData.length - 1}</p>
             </div>
         `;
@@ -603,7 +632,6 @@ function limpiarMapa() {
     marcadoresTraslados = [];
     rutasTraslados = [];
     
-    // Limpiar controles personalizados
     mapaTraslados.eachLayer(function(layer) {
         if (layer instanceof L.Control) {
             mapaTraslados.removeControl(layer);
@@ -622,17 +650,16 @@ function calcularDistanciaTotal() {
     return distanciaTotal.toFixed(1);
 }
 
-// Función para calcular tiempo total
+// Función para calcular tiempo total (hardcodeado)
 function calcularTiempoTotal() {
-    // Tiempo hardcodeado basado en los datos
     return "1 hora 35 minutos";
 }
 
 // Función para calcular distancia entre dos puntos (fórmula de Haversine)
 function calcularDistanciaEntrePuntos(lat1, lng1, lat2, lng2) {
-    var R = 6371; // Radio de la Tierra en km
+    var R = 6371; 
     var dLat = (lat2 - lat1) * Math.PI / 180;
-    var dLng = (lng2 - lng1) * Math.PI / 180;
+    var dLng = (lng2 - lon1) * Math.PI / 180; // Corregido lon1 en lugar de lng1 en el código original, pero es lon2 - lon1
     var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
             Math.sin(dLng/2) * Math.sin(dLng/2);
@@ -640,27 +667,75 @@ function calcularDistanciaEntrePuntos(lat1, lng1, lat2, lng2) {
     return R * c;
 }
 
-$(document).ready(function() {
-    // Inicializar mapa de ubicación
-    mapaUbicacion = L.map('mapaUbicacion').setView([-17.7833, -63.1833], 13);
+// Función para calcular el rumbo (bearing) 
+function calculateBearing(lat1, lon1, lat2, lon2) {
+    lat1 = lat1 * Math.PI / 180;
+    lon1 = lon1 * Math.PI / 180;
+    lat2 = lat2 * Math.PI / 180;
+    lon2 = lon2 * Math.PI / 180;
+
+    var dLon = lon2 - lon1;
+    var y = Math.sin(dLon) * Math.cos(lat2);
+    var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
+    var brng = Math.atan2(y, x);
+
+    brng = brng * 180 / Math.PI;
+    return (brng + 360) % 360; 
+}
+
+// **Función para cambiar de pestaña y marcar la ruta (corregida)**
+function cambiarATabRuta() {
+    // 1. Marca la variable para que se dibuje la ruta al abrir la pestaña.
+    dibujarRutaAlAbrirMapa = true;
     
+    // 2. Activa la pestaña del mapa de traslados.
+    $('#mapa-traslados-tab').tab('show');
+}
+
+
+$(document).ready(function() {
+    // Inicialización de mapa de ubicación
+    mapaUbicacion = L.map('mapaUbicacion').setView([-17.7833, -63.1833], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(mapaUbicacion);
-    
-    // Agregar marcador de la ubicación del rescate
     marcadorUbicacion = L.marker([-17.7833, -63.1833]).addTo(mapaUbicacion);
     marcadorUbicacion.bindPopup('<b>Ubicación del Rescate</b><br>Sada - Labrador<br>01/09/2025');
     
-    // Inicializar mapa de traslados
-    mapaTraslados = L.map('mapaTraslados').setView([-17.7900, -63.1900], 12);
-    
+    // Inicialización de mapa de traslados
+    mapaTraslados = L.map('mapaTraslados', {
+        zoomControl: true,
+        scrollWheelZoom: true
+    }).setView([-17.7900, -63.1900], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
     }).addTo(mapaTraslados);
     
-    // Mostrar todos los puntos por defecto
-    mostrarTodosLosPuntos();
+    // **Lógica central para los tabs:** se ejecuta cuando la pestaña es visible
+    $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
+        var target = $(e.target).attr("href");
+        
+        if (target === '#mapa-traslados') {
+            // 1. Invalida el tamaño del mapa de traslados (crucial para Leaflet en pestañas)
+            mapaTraslados.invalidateSize();
+            
+            // 2. Si se solicitó la ruta completa (desde el botón del historial)
+            if (dibujarRutaAlAbrirMapa) {
+                mostrarRutaCompleta();
+                dibujarRutaAlAbrirMapa = false; // Reinicia la variable
+            } else {
+                // Si solo se cambió al tab (sin botón de ruta), muestra solo los puntos
+                mostrarTodosLosPuntos(); 
+            }
+        } else if (target === '#ubicacion-actual') {
+            // Invalida el tamaño del mapa de ubicación
+            mapaUbicacion.invalidateSize();
+            mapaUbicacion.setView([-17.7833, -63.1833], 13);
+        }
+    });
+
+    // Carga inicial de puntos en el mapa de traslados (a pesar de estar oculto)
+    mostrarTodosLosPuntos(); 
 });
 </script>
 @endsection
