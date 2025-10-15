@@ -51,9 +51,9 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#agregarVeterinarioModal">
-                            <i class="fas fa-plus mr-2"></i> Agregar Veterinario
-                        </button>
+                    <button type="button" class="btn btn-success w-100" data-bs-toggle="modal" data-bs-target="#agregarVeterinarioModal">
+                        <i class="fas fa-plus me-2"></i> Agregar Veterinario
+                    </button>
                     </div>
                 </div>
 
@@ -177,9 +177,10 @@
                 <h5 class="modal-title text-white" id="agregarVeterinarioModalLabel">
                     <i class="fas fa-user-plus mr-2"></i>Agregar Nuevo Veterinario
                 </h5>
-                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <button type="button" class="close-x" data-bs-dismiss="modal" aria-label="Close">
+    ×
+</button>
+
             </div>
             <div class="modal-body">
                 <form id="veterinarioForm">
@@ -197,10 +198,7 @@
                                     <option value="">Selecciona una especialidad</option>
                                     <option value="Veterinario General">Veterinario General</option>
                                     <option value="Cirugía">Cirugía</option>
-                                    <option value="Medicina Interna">Medicina Interna</option>
-                                    <option value="Dermatología">Dermatología</option>
-                                    <option value="Cardiología">Cardiología</option>
-                                    <option value="Neurología">Neurología</option>
+                                   
                                 </select>
                             </div>
                         </div>
@@ -238,9 +236,10 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">
-                    <i class="fas fa-times mr-1"></i> Cancelar
-                </button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+    <i class="fas fa-times me-1"></i> Cancelar
+</button>
+
                 <button type="button" class="btn btn-success" onclick="guardarVeterinario()">
                     <i class="fas fa-save mr-1"></i> Guardar Veterinario
                 </button>
