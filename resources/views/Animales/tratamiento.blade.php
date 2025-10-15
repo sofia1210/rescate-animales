@@ -200,11 +200,7 @@
                                     <i class="fas fa-arrow-left mr-2"></i> Volver a Animales
                                 </a>
                             </div>
-                            <div class="col-md-6 text-right">
-                                <button type="button" class="btn btn-danger" onclick="emergencia()">
-                                    <i class="fas fa-exclamation-triangle mr-2"></i> Emergencia
-                                </button>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
