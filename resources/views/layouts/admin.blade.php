@@ -25,6 +25,17 @@
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
             </li>
         </ul>
+        <div class="ml-auto d-flex align-items-center">
+            <span class="mr-2">Rol:</span>
+            <select id="roleSwitcher" class="form-control form-control-sm" style="width:auto;">
+                <option value="Ciudadano">Ciudadano</option>
+                <option value="Brigadista">Brigadista</option>
+                <option value="Cuidador">Cuidador</option>
+                <option value="Veterinario">Veterinario</option>
+                <option value="Administrador">Administrador</option>
+            </select>
+            <span id="roleBadge" class="badge badge-info ml-2">Ciudadano</span>
+        </div>
     </nav>
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
@@ -36,27 +47,27 @@
         <div class="sidebar">
             <nav class="mt-2">
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('home') }}" class="nav-link {{ request()->is('home*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-home"></i><p>Inicio</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-role-allowed="Brigadista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('animales.index') }}" class="nav-link {{ request()->is('animales*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-paw"></i><p>Animales</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Administrador">
                         <a href="{{ route('adopciones.index') }}" class="nav-link {{ request()->is('adopciones*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-hand-holding-heart"></i><p>Adopciones</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-role-allowed="Administrador">
                         <a href="{{ route('reportes.index') }}" class="nav-link {{ request()->is('reportes*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-chart-line"></i><p>Reportes</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-role-allowed="Cuidador,Administrador">
                         <a href="{{ route('centros.index') }}" class="nav-link {{ request()->is('centros*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-building"></i><p>Centros</p>
                         </a>
@@ -90,7 +101,6 @@
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -98,3 +108,43 @@
 
 </body>
 </html>
+
+<script>
+(function() {
+    const ROLE_KEY = 'app_role';
+    const DEFAULT_ROLE = 'Ciudadano';
+    const roleSwitcher = document.getElementById('roleSwitcher');
+    const roleBadge = document.getElementById('roleBadge');
+
+    function parseAllowed(el) {
+        const val = el.getAttribute('data-role-allowed') || '';
+        return val.split(',').map(s => s.trim()).filter(Boolean);
+    }
+
+    function applyRole(role) {
+        if (roleBadge) roleBadge.textContent = role;
+        document.querySelectorAll('[data-role-allowed]').forEach(el => {
+            const allowed = parseAllowed(el);
+            const visible = allowed.length === 0 || allowed.includes(role);
+            el.classList.toggle('role-hidden', !visible);
+        });
+        localStorage.setItem(ROLE_KEY, role);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const saved = localStorage.getItem(ROLE_KEY) || DEFAULT_ROLE;
+        if (roleSwitcher) {
+            roleSwitcher.value = saved;
+            roleSwitcher.addEventListener('change', function(e) {
+                applyRole(e.target.value);
+            });
+        }
+        applyRole(saved);
+    });
+})();
+</script>
+<style>
+.role-hidden { display: none !important; }
+</style>
+
+@yield('js')
