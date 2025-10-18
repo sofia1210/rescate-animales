@@ -291,22 +291,21 @@
 @section('js')
 <script>
 function seleccionarVeterinario(id, nombre) {
-    // Guardar la selección del veterinario
+    
     sessionStorage.setItem('veterinarioSeleccionado', JSON.stringify({
         id: id,
         nombre: nombre
     }));
     
-    // Redirigir al formulario de evaluación médica
+    
     window.location.href = "{{ route('animales.evaluacion-medica') }}";
 }
 
 function guardarVeterinario() {
-    // Cerrar modal sin funcionalidad por el momento
+    
     $('#agregarVeterinarioModal').modal('hide');
 }
 
-// Búsqueda de veterinarios
 document.getElementById('buscarVeterinario').addEventListener('input', function(e) {
     const termino = e.target.value.toLowerCase();
     const veterinarios = document.querySelectorAll('#veterinariosList .col-md-6');

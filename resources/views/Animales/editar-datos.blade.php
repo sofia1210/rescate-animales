@@ -267,14 +267,14 @@
 @section('js')
 <script>
 function cambiarImagen() {
-    // Simular cambio de imagen
+    
     alert('Función de cambio de imagen (implementar según necesidades)');
 }
 
 function resetearFormulario() {
     if (confirm('¿Está seguro de que desea resetear todos los cambios?')) {
         document.getElementById('editarForm').reset();
-        // Restaurar valores originales
+        
         document.getElementById('nombre_animal').value = 'Sada';
         document.getElementById('raza_animal').value = 'Labrador';
         document.getElementById('estado_salud').value = 'Malo';
@@ -292,14 +292,14 @@ function resetearFormulario() {
 }
 
 function guardarCambios() {
-    // Validar formulario
+    
     const form = document.getElementById('editarForm');
     if (form.checkValidity()) {
-        // Simular guardado
+        
         alert('Cambios guardados exitosamente');
         
-        // Aquí podrías redirigir o hacer otras acciones
-        // window.location.href = "{{ route('animales.index') }}";
+        
+        
     } else {
         alert('Por favor completa todos los campos obligatorios');
         form.reportValidity();

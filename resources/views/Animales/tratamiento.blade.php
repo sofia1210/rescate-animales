@@ -362,7 +362,7 @@
 
 @section('js')
 <script>
-// Cargar información del veterinario seleccionado
+
 document.addEventListener('DOMContentLoaded', function() {
     const veterinarioSeleccionado = sessionStorage.getItem('veterinarioSeleccionadoTratamiento');
     if (veterinarioSeleccionado) {
@@ -372,7 +372,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function cambiarVeterinario() {
-    // Redirigir a la selección de veterinario
+    
     window.location.href = "{{ route('animales.seleccionar-veterinario-tratamiento') }}";
 }
 
@@ -387,7 +387,7 @@ function programarCita() {
 
 function generarReporte() {
     alert('Generando reporte de tratamiento...');
-    // Aquí podrías implementar la generación del reporte
+    
 }
 
 function finalizarTratamiento() {
@@ -403,7 +403,7 @@ function emergencia() {
 }
 
 function guardarTratamiento() {
-    // Cerrar modal sin funcionalidad por el momento
+    
     var modal = bootstrap.Modal.getInstance(document.getElementById('agregarTratamientoModal'));
     if (modal) {
         modal.hide();

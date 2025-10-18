@@ -4,7 +4,7 @@
 
 @section('css')
 <style>
-    /* Estilos de la línea de tiempo, se mantienen */
+    
     .timeline {
         position: relative;
         padding: 0;
@@ -444,7 +444,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
 <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 <script>
-// Variables globales para los mapas
+
 var mapaUbicacion = null;
 var marcadorUbicacion = null;
 var mapaTraslados = null;
@@ -452,10 +452,8 @@ var marcadoresTraslados = [];
 var rutasTraslados = [];
 var controlRuta = null;
 
-// Variable de control para el dibujo de la ruta
 var dibujarRutaAlAbrirMapa = false;
 
-// Datos hardcodeados de traslados, se mantienen
 var trasladosData = [
     {
         id: 1,
@@ -495,7 +493,6 @@ var trasladosData = [
     }
 ];
 
-// Función para obtener ubicación actual
 function obtenerMiUbicacion() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
@@ -518,7 +515,6 @@ function obtenerMiUbicacion() {
     }
 }
 
-// Función para mostrar todos los puntos de traslado
 function mostrarTodosLosPuntos() {
     limpiarMapa();
     
@@ -548,21 +544,20 @@ function mostrarTodosLosPuntos() {
     mapaTraslados.fitBounds(grupo.getBounds().pad(0.1));
 }
 
-// Función para mostrar la ruta completa
 function mostrarRutaCompleta() {
     limpiarMapa();
     mostrarTodosLosPuntos();
     
-    // Crear waypoints para la ruta
+    
     var waypoints = trasladosData.map(function(traslado) {
         return L.latLng(traslado.lat, traslado.lng);
     });
     
-    // Crear control de ruta usando Leaflet Routing Machine
+    
     controlRuta = L.Routing.control({
         waypoints: waypoints,
         routeWhileDragging: false,
-        createMarker: function() { return null; }, // No crear marcadores adicionales
+        createMarker: function() { return null; }, 
         lineOptions: {
             styles: [{ 
                 color: '#007bff', 
@@ -574,11 +569,11 @@ function mostrarRutaCompleta() {
         addWaypoints: false,
         draggableWaypoints: false,
         fitSelectedRoutes: true,
-        show: false, // Ocultar el panel de instrucciones
+        show: false, 
         collapsible: false
     }).addTo(mapaTraslados);
     
-    // Mostrar información de la ruta
+    
     var infoRuta = L.control({position: 'topright'});
     infoRuta.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'info-ruta');
@@ -593,7 +588,7 @@ function mostrarRutaCompleta() {
     };
     infoRuta.addTo(mapaTraslados);
     
-    // Ajustar vista para mostrar toda la ruta
+    
     setTimeout(function() {
         if (controlRuta.getPlan()) {
             var bounds = controlRuta.getPlan().getBounds();
@@ -604,7 +599,6 @@ function mostrarRutaCompleta() {
     }, 1000);
 }
 
-// Función para limpiar el mapa
 function limpiarMapa() {
     marcadoresTraslados.forEach(function(marcador) {
         mapaTraslados.removeLayer(marcador);
@@ -627,7 +621,6 @@ function limpiarMapa() {
     });
 }
 
-// Función para calcular distancia total
 function calcularDistanciaTotal() {
     var distanciaTotal = 0;
     for (var i = 0; i < trasladosData.length - 1; i++) {
@@ -638,16 +631,14 @@ function calcularDistanciaTotal() {
     return distanciaTotal.toFixed(1);
 }
 
-// Función para calcular tiempo total (hardcodeado)
 function calcularTiempoTotal() {
     return "1 hora 35 minutos";
 }
 
-// Función para calcular distancia entre dos puntos (fórmula de Haversine)
 function calcularDistanciaEntrePuntos(lat1, lng1, lat2, lng2) {
     var R = 6371; 
     var dLat = (lat2 - lat1) * Math.PI / 180;
-    var dLng = (lng2 - lon1) * Math.PI / 180; // Corregido lon1 en lugar de lng1 en el código original, pero es lon2 - lon1
+    var dLng = (lng2 - lon1) * Math.PI / 180; 
     var a = Math.sin(dLat/2) * Math.sin(dLat/2) +
             Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
             Math.sin(dLng/2) * Math.sin(dLng/2);
@@ -655,7 +646,6 @@ function calcularDistanciaEntrePuntos(lat1, lng1, lat2, lng2) {
     return R * c;
 }
 
-// Función para calcular el rumbo (bearing) 
 function calculateBearing(lat1, lon1, lat2, lon2) {
     lat1 = lat1 * Math.PI / 180;
     lon1 = lon1 * Math.PI / 180;
@@ -671,18 +661,16 @@ function calculateBearing(lat1, lon1, lat2, lon2) {
     return (brng + 360) % 360; 
 }
 
-// **Función para cambiar de pestaña y marcar la ruta (corregida)**
 function cambiarATabRuta() {
-    // 1. Marca la variable para que se dibuje la ruta al abrir la pestaña.
+    
     dibujarRutaAlAbrirMapa = true;
     
-    // 2. Activa la pestaña del mapa de traslados.
+    
     $('#mapa-traslados-tab').tab('show');
 }
 
-
 $(document).ready(function() {
-    // Inicialización de mapa de ubicación
+    
     mapaUbicacion = L.map('mapaUbicacion').setView([-17.7833, -63.1833], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -690,7 +678,7 @@ $(document).ready(function() {
     marcadorUbicacion = L.marker([-17.7833, -63.1833]).addTo(mapaUbicacion);
     marcadorUbicacion.bindPopup('<b>Ubicación del Rescate</b><br>Sada - Labrador<br>01/09/2025');
     
-    // Inicialización de mapa de traslados
+    
     mapaTraslados = L.map('mapaTraslados', {
         zoomControl: true,
         scrollWheelZoom: true
@@ -699,30 +687,30 @@ $(document).ready(function() {
         attribution: '© OpenStreetMap contributors'
     }).addTo(mapaTraslados);
     
-    // **Lógica central para los tabs:** se ejecuta cuando la pestaña es visible
+    
     $('a[data-bs-toggle="tab"]').on('shown.bs.tab', function (e) {
         var target = $(e.target).attr("href");
         
         if (target === '#mapa-traslados') {
-            // 1. Invalida el tamaño del mapa de traslados (crucial para Leaflet en pestañas)
+            
             mapaTraslados.invalidateSize();
             
-            // 2. Si se solicitó la ruta completa (desde el botón del historial)
+            
             if (dibujarRutaAlAbrirMapa) {
                 mostrarRutaCompleta();
-                dibujarRutaAlAbrirMapa = false; // Reinicia la variable
+                dibujarRutaAlAbrirMapa = false; 
             } else {
-                // Si solo se cambió al tab (sin botón de ruta), muestra solo los puntos
+                
                 mostrarTodosLosPuntos(); 
             }
         } else if (target === '#ubicacion-actual') {
-            // Invalida el tamaño del mapa de ubicación
+            
             mapaUbicacion.invalidateSize();
             mapaUbicacion.setView([-17.7833, -63.1833], 13);
         }
     });
 
-    // Carga inicial de puntos en el mapa de traslados (a pesar de estar oculto)
+    
     mostrarTodosLosPuntos(); 
 });
 </script>

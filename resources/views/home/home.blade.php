@@ -4,7 +4,7 @@
 
 @push('styles')
 <style>
-    /* Estilos personalizados para las tarjetas */
+    
     .custom-card {
         border-radius: 15px;
         box-shadow: 0 4px 12px rgba(0,0,0,0.08);
@@ -401,7 +401,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 $(document).ready(function() {
-    // Estado de Salud Chart
+    
     const estadoSaludCtx = document.getElementById('estadoSaludChart').getContext('2d');
     new Chart(estadoSaludCtx, {
         type: 'doughnut',
@@ -431,7 +431,7 @@ $(document).ready(function() {
         }
     });
 
-    // Tipos de Animales Chart
+    
     const tiposAnimalesCtx = document.getElementById('tiposAnimalesChart').getContext('2d');
     new Chart(tiposAnimalesCtx, {
         type: 'bar',
@@ -467,7 +467,7 @@ $(document).ready(function() {
         }
     });
 
-    // Rescates por Mes Chart
+    
     const rescatesPorMesCtx = document.getElementById('rescatesPorMesChart').getContext('2d');
     new Chart(rescatesPorMesCtx, {
         type: 'line',
@@ -499,7 +499,7 @@ $(document).ready(function() {
         }
     });
 
-    // Gráfico de Adopciones por Mes
+    
     const adopcionesPorMesCtx = document.getElementById('adopcionesPorMesChart');
     if (adopcionesPorMesCtx) {
         new Chart(adopcionesPorMesCtx.getContext('2d'), {
@@ -526,7 +526,7 @@ $(document).ready(function() {
         });
     }
 
-    // Gráfico de Gastos por Categoría
+    
     const gastosCategoriaCtx = document.getElementById('gastosCategoriaChart');
     if (gastosCategoriaCtx) {
         new Chart(gastosCategoriaCtx.getContext('2d'), {

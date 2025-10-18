@@ -191,7 +191,7 @@
 
 @section('js')
 <script>
-// Cargar información del veterinario seleccionado
+
 document.addEventListener('DOMContentLoaded', function() {
     const veterinarioSeleccionado = sessionStorage.getItem('veterinarioSeleccionado');
     if (veterinarioSeleccionado) {
@@ -201,22 +201,22 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function cambiarVeterinario() {
-    // Redirigir a la selección de veterinario
+    
     window.location.href = "{{ route('animales.seleccionar-veterinario-evaluacion') }}";
 }
 
 function guardarEvaluacion() {
-    // Validar formulario
+    
     const form = document.getElementById('evaluacionForm');
     if (form.checkValidity()) {
-        // Simular guardado
+        
         alert('Evaluación médica guardada exitosamente');
         
-        // Limpiar sessionStorage
+        
         sessionStorage.removeItem('veterinarioSeleccionado');
         
-        // Aquí podrías redirigir o hacer otras acciones
-        // window.location.href = "{{ route('animales.index') }}";
+        
+        
     } else {
         alert('Por favor completa todos los campos obligatorios');
         form.reportValidity();

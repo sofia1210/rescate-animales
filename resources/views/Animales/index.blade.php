@@ -3,7 +3,7 @@
 @section('title', 'Gestión de Animales - Rescate Animales')
 
 @php
-    // --- DATOS HARDCODEADOS DIRECTAMENTE EN LA VISTA ---
+    
     $animales = collect([
         (object)[
             'id' => 1,
@@ -37,7 +37,7 @@
         ],
     ]);
 
-    // Simulación de variables de filtro
+    
     $nombre = request('nombre');
     $tipo = request('tipo', 'Todos');
     $estado = request('estado', 'Todos');
@@ -785,33 +785,31 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Función global para seleccionar rescatista
+
 function seleccionarRescatista(nombreRescatista) {
     console.log('Rescatista seleccionado:', nombreRescatista);
     $('#rescuerNameBadge').text('Rescatista: ' + nombreRescatista);
 }
 
-// Variables globales para el mapa
 var mapaRescate = null;
 var marcadorRescate = null;
 
-// Función para obtener ubicación actual
 function obtenerUbicacion() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
             
-            // Centrar el mapa en la ubicación actual
+            
             mapaRescate.setView([lat, lng], 15);
             
-            // Agregar marcador
+            
             if (marcadorRescate) {
                 mapaRescate.removeLayer(marcadorRescate);
             }
             marcadorRescate = L.marker([lat, lng]).addTo(mapaRescate);
             
-            // Actualizar campos ocultos
+            
             document.getElementById('latitud_rescate').value = lat;
             document.getElementById('longitud_rescate').value = lng;
             
@@ -828,25 +826,25 @@ function obtenerUbicacion() {
 $(document).ready(function() {
     console.log('JavaScript de animales cargado correctamente');
     
-    // Inicializar Select2 para los filtros
+    
     $('.select2').select2({
         theme: 'default',
         width: '100%'
     });
     
-    // Variables para los modales
+    
     let nombreRescatistaSeleccionado = null;
 
-    // Verificar que los elementos existen
+    
     console.log('Modal de agregar animal existe:', document.getElementById('agregarAnimalModal') ? 'SÍ' : 'NO');
     console.log('Bootstrap disponible:', typeof bootstrap !== 'undefined' ? 'SÍ' : 'NO');
     console.log('jQuery disponible:', typeof $ !== 'undefined' ? 'SÍ' : 'NO');
 
-    // Inicializar mapa cuando se abra el modal de agregar animal
+    
     $('#agregarAnimalModal').on('shown.bs.modal', function() {
         console.log('Modal de agregar animal abierto, inicializando mapa...');
         
-        // Inicializar mapa si no existe
+        
         if (!mapaRescate) {
             mapaRescate = L.map('mapaRescate').setView([-17.7833, -63.1833], 13);
             
@@ -854,7 +852,7 @@ $(document).ready(function() {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(mapaRescate);
             
-            // Agregar marcador al hacer clic en el mapa
+            
             mapaRescate.on('click', function(e) {
                 if (marcadorRescate) {
                     mapaRescate.removeLayer(marcadorRescate);
@@ -862,7 +860,7 @@ $(document).ready(function() {
                 
                 marcadorRescate = L.marker(e.latlng).addTo(mapaRescate);
                 
-                // Guardar coordenadas en los campos ocultos
+                
                 document.getElementById('latitud_rescate').value = e.latlng.lat;
                 document.getElementById('longitud_rescate').value = e.latlng.lng;
                 
@@ -871,7 +869,7 @@ $(document).ready(function() {
         }
     });
 
-    // Manejo de la imagen de upload
+    
     $(document).on('click', '.image-upload-box', function() {
         $('#imagen_animal').click();
     });
@@ -890,14 +888,14 @@ $(document).ready(function() {
         }
     });
 
-    // Manejo del botón guardar animal
+    
     $('#guardarAnimal').on('click', function() {
         console.log('Botón guardar animal clickeado');
         
-        // Validar formulario
+        
         const form = document.getElementById('animalForm');
         if (form.checkValidity()) {
-            // Recopilar datos del formulario
+            
             const formData = new FormData(form);
             const animalData = {};
             
@@ -907,16 +905,16 @@ $(document).ready(function() {
             
             console.log('Datos del animal:', animalData);
             
-            // Simular guardado
+            
             alert('Animal guardado exitosamente: ' + animalData.nombre);
             
-            // Cerrar modal
+            
             var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
             if (modal) {
                 modal.hide();
             }
             
-            // Limpiar formulario
+            
             form.reset();
             $('.image-upload-box').html(`
                 <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
@@ -930,11 +928,11 @@ $(document).ready(function() {
         }
     });
     
-    // Manejo del modal de detalles
+    
     $('.view-details-btn').on('click', function() {
         const data = $(this).data();
         
-        // Información básica
+        
         $('#modalAnimalNombre').text(data.nombre);
         $('#modalAnimalImagen').attr('src', data.imagen);
         $('#modalAnimalEspecie').text(data.especie);
@@ -944,11 +942,11 @@ $(document).ready(function() {
         $('#modalAnimalEstado').text(data.estado_salud);
         $('#modalAnimalIngreso').text(data.fecha_ingreso);
         
-        // Badges
+        
         $('#modalAnimalTipoBadge').text(data.tipo).removeClass().addClass('badge badge-' + getTipoClass(data.tipo));
         $('#modalAnimalEstadoBadge').text(data.estado_salud).removeClass().addClass('badge badge-' + getEstadoClass(data.estado_salud));
         
-        // Información adicional
+        
         $('#modalAlimentacionTipo').text(data.alimentacion_tipo);
         $('#modalAlimentacionCantidad').text(data.alimentacion_cantidad);
         $('#modalAnimalRescatista').text(data.rescatista);
@@ -959,12 +957,12 @@ $(document).ready(function() {
         $('#changeStatusAnimalName').text(data.nombre);
     });
     
-    // Función para obtener la clase del estado
+    
     function getEstadoClass(estado) {
         return 'secondary';
     }
     
-    // Función para obtener la clase del tipo
+    
     function getTipoClass(tipo) {
         switch(tipo) {
             case 'Animal Doméstico': return 'success';
@@ -973,16 +971,16 @@ $(document).ready(function() {
         }
     }
     
-    // Guardar animal
+    
     $('#guardarAnimal').on('click', function() {
-        // Cerrar modal sin funcionalidad por el momento
+        
         var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
         if (modal) {
             modal.hide();
         }
     });
     
-    // Confirmar cambio de estado
+    
     $('#confirmarCambioEstado').on('click', function() {
         const nuevoEstado = $('input[name="health_status"]:checked').val();
         if (nuevoEstado) {
@@ -994,9 +992,9 @@ $(document).ready(function() {
         }
     });
     
-    // Manejo del botón guardar rescatista
+    
     $('#guardarRescatista').on('click', function() {
-        // Cerrar modal sin funcionalidad por el momento
+        
         var modal = bootstrap.Modal.getInstance(document.getElementById('agregarRescatistaModal'));
         if (modal) {
             modal.hide();

@@ -3,7 +3,6 @@
 @section('title', 'Adoptar o Liberar Animales')
 
 @php
-    // --- DATOS HARDCODEADOS DIRECTAMENTE EN LA VISTA ---
     $animales = collect([
         (object)[
             'id' => 1,
@@ -12,7 +11,7 @@
             'raza' => 'Loro',
             'estado_salud' => 'Muy Bueno',
             'tipo' => 'Silvestre',
-            'imagen' => asset('Fotos/R.jpg'), // Asegúrate que la ruta sea correcta
+            'imagen' => asset('Fotos/R.jpg'),
         ],
         (object)[
             'id' => 2,
@@ -21,7 +20,7 @@
             'raza' => 'Jaguar',
             'estado_salud' => 'Bueno',
             'tipo' => 'Silvestre',
-            'imagen' => asset('Fotos/OIP.jpg'), // Asegúrate que la ruta sea correcta
+            'imagen' => asset('Fotos/OIP.jpg'),
         ],
         (object)[
             'id' => 3,
@@ -30,13 +29,12 @@
             'raza' => 'Golden Retriever',
             'estado_salud' => 'Excelente',
             'tipo' => 'Doméstico',
-            'imagen' => asset('Fotos/Patota.png'), // Asegúrate que la ruta sea correcta
+            'imagen' => asset('Fotos/Patota.png'),
         ],
     ]);
 @endphp
 
 @section('content')
-<!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
@@ -56,11 +54,9 @@
     </div>
 </div>
 
-<!-- Main content -->
 <section class="content">
     <div class="container-fluid">
 
-    <!-- Search and Filter Card -->
     <div class="card card-primary card-outline">
         <div class="card-header">
             <h3 class="card-title">
@@ -132,7 +128,6 @@
         </div>
     </div>
 
-    <!-- Animals List -->
     <div class="row">
         @forelse ($animales as $animal)
             <div class="col-md-4 col-lg-3 mb-4">
@@ -182,9 +177,6 @@
     </div>
     </section>
 
-{{-- ================================================================= --}}
-{{--                       MODAL LIBERAR ANIMAL                        --}}
-{{-- ================================================================= --}}
 <div class="modal fade" id="liberarAnimalModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -197,7 +189,6 @@
                 </button>
             </div>
             <div class="modal-body">
-                <!-- Información del Animal -->
                 <div class="card card-info card-outline mb-3">
                     <div class="card-header">
                         <h3 class="card-title">
@@ -264,7 +255,7 @@
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    /* Estilos adicionales si son necesarios */
+    
 </style>
 @endsection
 
@@ -272,27 +263,26 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-// Variables globales para el mapa de adopciones
+
 var mapaAdopcion = null;
 var marcadorAdopcion = null;
 
-// Función para obtener ubicación actual en adopciones
 function obtenerUbicacionAdopcion() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
             
-            // Centrar el mapa en la ubicación actual
+            
             mapaAdopcion.setView([lat, lng], 15);
             
-            // Agregar marcador
+            
             if (marcadorAdopcion) {
                 mapaAdopcion.removeLayer(marcadorAdopcion);
             }
             marcadorAdopcion = L.marker([lat, lng]).addTo(mapaAdopcion);
             
-            // Actualizar campos ocultos
+            
             document.getElementById('latitud_adopcion').value = lat;
             document.getElementById('longitud_adopcion').value = lng;
             
@@ -307,7 +297,7 @@ function obtenerUbicacionAdopcion() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    // Inicializar Select2 para los filtros
+    
     $('.select2').select2({
         theme: 'default',
         width: '100%'
@@ -316,17 +306,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const liberarAnimalModal = document.getElementById('liberarAnimalModal');
     
     $('#liberarAnimalModal').on('show.bs.modal', function (event) {
-        // El botón que fue presionado
+        
         const button = event.relatedTarget;
         
-        // Lee el nombre del animal desde el atributo data-* del botón
+        
         const nombreAnimal = button.dataset.nombre;
 
-        // Encuentra el badge dentro del modal y actualiza su texto
+        
         const modalAnimalNameBadge = liberarAnimalModal.querySelector('#modalAnimalNameBadge');
         modalAnimalNameBadge.textContent = nombreAnimal;
         
-        // Inicializar mapa si no existe
+        
         if (!mapaAdopcion) {
             setTimeout(function() {
                 mapaAdopcion = L.map('mapaAdopcion').setView([-17.7833, -63.1833], 13);
@@ -335,7 +325,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     attribution: '© OpenStreetMap contributors'
                 }).addTo(mapaAdopcion);
                 
-                // Agregar marcador al hacer clic en el mapa
+                
                 mapaAdopcion.on('click', function(e) {
                     if (marcadorAdopcion) {
                         mapaAdopcion.removeLayer(marcadorAdopcion);
@@ -343,7 +333,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     
                     marcadorAdopcion = L.marker(e.latlng).addTo(mapaAdopcion);
                     
-                    // Guardar coordenadas en los campos ocultos
+                    
                     document.getElementById('latitud_adopcion').value = e.latlng.lat;
                     document.getElementById('longitud_adopcion').value = e.latlng.lng;
                     

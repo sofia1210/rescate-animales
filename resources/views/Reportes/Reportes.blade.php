@@ -4,13 +4,13 @@
 
 @push('styles')
 <style>
-    /* Estilos personalizados para el gráfico de barras verticales */
+    
     .chart-bar {
         width: 50px;
-        border-radius: 5px 5px 0 0; /* Bordes superiores redondeados */
+        border-radius: 5px 5px 0 0; 
     }
     .bar-chart-container {
-        height: 180px; /* Un poco más de altura para el gráfico */
+        height: 180px; 
         text-align: center;
         border-bottom: 1px solid #dee2e6;
         padding-bottom: 10px;

@@ -249,8 +249,8 @@
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
 <script>
-    // Inicializar mapa
-    var map = L.map('map').setView([-17.7833, -63.1833], 13); // Coordenadas de Santa Cruz, Bolivia
+    
+    var map = L.map('map').setView([-17.7833, -63.1833], 13); 
     
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© OpenStreetMap contributors'
@@ -258,7 +258,7 @@
 
     var marker = null;
 
-    // Agregar marcador al hacer clic en el mapa
+    
     map.on('click', function(e) {
         if (marker) {
             map.removeLayer(marker);
@@ -266,12 +266,12 @@
         
         marker = L.marker(e.latlng).addTo(map);
         
-        // Guardar coordenadas en los campos ocultos
+        
         document.getElementById('latitud').value = e.latlng.lat;
         document.getElementById('longitud').value = e.latlng.lng;
     });
 
-    // Mostrar/ocultar campo CI según tipo de usuario
+    
     document.querySelectorAll('input[name="tipo_usuario"]').forEach(function(radio) {
         radio.addEventListener('change', function() {
             const ciField = document.getElementById('ciField');
@@ -288,7 +288,7 @@
         });
     });
 
-    // Validación del formulario
+    
     document.getElementById('reporteForm').addEventListener('submit', function(e) {
         const latitud = document.getElementById('latitud').value;
         const longitud = document.getElementById('longitud').value;
@@ -299,16 +299,16 @@
             return false;
         }
         
-        // Mostrar modal de confirmación
+        
         e.preventDefault();
         $('#modal-default').modal('show');
     });
 
-    // Manejar confirmación del modal
+    
     document.getElementById('confirmarEnvio').addEventListener('click', function() {
         $('#modal-default').modal('hide');
         
-        // Enviar el formulario normalmente - el servidor se encargará de redirigir
+        
         document.getElementById('reporteForm').submit();
     });
 </script>

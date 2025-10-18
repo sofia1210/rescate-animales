@@ -7,17 +7,13 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
-// --- Rutas de autenticación ---
-
-// Muestra el formulario de login
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login');
 
-// Procesa el formulario de login (Hardcoded)
 Route::post('/login', function (Request $request) {
     if ($request->email === 'admin@example.com' && $request->password === 'password') {
-        // En un futuro, aquí iniciarías la sesión del usuario.
+        
         return redirect()->route('home');
     }
     return back()->withErrors('Credenciales incorrectas.');
@@ -27,17 +23,14 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register');
 
-// Ruta para el home
 Route::get('/home', function () {
     return view('home.home');
 })->name('home');
 
-// Ruta para el inicio
 Route::get('/inicio', function () {
     return view('home.home');
 })->name('inicio');
 
-// Rutas principales de la aplicación
 Route::get('/animales', function (Request $request) {
     $animales = [
         (object)[
@@ -132,16 +125,12 @@ Route::get('/reportes', function () {
     return view('Reportes.Reportes');
 })->name('reportes.index');
 
-// --- Rutas de Reporte Rápido ---
-
-// Mostrar formulario de reporte rápido
 Route::get('/reporte-rapido', function () {
     return view('ReporteRapido.index');
 })->name('reporte-rapido');
 
-// Procesar reporte rápido
 Route::post('/reporte-rapido', function (Request $request) {
-    // Validar datos del formulario
+    
     $request->validate([
         'tipo_emergencia' => 'required|in:incendio,otro',
         'tipo_usuario' => 'required|in:reportante,rescatista',
@@ -153,7 +142,7 @@ Route::post('/reporte-rapido', function (Request $request) {
         'ci' => 'required_if:tipo_usuario,rescatista|nullable|string|max:20'
     ]);
 
-    // Simular guardado del reporte (en un proyecto real, aquí guardarías en la base de datos)
+    
     $reporte = [
         'tipo_emergencia' => $request->tipo_emergencia,
         'tipo_usuario' => $request->tipo_usuario,
@@ -166,40 +155,32 @@ Route::post('/reporte-rapido', function (Request $request) {
         'fecha_reporte' => now()
     ];
 
-    // Aquí podrías guardar en la base de datos, enviar notificaciones, etc.
-    // Por ahora solo mostramos la confirmación
+    
+    
     
     return view('ReporteRapido.confirmacion', compact('reporte'));
 })->name('reporte-rapido.store');
 
-// --- Rutas de Acciones de Animales ---
-
-// Seleccionar Veterinario para Evaluación Médica
 Route::get('/animales/seleccionar-veterinario-evaluacion', function () {
     return view('Animales.seleccionar-veterinario-evaluacion');
 })->name('animales.seleccionar-veterinario-evaluacion');
 
-// Evaluación Médica
 Route::get('/animales/evaluacion-medica', function () {
     return view('Animales.evaluacion-medica');
 })->name('animales.evaluacion-medica');
 
-// Seleccionar Veterinario para Tratamiento
 Route::get('/animales/seleccionar-veterinario-tratamiento', function () {
     return view('Animales.seleccionar-veterinario-tratamiento');
 })->name('animales.seleccionar-veterinario-tratamiento');
 
-// Ver Ubicación
 Route::get('/animales/ver-ubicacion', function () {
     return view('Animales.ver-ubicacion');
 })->name('animales.ver-ubicacion');
 
-// Editar Datos
 Route::get('/animales/editar-datos', function () {
     return view('Animales.editar-datos');
 })->name('animales.editar-datos');
 
-// Tratamiento
 Route::get('/animales/tratamiento', function () {
     return view('Animales.tratamiento');
 })->name('animales.tratamiento');

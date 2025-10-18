@@ -3,7 +3,7 @@
 @section('title', 'Dashboard - Rescate Animales')
 
 @php
-    // Datos para el dashboard
+    
     $totalAnimales = 25;
     $animalesRescatados = 18;
     $animalesAdoptados = 12;
@@ -710,7 +710,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 $(document).ready(function() {
-    // Estado de Salud Chart
+    
     const estadoSaludCtx = document.getElementById('estadoSaludChart').getContext('2d');
     new Chart(estadoSaludCtx, {
         type: 'doughnut',
@@ -740,7 +740,7 @@ $(document).ready(function() {
         }
     });
 
-    // Tipos de Animales Chart
+    
     const tiposAnimalesCtx = document.getElementById('tiposAnimalesChart').getContext('2d');
     new Chart(tiposAnimalesCtx, {
         type: 'bar',
@@ -776,7 +776,7 @@ $(document).ready(function() {
         }
     });
 
-    // Rescates por Mes Chart
+    
     const rescatesPorMesCtx = document.getElementById('rescatesPorMesChart').getContext('2d');
     new Chart(rescatesPorMesCtx, {
         type: 'line',
@@ -808,7 +808,7 @@ $(document).ready(function() {
         }
     });
 
-    // Gráfico de Adopciones por Mes
+    
     const adopcionesPorMesCtx = document.getElementById('adopcionesPorMesChart');
     if (adopcionesPorMesCtx) {
         new Chart(adopcionesPorMesCtx.getContext('2d'), {
@@ -835,7 +835,7 @@ $(document).ready(function() {
         });
     }
 
-    // Gráfico de Gastos por Categoría
+    
     const gastosCategoriaCtx = document.getElementById('gastosCategoriaChart');
     if (gastosCategoriaCtx) {
         new Chart(gastosCategoriaCtx.getContext('2d'), {
@@ -865,7 +865,7 @@ $(document).ready(function() {
         });
     }
 
-    // Gráfico de Eficiencia de Rescates
+    
     const eficienciaRescatesCtx = document.getElementById('eficienciaRescatesChart');
     if (eficienciaRescatesCtx) {
         new Chart(eficienciaRescatesCtx.getContext('2d'), {
@@ -900,7 +900,7 @@ $(document).ready(function() {
         });
     }
 
-    // Gráfico de Tiempo de Recuperación
+    
     const tiempoRecuperacionCtx = document.getElementById('tiempoRecuperacionChart');
     if (tiempoRecuperacionCtx) {
         new Chart(tiempoRecuperacionCtx.getContext('2d'), {
@@ -944,7 +944,7 @@ $(document).ready(function() {
         });
     }
 
-    // Gráfico de Distribución por Edad
+    
     const distribucionEdadCtx = document.getElementById('distribucionEdadChart');
     if (distribucionEdadCtx) {
         new Chart(distribucionEdadCtx.getContext('2d'), {
