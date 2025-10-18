@@ -184,3 +184,7 @@ Route::get('/animales/editar-datos', function () {
 Route::get('/animales/tratamiento', function () {
     return view('Animales.tratamiento');
 })->name('animales.tratamiento');
+
+Route::get('/centros', function () {
+    return view('Centros.index');
+})->name('centros.index');

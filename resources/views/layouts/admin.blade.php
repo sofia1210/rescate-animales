@@ -56,6 +56,11 @@
                             <i class="nav-icon fas fa-chart-line"></i><p>Reportes</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('centros.index') }}" class="nav-link {{ request()->is('centros*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-building"></i><p>Centros</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             {{-- ========================================================== --}}
