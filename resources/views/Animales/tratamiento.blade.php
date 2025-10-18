@@ -173,6 +173,84 @@
             </div>
         </div>
 
+        <!-- Medical Evaluations History -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-info card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            <i class="fas fa-file-medical mr-2"></i>
+                            Historial de Evaluaciones Médicas
+                        </h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Diagnóstico</th>
+                                        <th>Síntomas</th>
+                                        <th>Medicación</th>
+                                        <th>Veterinario</th>
+                                        <th>Próxima Revisión</th>
+                                        <th>Observaciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>01/09/2025</td>
+                                        <td>Desnutrición severa</td>
+                                        <td>Debilidad, pérdida de peso</td>
+                                        <td>Suero fisiológico</td>
+                                        <td>Dr. Carlos Mendoza</td>
+                                        <td>03/09/2025</td>
+                                        <td>Estado crítico al ingreso</td>
+                                    </tr>
+                                    <tr>
+                                        <td>03/09/2025</td>
+                                        <td>Mejoría nutricional</td>
+                                        <td>Incremento de apetito</td>
+                                        <td>Vitaminas B1, B6, B12</td>
+                                        <td>Dr. Carlos Mendoza</td>
+                                        <td>07/09/2025</td>
+                                        <td>Progreso satisfactorio</td>
+                                    </tr>
+                                    <tr>
+                                        <td>07/09/2025</td>
+                                        <td>Recuperación muscular</td>
+                                        <td>Mayor movilidad</td>
+                                        <td>Multivitamínicos</td>
+                                        <td>Dr. Ana García</td>
+                                        <td>12/09/2025</td>
+                                        <td>Primera caminata sin ayuda</td>
+                                    </tr>
+                                    <tr>
+                                        <td>12/09/2025</td>
+                                        <td>Estado estable</td>
+                                        <td>Sin síntomas preocupantes</td>
+                                        <td>Control de peso</td>
+                                        <td>Dr. Carlos Mendoza</td>
+                                        <td>20/09/2025</td>
+                                        <td>Listo para rehabilitación</td>
+                                    </tr>
+                                    <tr>
+                                        <td>20/09/2025</td>
+                                        <td>Recuperación completa</td>
+                                        <td>Actividad normal</td>
+                                        <td>Ejercicios de rehabilitación</td>
+                                        <td>Dr. Ana García</td>
+                                        <td>30/09/2025</td>
+                                        <td>Evaluación final pendiente</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Actions -->
         <div class="row">
             <div class="col-12">
@@ -248,7 +326,7 @@
       </div>
 
       <div class="modal-footer bg-light">
-        <button type="button" class="btn btn-success">
+        <button type="button" class="btn btn-success" onclick="guardarTratamiento()">
           <i class="fas fa-check me-2"></i> Guardar Tratamiento
         </button>
       </div>
@@ -321,6 +399,14 @@ function finalizarTratamiento() {
 function emergencia() {
     if (confirm('¿Es una emergencia médica? Se contactará al veterinario inmediatamente.')) {
         alert('Emergencia reportada. El veterinario será contactado.');
+    }
+}
+
+function guardarTratamiento() {
+    // Cerrar modal sin funcionalidad por el momento
+    var modal = bootstrap.Modal.getInstance(document.getElementById('agregarTratamientoModal'));
+    if (modal) {
+        modal.hide();
     }
 }
 </script>

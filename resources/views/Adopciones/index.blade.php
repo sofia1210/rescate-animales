@@ -23,6 +23,15 @@
             'tipo' => 'Silvestre',
             'imagen' => asset('Fotos/OIP.jpg'), // Asegúrate que la ruta sea correcta
         ],
+        (object)[
+            'id' => 3,
+            'nombre' => 'Max',
+            'especie' => 'Canino',
+            'raza' => 'Golden Retriever',
+            'estado_salud' => 'Excelente',
+            'tipo' => 'Doméstico',
+            'imagen' => asset('Fotos/Patota.png'), // Asegúrate que la ruta sea correcta
+        ],
     ]);
 @endphp
 
@@ -233,15 +242,6 @@
 
                         <!-- Mapa -->
                         <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
-                            <iframe
-                                width="100%"
-                                height="100%"
-                                frameborder="0"
-                                style="border:0;"
-                                src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d15839.459814786098!2d-63.1821!3d-17.7833!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2sbo!4v1684261534658!5m2!1ses!2sbo"
-                                allowfullscreen
-                                loading="lazy">
-                            </iframe>
                         </div>
 
                         <input type="hidden" id="latitud_adopcion" name="latitud_adopcion">
@@ -261,12 +261,16 @@
 @endsection
 
 @section('css')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     /* Estilos adicionales si son necesarios */
 </style>
 @endsection
 
 @section('js')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // Variables globales para el mapa de adopciones
 var mapaAdopcion = null;

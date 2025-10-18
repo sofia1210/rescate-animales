@@ -219,7 +219,7 @@
                     </div>
                     <input type="text" class="form-control" placeholder="Buscar por nombre o teléfono...">
                 </div>
-                <button class="btn btn-success btn-sm mb-3">
+                <button class="btn btn-success btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#agregarRescatistaModal">
                     <i class="fas fa-plus mr-1"></i> Agregar Nuevo Rescatista
                 </button>
                 <div class="list-group">
@@ -270,8 +270,8 @@
                 <form id="animalForm">
                     <div class="row">
                         <!-- Información Básica -->
-                        <div class="col-lg-6">
-                            <div class="card card-primary card-outline">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card card-primary">
                                 <div class="card-header">
                                     <h3 class="card-title">
                                         <i class="fas fa-info-circle mr-2"></i>Información Básica
@@ -317,8 +317,8 @@
                         </div>
 
                         <!-- Información del Rescate -->
-                        <div class="col-lg-6">
-                            <div class="card card-info card-outline">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card card-info">
                                 <div class="card-header">
                                     <h3 class="card-title">
                                         <i class="fas fa-map-marker-alt mr-2"></i>Información del Rescate
@@ -334,43 +334,30 @@
                                         <textarea class="form-control" id="ubicacion_rescate" name="ubicacion_rescate" rows="3" placeholder="Dirección completa del rescate" required></textarea>
                                     </div>
                                     <div class="form-group">
-    <label>Ubicación en el mapa</label>
-    <div class="input-group mb-2">
-        <div class="input-group-prepend">
-            <span class="input-group-text">
-                <i class="fas fa-map"></i>
-            </span>
-        </div>
-        <button type="button" class="btn btn-success" onclick="obtenerUbicacion()">
-            <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
-        </button>
-    </div>
-
-    <!-- Mapa estático -->
-    <div id="mapaRescate" style="height: 250px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
-        <iframe
-            width="100%"
-            height="100%"
-            frameborder="0"
-            style="border:0;"
-            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d24184.116851415733!2d-58.3816!3d-34.6037!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1ses!2s!4v1684261534658!5m2!1ses!2s"
-            allowfullscreen
-            loading="lazy">
-        </iframe>
-    </div>
-
-    <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta del rescate</small>
-    <input type="hidden" id="latitud_rescate" name="latitud_rescate">
-    <input type="hidden" id="longitud_rescate" name="longitud_rescate">
-</div>
-
+                                        <label>Ubicación en el mapa</label>
+                                        <div class="input-group mb-2">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                    <i class="fas fa-map"></i>
+                                                </span>
+                                            </div>
+                                            <button type="button" class="btn btn-success" onclick="obtenerUbicacion()">
+                                                <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
+                                            </button>
+                                        </div>
+                                        <div id="mapaRescate" style="height: 200px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
+                                        </div>
+                                        <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta del rescate</small>
+                                        <input type="hidden" id="latitud_rescate" name="latitud_rescate">
+                                        <input type="hidden" id="longitud_rescate" name="longitud_rescate">
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
                         <!-- Salud y Cuidados -->
-                        <div class="col-lg-6">
-                            <div class="card card-warning card-outline">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card card-warning">
                                 <div class="card-header">
                                     <h3 class="card-title">
                                         <i class="fas fa-heartbeat mr-2"></i>Salud y Cuidados
@@ -402,8 +389,8 @@
                         </div>
 
                         <!-- Multimedia -->
-                        <div class="col-lg-6">
-                            <div class="card card-secondary card-outline">
+                        <div class="col-lg-6 mb-4">
+                            <div class="card card-secondary">
                                 <div class="card-header">
                                     <h3 class="card-title">
                                         <i class="fas fa-image mr-2"></i>Multimedia
@@ -424,8 +411,8 @@
                         </div>
 
                         <!-- Observaciones -->
-                        <div class="col-12">
-                            <div class="card card-light card-outline">
+                        <div class="col-12 mb-4">
+                            <div class="card card-light">
                                 <div class="card-header">
                                     <h3 class="card-title">
                                         <i class="fas fa-clipboard-list mr-2"></i>Observaciones Adicionales
@@ -464,15 +451,15 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body p-4">
+            <div class="modal-body p-3">
                 <div class="row">
                     <div class="col-md-5">
-                        <div class="text-center mb-3">
-                            <img src="{{ asset('Fotos/OIP.jpg') }}" class="img-fluid rounded shadow" style="max-height: 350px; width: 100%; object-fit: cover;" alt="Foto del animal">
+                        <div class="text-center mb-2">
+                            <img src="{{ asset('Fotos/OIP.jpg') }}" class="img-fluid rounded shadow" style="max-height: 250px; width: 100%; object-fit: cover;" alt="Foto del animal">
                         </div>
                     </div>
                     <div class="col-md-7">
-                        <h4 class="text-primary mb-3">Sada</h4>
+                        <h4 class="text-primary mb-2">Sada</h4>
                         <div class="row">
                             <div class="col-sm-6">
                                 <p><strong>Especie:</strong> Canino</p>
@@ -488,17 +475,17 @@
                     </div>
                 </div>
                 
-                <hr>
+                <hr class="my-3">
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 class="text-primary">Información de Rescate</h5>
+                        <h5 class="text-primary mb-2">Información de Rescate</h5>
                         <p><strong>Rescatista:</strong> Rescatista Temporal</p>
                         <p><strong>Ubicación:</strong> Calle Paitití, Centro, Santa Cruz De La Sierra</p>
                         <p><strong>Fecha de Rescate:</strong> 01/09/2025</p>
                     </div>
                     <div class="col-md-6">
-                        <h5 class="text-primary">Alimentación</h5>
+                        <h5 class="text-primary mb-2">Alimentación</h5>
                         <p><strong>Tipo:</strong> Carnívoro</p>
                         <p><strong>Cantidad:</strong> Diaria</p>
                         <p><strong>Estado Nutricional:</strong> <span class="badge badge-info">Regular</span></p>
@@ -632,9 +619,75 @@
         </div>
     </div>
 </div>
+
+<!-- Modal Agregar Rescatista -->
+<div class="modal fade" id="agregarRescatistaModal" tabindex="-1" role="dialog" aria-labelledby="agregarRescatistaModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-success">
+                <h5 class="modal-title text-white" id="agregarRescatistaModalLabel">
+                    <i class="fas fa-user-plus mr-2"></i>Agregar Nuevo Rescatista
+                </h5>
+                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="rescatistaForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="nombre_rescatista">Nombre Completo *</label>
+                                <input type="text" class="form-control" id="nombre_rescatista" name="nombre" placeholder="Ej. Juan Pérez" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="telefono_rescatista">Teléfono *</label>
+                                <input type="tel" class="form-control" id="telefono_rescatista" name="telefono" placeholder="Ej. 70012345" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="ci_rescatista">Cédula de Identidad *</label>
+                                <input type="text" class="form-control" id="ci_rescatista" name="ci" placeholder="Ej. 12345678" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="email_rescatista">Email</label>
+                                <input type="email" class="form-control" id="email_rescatista" name="email" placeholder="Ej. juan@email.com">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="direccion_rescatista">Dirección</label>
+                        <textarea class="form-control" id="direccion_rescatista" name="direccion" rows="2" placeholder="Dirección del rescatista"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="observaciones_rescatista">Observaciones</label>
+                        <textarea class="form-control" id="observaciones_rescatista" name="observaciones" rows="3" placeholder="Información adicional sobre el rescatista"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-success" id="guardarRescatista">
+                    <i class="fas fa-save mr-1"></i>Guardar Rescatista
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
 @endsection
 
 @section('css')
+<!-- Leaflet CSS -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
     .widget-user-2 .widget-user-header {
         padding: 1rem;
@@ -729,6 +782,8 @@
 @endsection
 
 @section('js')
+<!-- Leaflet JS -->
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 // Función global para seleccionar rescatista
 function seleccionarRescatista(nombreRescatista) {
@@ -920,12 +975,11 @@ $(document).ready(function() {
     
     // Guardar animal
     $('#guardarAnimal').on('click', function() {
-        // Aquí iría la lógica para guardar el animal
-        alert('Animal guardado exitosamente');
+        // Cerrar modal sin funcionalidad por el momento
         var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
-        modal.hide();
-        // Recargar la página o actualizar la lista
-        location.reload();
+        if (modal) {
+            modal.hide();
+        }
     });
     
     // Confirmar cambio de estado
@@ -937,6 +991,15 @@ $(document).ready(function() {
             modal.hide();
         } else {
             alert('Por favor selecciona un estado');
+        }
+    });
+    
+    // Manejo del botón guardar rescatista
+    $('#guardarRescatista').on('click', function() {
+        // Cerrar modal sin funcionalidad por el momento
+        var modal = bootstrap.Modal.getInstance(document.getElementById('agregarRescatistaModal'));
+        if (modal) {
+            modal.hide();
         }
     });
 });

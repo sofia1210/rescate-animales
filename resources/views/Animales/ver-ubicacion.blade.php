@@ -440,6 +440,9 @@
 @endsection
 
 @section('js')
+<!-- Leaflet Routing Machine -->
+<link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+<script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 <script>
 // Variables globales para los mapas
 var mapaUbicacion = null;
@@ -447,6 +450,7 @@ var marcadorUbicacion = null;
 var mapaTraslados = null;
 var marcadoresTraslados = [];
 var rutasTraslados = [];
+var controlRuta = null;
 
 // Variable de control para el dibujo de la ruta
 var dibujarRutaAlAbrirMapa = false;
@@ -549,76 +553,55 @@ function mostrarRutaCompleta() {
     limpiarMapa();
     mostrarTodosLosPuntos();
     
-    // Crear puntos para la ruta
-    var puntosRuta = trasladosData.map(function(traslado) {
-        return [traslado.lat, traslado.lng];
+    // Crear waypoints para la ruta
+    var waypoints = trasladosData.map(function(traslado) {
+        return L.latLng(traslado.lat, traslado.lng);
     });
     
-    // Crear la ruta usando una línea
-    var ruta = L.polyline(puntosRuta, {
-        color: '#3388ff',
-        weight: 4,
-        opacity: 0.8,
-        dashArray: '10, 10'
+    // Crear control de ruta usando Leaflet Routing Machine
+    controlRuta = L.Routing.control({
+        waypoints: waypoints,
+        routeWhileDragging: false,
+        createMarker: function() { return null; }, // No crear marcadores adicionales
+        lineOptions: {
+            styles: [{ 
+                color: '#007bff', 
+                weight: 4, 
+                opacity: 0.8,
+                dashArray: '10, 10'
+            }]
+        },
+        addWaypoints: false,
+        draggableWaypoints: false,
+        fitSelectedRoutes: true,
+        show: false, // Ocultar el panel de instrucciones
+        collapsible: false
     }).addTo(mapaTraslados);
     
-    rutasTraslados.push(ruta);
-    
-    // Función para calcular el rumbo (bearing) para las flechas
-    function calculateBearing(lat1, lon1, lat2, lon2) {
-        lat1 = lat1 * Math.PI / 180;
-        lon1 = lon1 * Math.PI / 180;
-        lat2 = lat2 * Math.PI / 180;
-        lon2 = lon2 * Math.PI / 180;
-
-        var dLon = lon2 - lon1;
-        var y = Math.sin(dLon) * Math.cos(lat2);
-        var x = Math.cos(lat1) * Math.sin(lat2) - Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLon);
-        var brng = Math.atan2(y, x);
-
-        brng = brng * 180 / Math.PI;
-        return (brng + 360) % 360; 
-    }
-
-    // Agregar flechas direccionales
-    for (var i = 0; i < puntosRuta.length - 1; i++) {
-        var puntoInicio = puntosRuta[i];
-        var puntoFin = puntosRuta[i + 1];
-        
-        var latIntermedia = (puntoInicio[0] + puntoFin[0]) / 2;
-        var lngIntermedia = (puntoInicio[1] + puntoFin[1]) / 2;
-        
-        var flecha = L.divIcon({
-            className: 'custom-div-icon',
-            html: `<div style="background: none; color: #3388ff; font-size: 20px; text-shadow: 1px 1px 2px white;"><i class="fas fa-arrow-right"></i></div>`,
-            iconSize: [20, 20],
-            iconAnchor: [10, 10]
-        });
-        
-        L.marker([latIntermedia, lngIntermedia], {
-            icon: flecha,
-            rotationAngle: calculateBearing(puntoInicio[0], puntoInicio[1], puntoFin[0], puntoFin[1])
-        }).addTo(mapaTraslados);
-    }
-    
     // Mostrar información de la ruta
-    var distanciaTotal = calcularDistanciaTotal();
-    var tiempoTotal = calcularTiempoTotal();
-    
     var infoRuta = L.control({position: 'topright'});
     infoRuta.onAdd = function(map) {
         var div = L.DomUtil.create('div', 'info-ruta');
         div.innerHTML = `
             <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.2);">
                 <h6><i class="fas fa-route"></i> Información de la Ruta</h6>
-                <p><strong>Distancia Total:</strong> ${distanciaTotal} km</p>
-                <p><strong>Tiempo Total Estimado:</strong> ${tiempoTotal}</p>
-                <p><strong>Traslados:</strong> ${trasladosData.length - 1}</p>
+                <p><strong>Puntos de Traslado:</strong> ${trasladosData.length}</p>
+                <p><strong>Ruta entre calles:</strong> Activada</p>
             </div>
         `;
         return div;
     };
     infoRuta.addTo(mapaTraslados);
+    
+    // Ajustar vista para mostrar toda la ruta
+    setTimeout(function() {
+        if (controlRuta.getPlan()) {
+            var bounds = controlRuta.getPlan().getBounds();
+            if (bounds.isValid()) {
+                mapaTraslados.fitBounds(bounds, { padding: [20, 20] });
+            }
+        }
+    }, 1000);
 }
 
 // Función para limpiar el mapa
@@ -631,6 +614,11 @@ function limpiarMapa() {
     });
     marcadoresTraslados = [];
     rutasTraslados = [];
+    
+    if (controlRuta) {
+        mapaTraslados.removeControl(controlRuta);
+        controlRuta = null;
+    }
     
     mapaTraslados.eachLayer(function(layer) {
         if (layer instanceof L.Control) {

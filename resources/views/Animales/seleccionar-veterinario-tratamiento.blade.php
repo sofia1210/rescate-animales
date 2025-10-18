@@ -302,23 +302,8 @@ function seleccionarVeterinario(id, nombre) {
 }
 
 function guardarVeterinario() {
-    const form = document.getElementById('veterinarioForm');
-    if (form.checkValidity()) {
-        // Simular guardado del veterinario
-        alert('Veterinario agregado exitosamente');
-        
-        // Cerrar modal
-        $('#agregarVeterinarioModal').modal('hide');
-        
-        // Limpiar formulario
-        form.reset();
-        
-        // Aquí podrías recargar la lista de veterinarios o agregar el nuevo a la lista
-        location.reload();
-    } else {
-        alert('Por favor completa todos los campos obligatorios');
-        form.reportValidity();
-    }
+    // Cerrar modal sin funcionalidad por el momento
+    $('#agregarVeterinarioModal').modal('hide');
 }
 
 // Búsqueda de veterinarios
