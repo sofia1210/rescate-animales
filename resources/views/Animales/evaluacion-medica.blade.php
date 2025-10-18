@@ -162,6 +162,74 @@
                 </div>
             </div>
         </div>
+
+        <!-- Historial de Evaluaciones Médicas -->
+        <div class="card card-primary card-outline">
+            <div class="card-header">
+                <h3 class="card-title">
+                    <i class="fas fa-notes-medical mr-2"></i>
+                    Historial de Evaluaciones Médicas
+                </h3>
+                <div class="card-tools">
+                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                        <i class="fas fa-minus"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Veterinario</th>
+                                <th>Diagnóstico</th>
+                                <th>Medicación</th>
+                                <th>Próxima Rev.</th>
+                                <th>Síntomas</th>
+                            </tr>
+                        </thead>
+                        <tbody id="historial-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal Detalle Evaluación -->
+        <div class="modal fade" id="detalleEvaluacionModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header bg-info">
+                        <h5 class="modal-title text-white">
+                            <i class="fas fa-file-medical mr-2"></i>Detalle de Evaluación
+                        </h5>
+                        <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <dl class="row mb-0">
+                            <dt class="col-sm-3">Fecha:</dt>
+                            <dd class="col-sm-9"><span id="detFecha">-</span></dd>
+                            <dt class="col-sm-3">Veterinario:</dt>
+                            <dd class="col-sm-9"><span id="detVeterinario">-</span></dd>
+                            <dt class="col-sm-3">Diagnóstico:</dt>
+                            <dd class="col-sm-9"><span id="detDiagnostico">-</span></dd>
+                            <dt class="col-sm-3">Medicación:</dt>
+                            <dd class="col-sm-9"><span id="detMedicacion">-</span></dd>
+                            <dt class="col-sm-3">Próxima Revisión:</dt>
+                            <dd class="col-sm-9"><span id="detProxima">-</span></dd>
+                            <dt class="col-sm-3">Síntomas:</dt>
+                            <dd class="col-sm-9"><span id="detSintomas">-</span></dd>
+                        </dl>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
     </div>
 </section>
 @endsection
@@ -201,22 +269,61 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function cambiarVeterinario() {
-    
     window.location.href = "{{ route('animales.seleccionar-veterinario-evaluacion') }}";
 }
 
+// Datos hardcodeados del historial
+const defaultHistorial = [
+    { id: 1, fecha: '2025-09-01 10:00', veterinario: 'Dr. Carlos Mendoza', diagnostico: 'Infección respiratoria', medicacion: 'Amoxicilina 500mg', proxima: '2025-09-10 09:00', sintomas: 'Tos, dificultad respiratoria' },
+    { id: 2, fecha: '2025-09-05 16:30', veterinario: 'Dra. Ana López', diagnostico: 'Herida superficial', medicacion: 'Cicatrizante tópico', proxima: '', sintomas: 'Dolor localizado' },
+    { id: 3, fecha: '2025-09-12 11:15', veterinario: 'Dr. Juan Pérez', diagnostico: 'Parásitos intestinales', medicacion: 'Antiparasitario', proxima: '2025-09-22 08:00', sintomas: 'Letargo, pérdida de apetito' }
+];
+let historial = defaultHistorial.slice();
+
+function renderHistorial() {
+    const tbody = document.getElementById('historial-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+    historial.forEach(h => {
+        const tr = document.createElement('tr');
+        tr.setAttribute('data-id', h.id);
+        tr.innerHTML = `
+            <td>${h.fecha}</td>
+            <td>${h.veterinario}</td>
+            <td>${h.diagnostico}</td>
+            <td>${h.medicacion || '-'}</td>
+            <td>${h.proxima || '-'}</td>
+            <td>${h.sintomas}</td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    renderHistorial();
+});
+
 function guardarEvaluacion() {
-    
     const form = document.getElementById('evaluacionForm');
     if (form.checkValidity()) {
-        
+        const veterinario = document.getElementById('veterinarioNombre').textContent || 'N/A';
+        const fechaRaw = document.getElementById('fecha_evaluacion').value || '';
+        const fecha = fechaRaw.replace('T',' ');
+        const diagnostico = document.getElementById('diagnostico').value.trim();
+        const medicacion = document.getElementById('medicacion').value.trim();
+        const proxima = (document.getElementById('proxima_revision').value || '').replace('T',' ');
+        const sintomas = document.getElementById('sintomas').value.trim();
+
+        historial.unshift({
+            id: Date.now(),
+            fecha, veterinario, diagnostico, medicacion, proxima, sintomas
+        });
+        renderHistorial();
+
         alert('Evaluación médica guardada exitosamente');
-        
-        
         sessionStorage.removeItem('veterinarioSeleccionado');
-        
-        
-        
+        form.reset();
+        document.getElementById('fecha_evaluacion').value = "{{ now()->format('Y-m-d\\TH:i') }}";
     } else {
         alert('Por favor completa todos los campos obligatorios');
         form.reportValidity();

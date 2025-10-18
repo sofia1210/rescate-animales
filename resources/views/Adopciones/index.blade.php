@@ -232,8 +232,7 @@
                         <p class="text-center text-muted small mb-3">o haz clic en el mapa para seleccionar la ubicación</p>
 
                         <!-- Mapa -->
-                        <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
-                        </div>
+                        <div id="mapaAdopcion" style="height: 300px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;"></div>
 
                         <input type="hidden" id="latitud_adopcion" name="latitud_adopcion">
                         <input type="hidden" id="longitud_adopcion" name="longitud_adopcion">
@@ -255,7 +254,7 @@
 <!-- Leaflet CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
-    
+    /* Puedes agregar estilos del mapa si lo prefieres aquí */
 </style>
 @endsection
 
@@ -263,32 +262,28 @@
 <!-- Leaflet JS -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
-
 var mapaAdopcion = null;
 var marcadorAdopcion = null;
 
+@section('js')
 function obtenerUbicacionAdopcion() {
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function(position) {
             var lat = position.coords.latitude;
             var lng = position.coords.longitude;
-            
-            
+
             mapaAdopcion.setView([lat, lng], 15);
-            
-            
+
             if (marcadorAdopcion) {
                 mapaAdopcion.removeLayer(marcadorAdopcion);
             }
+            // Agregar marcador en la ubicación actual
             marcadorAdopcion = L.marker([lat, lng]).addTo(mapaAdopcion);
-            
-            
+            marcadorAdopcion.bindPopup('Ubicación seleccionada').openPopup();
+
             document.getElementById('latitud_adopcion').value = lat;
             document.getElementById('longitud_adopcion').value = lng;
-            
-            console.log('Ubicación de adopción obtenida:', lat, lng);
         }, function(error) {
-            console.error('Error al obtener ubicación:', error);
             alert('No se pudo obtener tu ubicación. Puedes marcar la ubicación manualmente en el mapa.');
         });
     } else {
@@ -297,49 +292,36 @@ function obtenerUbicacionAdopcion() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    
-    $('.select2').select2({
-        theme: 'default',
-        width: '100%'
-    });
-    
+    $('.select2').select2({ theme: 'default', width: '100%' });
     const liberarAnimalModal = document.getElementById('liberarAnimalModal');
-    
-    $('#liberarAnimalModal').on('show.bs.modal', function (event) {
-        
-        const button = event.relatedTarget;
-        
-        
-        const nombreAnimal = button.dataset.nombre;
 
-        
+    $('#liberarAnimalModal').on('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const nombreAnimal = button.dataset.nombre;
         const modalAnimalNameBadge = liberarAnimalModal.querySelector('#modalAnimalNameBadge');
         modalAnimalNameBadge.textContent = nombreAnimal;
-        
-        
+
         if (!mapaAdopcion) {
             setTimeout(function() {
                 mapaAdopcion = L.map('mapaAdopcion').setView([-17.7833, -63.1833], 13);
-                
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '© OpenStreetMap contributors'
-                }).addTo(mapaAdopcion);
-                
-                
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {}).addTo(mapaAdopcion);
                 mapaAdopcion.on('click', function(e) {
                     if (marcadorAdopcion) {
                         mapaAdopcion.removeLayer(marcadorAdopcion);
                     }
-                    
                     marcadorAdopcion = L.marker(e.latlng).addTo(mapaAdopcion);
-                    
-                    
+                    marcadorAdopcion.bindPopup('Ubicación seleccionada').openPopup();
                     document.getElementById('latitud_adopcion').value = e.latlng.lat;
                     document.getElementById('longitud_adopcion').value = e.latlng.lng;
-                    
-                    console.log('Ubicación de adopción marcada:', e.latlng.lat, e.latlng.lng);
                 });
+                setTimeout(function() { mapaAdopcion.invalidateSize(); }, 0);
             }, 100);
+        }
+    });
+
+    $('#liberarAnimalModal').on('shown.bs.modal', function () {
+        if (mapaAdopcion) {
+            setTimeout(function() { mapaAdopcion.invalidateSize(); }, 0);
         }
     });
 });
