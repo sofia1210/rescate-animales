@@ -72,6 +72,11 @@
                             <i class="nav-icon fas fa-building"></i><p>Centros</p>
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a href="{{ route('perfil.index') }}" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user"></i><p>Perfil</p>
+                        </a>
+                    </li>
                 </ul>
             </nav>
             {{-- ========================================================== --}}

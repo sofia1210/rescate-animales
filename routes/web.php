@@ -31,6 +31,10 @@ Route::get('/inicio', function () {
     return view('home.home');
 })->name('inicio');
 
+Route::get('/perfil', function () {
+    return view('Perfil.index');
+})->name('perfil.index');
+
 Route::get('/animales', function (Request $request) {
     $animales = [
         (object)[
