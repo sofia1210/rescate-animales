@@ -431,7 +431,7 @@
             </div>
             <div class="modal-footer">
                 
-                <button type="button" class="btn btn-success" id="guardarAnimal">
+                <button type="button" class="btn btn-success" id="guardarAnimal" data-bs-dismiss="modal" data-dismiss="modal">
                     <i class="fas fa-save mr-1"></i>Guardar Animal
                 </button>
             </div>
@@ -676,7 +676,7 @@
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                     <i class="fas fa-times mr-1"></i>Cancelar
                 </button>
-                <button type="button" class="btn btn-success" id="guardarRescatista">
+                <button type="button" class="btn btn-success" id="guardarRescatista" data-bs-dismiss="modal" data-dismiss="modal">
                     <i class="fas fa-save mr-1"></i>Guardar Rescatista
                 </button>
             </div>
@@ -889,43 +889,11 @@ $(document).ready(function() {
     });
 
     
-    $('#guardarAnimal').on('click', function() {
-        console.log('Botón guardar animal clickeado');
-        
-        
-        const form = document.getElementById('animalForm');
-        if (form.checkValidity()) {
-            
-            const formData = new FormData(form);
-            const animalData = {};
-            
-            for (let [key, value] of formData.entries()) {
-                animalData[key] = value;
-            }
-            
-            console.log('Datos del animal:', animalData);
-            
-            
-            alert('Animal guardado exitosamente: ' + animalData.nombre);
-            
-            
-            var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
-            if (modal) {
-                modal.hide();
-            }
-            
-            
-            form.reset();
-            $('.image-upload-box').html(`
-                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
-                <p class="text-muted mb-2">Click para subir o arrastra una imagen</p>
-                <small class="text-muted">PNG, JPG, JPEG (Máx. 5MB)</small>
-            `);
-            
-        } else {
-            alert('Por favor completa todos los campos obligatorios');
-            form.reportValidity();
-        }
+    $(document).on('click', '#guardarAnimal', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
+        if (modal) { modal.hide(); }
     });
     
     
@@ -993,12 +961,11 @@ $(document).ready(function() {
     });
     
     
-    $('#guardarRescatista').on('click', function() {
-        
+    $(document).on('click', '#guardarRescatista', function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
         var modal = bootstrap.Modal.getInstance(document.getElementById('agregarRescatistaModal'));
-        if (modal) {
-            modal.hide();
-        }
+        if (modal) { modal.hide(); }
     });
 });
 </script>

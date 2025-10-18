@@ -325,10 +325,11 @@
         </form>
       </div>
 
+      <!-- Modal Nuevo Tratamiento Médico (footer) -->
       <div class="modal-footer bg-light">
-        <button type="button" class="btn btn-success" onclick="guardarTratamiento()">
-          <i class="fas fa-check me-2"></i> Guardar Tratamiento
-        </button>
+          <button type="button" class="btn btn-success" onclick="guardarTratamiento()" data-bs-dismiss="modal" data-dismiss="modal">
+              <i class="fas fa-check me-2"></i> Guardar Tratamiento
+          </button>
       </div>
     </div>
   </div>

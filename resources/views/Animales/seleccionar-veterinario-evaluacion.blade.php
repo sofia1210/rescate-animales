@@ -237,10 +237,11 @@
                     </div>
                 </form>
             </div>
+            <!-- Modal Agregar Veterinario (footer) -->
             <div class="modal-footer">
             <
-
-                <button type="button" class="btn btn-success" onclick="guardarVeterinario()">
+            
+                <button type="button" class="btn btn-success" onclick="guardarVeterinario()" data-bs-dismiss="modal" data-dismiss="modal">
                     <i class="fas fa-save mr-1"></i> Guardar Veterinario
                 </button>
             </div>

@@ -46,7 +46,7 @@
                         <i class="fas fa-plus mr-1"></i> Nuevo Centro
                     </button>
                     <button type="button" class="btn btn-secondary btn-sm" id="btn-restablecer">
-                        <i class="fas fa-rotate-left mr-1"></i> Restablecer datos
+                        <i class="fas fa-rotate-left mr-1"></i> 
                     </button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
                         <i class="fas fa-minus"></i>
