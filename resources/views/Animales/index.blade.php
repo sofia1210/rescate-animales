@@ -81,8 +81,10 @@
                     <i class="fas fa-search mr-2"></i>
                     Búsqueda
                 </h3>
+                <!-- Botón (card-tools) para abrir Seleccionar Rescatista: sólo Brigadista/Admin -->
                 <div class="card-tools">
-                    <button type="button" class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal">
+                    <!-- Botón de apertura alterno: también restringido -->
+                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal" data-role-allowed="Brigadista,Administrador">
                         <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -219,7 +221,8 @@
                     </div>
                     <input type="text" class="form-control" placeholder="Buscar por nombre o teléfono...">
                 </div>
-                <button class="btn btn-success btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#agregarRescatistaModal">
+                <!-- Dentro de Seleccionar Rescatista: agregar rescatista sólo Admin -->
+                <button class="btn btn-success btn-sm mb-3" data-bs-toggle="modal" data-bs-target="#agregarRescatistaModal" data-role-allowed="Administrador">
                     <i class="fas fa-plus mr-1"></i> Agregar Nuevo Rescatista
                 </button>
                 <div class="list-group">
@@ -429,9 +432,10 @@
                     </div>
                 </form>
             </div>
+            <!-- Guardar Animal: sólo Brigadista/Admin -->
             <div class="modal-footer">
                 
-                <button type="button" class="btn btn-success" id="guardarAnimal" data-bs-dismiss="modal" data-dismiss="modal">
+                <button type="button" class="btn btn-success" id="guardarAnimal" data-bs-dismiss="modal" data-dismiss="modal" data-role-allowed="Brigadista,Administrador">
                     <i class="fas fa-save mr-1"></i>Guardar Animal
                 </button>
             </div>
@@ -507,24 +511,25 @@
                     </div>
                     <div class="col-md-6">
                         <h5 class="text-primary">Acciones Disponibles</h5>
+                        <!-- Acciones Disponibles: marcar por rol -->
                         <div class="row">
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.seleccionar-veterinario-evaluacion') }}" class="btn btn-success btn-block">
+                                <a href="{{ route('animales.seleccionar-veterinario-evaluacion') }}" class="btn btn-success btn-block" data-role-allowed="Veterinario,Administrador">
                                     <i class="fas fa-file-medical mr-2"></i> Evaluación Médica
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block">
+                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Brigadista,Administrador">
                                     <i class="fas fa-map-marker-alt mr-2"></i> Ver Ubicación
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.editar-datos') }}" class="btn btn-warning btn-block">
+                                <a href="{{ route('animales.editar-datos') }}" class="btn btn-warning btn-block" data-role-allowed="Administrador">
                                     <i class="fas fa-edit mr-2"></i> Editar Datos
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.seleccionar-veterinario-tratamiento') }}" class="btn btn-primary btn-block">
+                                <a href="{{ route('animales.seleccionar-veterinario-tratamiento') }}" class="btn btn-primary btn-block" data-role-allowed="Veterinario,Administrador">
                                     <i class="fas fa-heart mr-2"></i> Tratamiento
                                 </a>
                             </div>
@@ -543,8 +548,9 @@
                     </div>
                 </div>
             </div>
+            <!-- Botón Cambiar Estado: sólo Admin -->
             <div class="modal-footer justify-content-end">
-                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changeStatusModal">
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#changeStatusModal" data-role-allowed="Administrador">
                     <i class="fas fa-edit mr-1"></i>Cambiar Estado
                 </button>
             </div>
@@ -620,8 +626,8 @@
     </div>
 </div>
 
-<!-- Modal Agregar Rescatista -->
-<div class="modal fade" id="agregarRescatistaModal" tabindex="-1" role="dialog" aria-labelledby="agregarRescatistaModalLabel" aria-hidden="true">
+<!-- Modal Agregar Rescatista: restringir todo el modal a Admin -->
+<div class="modal fade" id="agregarRescatistaModal" tabindex="-1" role="dialog" aria-labelledby="agregarRescatistaModalLabel" aria-hidden="true" data-role-allowed="Administrador">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">

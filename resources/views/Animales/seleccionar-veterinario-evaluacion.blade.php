@@ -25,7 +25,8 @@
 </div>
 
 <!-- Main content -->
-<section class="content">
+<!-- Página de evaluación: visible para Veterinario/Admin; agregar veterinario sólo Admin -->
+<section class="content" data-role-allowed="Veterinario,Administrador">
     <div class="container-fluid">
         <!-- Animal Info Card -->
         
@@ -169,8 +170,8 @@
     </div>
 </section>
 
-<!-- Modal Agregar Veterinario -->
-<div class="modal fade" id="agregarVeterinarioModal" tabindex="-1" role="dialog" aria-labelledby="agregarVeterinarioModalLabel" aria-hidden="true">
+<!-- Modal Agregar Veterinario: sólo Admin -->
+<div class="modal fade" id="agregarVeterinarioModal" tabindex="-1" role="dialog" aria-labelledby="agregarVeterinarioModalLabel" aria-hidden="true" data-role-allowed="Administrador">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header bg-success">

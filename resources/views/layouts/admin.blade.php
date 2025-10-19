@@ -46,6 +46,7 @@
 
         <div class="sidebar">
             <nav class="mt-2">
+                <!-- Menú lateral: ajustar visibilidad por rol según diagrama -->
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                     <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('home') }}" class="nav-link {{ request()->is('home*') ? 'active' : '' }}">
@@ -57,7 +58,7 @@
                             <i class="nav-icon fas fa-paw"></i><p>Animales</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Administrador">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Administrador">
                         <a href="{{ route('adopciones.index') }}" class="nav-link {{ request()->is('adopciones*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-hand-holding-heart"></i><p>Adopciones</p>
                         </a>
@@ -67,12 +68,12 @@
                             <i class="nav-icon fas fa-chart-line"></i><p>Reportes</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Cuidador,Administrador">
+                    <li class="nav-item" data-role-allowed="Administrador">
                         <a href="{{ route('centros.index') }}" class="nav-link {{ request()->is('centros*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-building"></i><p>Centros</p>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('perfil.index') }}" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-user"></i><p>Perfil</p>
                         </a>
@@ -114,6 +115,7 @@
 </body>
 </html>
 
+<!-- Script de cambio de rol: añade clase al body para el tema -->
 <script>
 (function() {
     const ROLE_KEY = 'app_role';
@@ -128,6 +130,8 @@
 
     function applyRole(role) {
         if (roleBadge) roleBadge.textContent = role;
+
+        // Visibilidad por rol (data-role-allowed)
         document.querySelectorAll('[data-role-allowed]').forEach(el => {
             const allowed = parseAllowed(el);
             const visible = allowed.length === 0 || allowed.includes(role);

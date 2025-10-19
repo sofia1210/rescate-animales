@@ -33,7 +33,8 @@
     </div>
 </div>
 
-<section class="content">
+<!-- Sección Centros: acceso y acciones sólo para Administrador -->
+<section class="content" data-role-allowed="Administrador">
     <div class="container-fluid">
         <div class="card card-primary card-outline mb-3">
             <div class="card-header">
@@ -42,7 +43,7 @@
                     Búsqueda
                 </h3>
                 <div class="card-tools">
-                    <button type="button" class="btn btn-success btn-sm" id="btn-nuevo" data-bs-toggle="modal" data-bs-target="#modalCentro">
+                    <button type="button" class="btn btn-success btn-sm" id="btn-nuevo" data-bs-toggle="modal" data-bs-target="#modalCentro" data-role-allowed="Administrador">
                         <i class="fas fa-plus mr-1"></i> Nuevo Centro
                     </button>
                     <button type="button" class="btn btn-secondary btn-sm" id="btn-restablecer">
@@ -141,8 +142,8 @@
     </div>
 </section>
 
-<!-- Modal Crear/Editar Centro -->
-<div class="modal fade" id="modalCentro" tabindex="-1" aria-hidden="true">
+<!-- Modal Crear/Editar Centro: sólo Admin -->
+<div class="modal fade" id="modalCentro" tabindex="-1" aria-hidden="true" data-role-allowed="Administrador">
     <div class="modal-dialog modal-lg">
         <form id="form-centro" class="modal-content">
             <div class="modal-header bg-primary">
@@ -207,7 +208,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="btn-guardar" type="submit" class="btn btn-primary"><i class="fas fa-save mr-1"></i> Guardar</button>
+                <button id="btn-guardar" type="submit" class="btn btn-primary" data-role-allowed="Administrador">
+                    <i class="fas fa-save mr-1"></i> Guardar</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </form>

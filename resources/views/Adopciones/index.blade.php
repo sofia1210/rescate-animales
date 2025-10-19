@@ -54,7 +54,8 @@
     </div>
 </div>
 
-<section class="content">
+<!-- Mantener liberación sólo Admin (ya configurado) y permitir búsqueda/listado para Ciudadano/Admin -->
+<section class="content" data-role-allowed="Ciudadano,Administrador">
     <div class="container-fluid">
 
     <div class="card card-primary card-outline">
