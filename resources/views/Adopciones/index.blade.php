@@ -201,13 +201,14 @@
 <div class="modal fade" id="liberarAnimalModal" tabindex="-1" aria-hidden="true" data-role-allowed="Administrador,Veterinario">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
+            <!-- Dentro del modal #liberarAnimalModal, header -->
             <div class="modal-header bg-success">
                 <h4 class="modal-title text-white">
                     <i class="fas fa-home mr-2 icon-domestico d-none"></i>
                     <i class="fas fa-dove mr-2 icon-salvaje"></i>
                     <span id="modalTitleText">Liberar</span>
                 </h4>
-                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -287,125 +288,64 @@
 <script>
 let mapaAdopcion = null;
 let marcadorAdopcion = null;
-let googleMapsLoaded = false;
 
-// Función para cargar el API de Google Maps
-function loadGoogleMaps() {
-    if (typeof google !== 'undefined' && google.maps) {
-        googleMapsLoaded = true;
-        initMapCallback();
-        return;
+function actualizarModalSegunTipo(tipo) {
+    if (tipo === 'Doméstico') {
+        $('.icon-domestico').removeClass('d-none');
+        $('.icon-salvaje').addClass('d-none');
+        $('#modalTitleText').text('Dar en Adopción');
+        $('#modalSubtitleText').text('Animal a dar en Adopción');
+        $('#modalAnimalTipo').val(tipo);
+    } else {
+        $('.icon-domestico').addClass('d-none');
+        $('.icon-salvaje').removeClass('d-none');
+        $('#modalTitleText').text('Liberar');
+        $('#modalSubtitleText').text('Animal a Liberar');
+        $('#modalAnimalTipo').val(tipo);
     }
-    const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=AIzaSyBNs42Rt_CyxAqdbIBK0a5Ut83QiitVrOs&callback=initMapCallback';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
 }
 
-// Callback que se ejecutará cuando el API esté cargado
-window.initMapCallback = function() {
-    googleMapsLoaded = true;
-    console.log('Google Maps API cargado correctamente');
-    if ($('#liberarAnimalModal').is(':visible')) {
-        initMapaAdopcion();
-    }
-};
-
-// Cargar el API cuando el documento esté listo
-$(document).ready(loadGoogleMaps);
-</script>
-<script>
-// Actualizar interfaz del modal según tipo de animal
-    function actualizarModalSegunTipo(tipo) {
-        if (tipo === 'Doméstico') {
-            $('.icon-domestico').removeClass('d-none');
-            $('.icon-salvaje').addClass('d-none');
-            $('#modalTitleText').text('Dar en Adopción');
-            $('#modalSubtitleText').text('Animal a dar en Adopción');
-            $('#modalAnimalTipo').val(tipo);
-        } else {
-            $('.icon-domestico').addClass('d-none');
-            $('.icon-salvaje').removeClass('d-none');
-            $('#modalTitleText').text('Liberar');
-            $('#modalSubtitleText').text('Animal a Liberar');
-            $('#modalAnimalTipo').val(tipo);
-    let mapaAdopcion = null;
-let marcadorAdopcion = null;
-
 function initMapaAdopcion() {
-    try {
-        // Verificar si el API está cargado
-        if (!googleMapsLoaded || typeof google === 'undefined') {
-            console.log('Google Maps API no está cargado aún');
-            return;
-        }
+    const container = document.getElementById('mapaAdopcion');
+    if (!container) {
+        console.error('Contenedor #mapaAdopcion no encontrado');
+        return;
+    }
 
-        const container = document.getElementById('mapaAdopcion');
-        if (!container) {
-            console.error('Contenedor #mapaAdopcion no encontrado');
-            return;
-        }
+    const lat = parseFloat(document.getElementById('latitud_adopcion').value) || -17.7833;
+    const lng = parseFloat(document.getElementById('longitud_adopcion').value) || -63.1833;
 
-        // Limpiar instancia previa si existe
-        if (mapaAdopcion) {
-            return;
-        }
+    if (!mapaAdopcion) {
+        mapaAdopcion = L.map('mapaAdopcion', {
+            zoomControl: true,
+            scrollWheelZoom: true
+        }).setView([lat, lng], 13);
 
-        console.log('Inicializando mapa...');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(mapaAdopcion);
 
-        // Obtener coordenadas previas si existen
-        const lat = parseFloat(document.getElementById('latitud_adopcion').value) || -17.7833;
-        const lng = parseFloat(document.getElementById('longitud_adopcion').value) || -63.1833;
-        const initialPosition = { lat: lat, lng: lng };
+        marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
 
-        // Opciones del mapa
-        const mapOptions = {
-            center: initialPosition,
-            zoom: 13,
-            mapTypeId: google.maps.MapTypeId.ROADMAP,
-            streetViewControl: false,
-            fullscreenControl: false,
-            mapTypeControl: false,
-            gestureHandling: 'greedy'
-        };
-
-        // Crear nuevo mapa
-        mapaAdopcion = new google.maps.Map(container, mapOptions);
-
-        // Crear marcador inicial
-        marcadorAdopcion = new google.maps.Marker({
-            position: initialPosition,
-            map: mapaAdopcion,
-            draggable: true,
-            animation: google.maps.Animation.DROP
+        mapaAdopcion.on('click', function(e) {
+            marcadorAdopcion.setLatLng(e.latlng);
+            document.getElementById('latitud_adopcion').value = e.latlng.lat;
+            document.getElementById('longitud_adopcion').value = e.latlng.lng;
         });
 
-        // Evento de clic en el mapa
-        mapaAdopcion.addListener('click', function(event) {
-            const latLng = event.latLng;
-            marcadorAdopcion.setPosition(latLng);
-            
-            // Actualizar campos ocultos
-            document.getElementById('latitud_adopcion').value = latLng.lat();
-            document.getElementById('longitud_adopcion').value = latLng.lng();
+        marcadorAdopcion.on('dragend', function(e) {
+            const ll = e.target.getLatLng();
+            document.getElementById('latitud_adopcion').value = ll.lat;
+            document.getElementById('longitud_adopcion').value = ll.lng;
         });
 
-        // Evento de arrastre del marcador
-        marcadorAdopcion.addListener('dragend', function() {
-            const latLng = marcadorAdopcion.getPosition();
-            document.getElementById('latitud_adopcion').value = latLng.lat();
-            document.getElementById('longitud_adopcion').value = latLng.lng();
-        });
-
-        // Forzar redibujado del mapa
-        google.maps.event.trigger(mapaAdopcion, 'resize');
-        mapaAdopcion.setCenter(initialPosition);
-
-        console.log('Mapa inicializado correctamente');
-
-    } catch (error) {
-        console.error('Error al inicializar el mapa:', error);
+        console.log('Mapa Leaflet inicializado');
+    } else {
+        // Redimensionar si el contenedor se reabre
+        setTimeout(function() { mapaAdopcion.invalidateSize(true); }, 0);
+        mapaAdopcion.setView([lat, lng], 13);
+        if (marcadorAdopcion) marcadorAdopcion.setLatLng([lat, lng]);
+        console.log('Mapa Leaflet reusado y redimensionado');
     }
 }
 
@@ -419,80 +359,84 @@ function obtenerUbicacionAdopcion() {
         function(position) {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
-            const latLng = new google.maps.LatLng(lat, lng);
 
             if (!mapaAdopcion) initMapaAdopcion();
 
-            // Centrar mapa en la ubicación actual
-            mapaAdopcion.setCenter(latLng);
-            mapaAdopcion.setZoom(15);
-            
-            // Actualizar posición del marcador
-            marcadorAdopcion.setPosition(latLng);
+            mapaAdopcion.setView([lat, lng], 15);
+            if (!marcadorAdopcion) {
+                marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
+            } else {
+                marcadorAdopcion.setLatLng([lat, lng]);
+            }
 
-            // Actualizar campos ocultos
             document.getElementById('latitud_adopcion').value = lat;
             document.getElementById('longitud_adopcion').value = lng;
 
-            // Mostrar mensaje de confirmación
-            const infoWindow = new google.maps.InfoWindow({
-                content: 'Ubicación actual'
-            });
-            infoWindow.open(mapaAdopcion, marcadorAdopcion);
-            setTimeout(() => infoWindow.close(), 2000);
+            // Popup breve
+            marcadorAdopcion.bindPopup('Ubicación actual').openPopup();
+            setTimeout(() => marcadorAdopcion.closePopup(), 2000);
         },
         function(error) {
             console.warn('Error al obtener la ubicación:', error.message);
-            alert('No se pudo obtener tu ubicación. Por favor, marca la ubicación manualmente en el mapa.');
+            alert('No se pudo obtener tu ubicación. Marca la ubicación manualmente en el mapa.');
         }
     );
 }
 
-// Manejar eventos del modal con mejor logging
-$('#liberarAnimalModal').on('show.bs.modal', function(e) {
-    const button = $(e.relatedTarget);
-    const tipo = button.data('tipo');
-    const nombre = button.data('nombre');
-    const id = button.data('id');
-    
-    $('#modalAnimalTipo').val(tipo);
-    $('#modalAnimalNameBadge').text(nombre);
-    actualizarModalSegunTipo(tipo);
-});
+// Manejar eventos del modal con verificación de jQuery
+if (window.jQuery) {
+    $('#liberarAnimalModal').on('show.bs.modal', function(e) {
+        const button = $(e.relatedTarget);
+        const tipo = button.data('tipo');
+        const nombre = button.data('nombre');
+        const id = button.data('id');
+        
+        $('#modalAnimalTipo').val(tipo);
+        $('#modalAnimalNameBadge').text(nombre);
+        actualizarModalSegunTipo(tipo);
+    });
 
-// Inicializar mapa después de que el modal esté completamente visible
-$('#liberarAnimalModal').on('shown.bs.modal', function() {
-    if (!googleMapsLoaded) {
-        console.log('Cargando Google Maps API...');
-        loadGoogleMaps();
-        return;
-    }
-
-    setTimeout(function() {
-        const mapContainer = document.getElementById('mapaAdopcion');
-        if (!mapContainer) {
-            console.error('Contenedor del mapa no encontrado');
+    $('#liberarAnimalModal').on('shown.bs.modal', function() {
+        if (!googleMapsLoaded) {
+            console.log('Cargando Google Maps API...');
+            loadGoogleMaps();
             return;
         }
 
-        initMapaAdopcion();
-        
-        if (mapaAdopcion) {
-            const lat = parseFloat($('#latitud_adopcion').val()) || -17.7833;
-            const lng = parseFloat($('#longitud_adopcion').val()) || -63.1833;
-            const latLng = new google.maps.LatLng(lat, lng);
-            
-            google.maps.event.trigger(mapaAdopcion, 'resize');
-            mapaAdopcion.setCenter(latLng);
-            mapaAdopcion.setZoom(15);
-            if (marcadorAdopcion) {
-                marcadorAdopcion.setPosition(latLng);
+        setTimeout(function() {
+            const mapContainer = document.getElementById('mapaAdopcion');
+            if (!mapContainer) {
+                console.error('Contenedor del mapa no encontrado');
+                return;
             }
-        }
-    }, 300);
-});
+            initMapaAdopcion();
 
+            if (mapaAdopcion) {
+                const lat = parseFloat($('#latitud_adopcion').val()) || -17.7833;
+                const lng = parseFloat($('#longitud_adopcion').val()) || -63.1833;
+                const latLng = new google.maps.LatLng(lat, lng);
+
+                google.maps.event.trigger(mapaAdopcion, 'resize');
+                mapaAdopcion.setCenter(latLng);
+                mapaAdopcion.setZoom(13);
+                if (marcadorAdopcion) marcadorAdopcion.setPosition(latLng);
+            }
+        }, 300);
+    });
+} else {
+    console.warn('jQuery no disponible; inicialización básica sin eventos de Bootstrap.');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Inicializa el mapa por si el modal ya está visible
+        initMapaAdopcion();
+    });
+}
 $('#confirmarLiberacion').on('click', function() {
     $('#liberarAnimalModal').modal('hide');
 });
+</script>
+<script>
+// Cargar el API cuando el documento esté listo
+document.addEventListener('DOMContentLoaded', loadGoogleMaps);
+</script>
+<script>
 </script>

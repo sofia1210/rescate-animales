@@ -507,35 +507,7 @@
                 
                 <div class="row">
                     <div class="col-md-6">
-                        <h5 class="text-primary mb-2">Información de Rescate</h5>
-                        <p><strong>Rescatista:</strong> Rescatista Temporal</p>
-                        <p><strong>Ubicación:</strong> Calle Paitití, Centro, Santa Cruz De La Sierra</p>
-                        <p><strong>Fecha de Rescate:</strong> 01/09/2025</p>
-                    </div>
-                    <div class="col-md-6">
-                        <h5 class="text-primary mb-2">Alimentación</h5>
-                        <p><strong>Tipo:</strong> Carnívoro</p>
-                        <p><strong>Cantidad:</strong> Diaria</p>
-                        <p><strong>Estado Nutricional:</strong> <span class="badge badge-info">Regular</span></p>
-                    </div>
-                </div>
-                
-                <hr>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <h5 class="text-primary">Ubicación de Rescate</h5>
-                        <div class="card">
-                            <div class="card-body">
-                                <p><strong>Dirección:</strong> Calle Paitití, Centro, Santa Cruz De La Sierra, Provincia Andrés Ibáñez, Santa Cruz, Bolivia</p>
-                                <p><strong>Coordenadas:</strong> -17.7833, -63.1833</p>
-                                <p><strong>Zona:</strong> Centro Urbano</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
                         <h5 class="text-primary">Acciones Disponibles</h5>
-                        <!-- Acciones Disponibles: marcar por rol -->
                         <div class="row">
                             <div class="col-6 mb-2">
                                 <a href="{{ route('animales.seleccionar-veterinario-evaluacion') }}" class="btn btn-success btn-block" data-role-allowed="Veterinario,Administrador">
@@ -544,7 +516,7 @@
                             </div>
                             <div class="col-6 mb-2">
                                 <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Brigadista,Veterinario,Administrador">
-                                    <i class="fas fa-map-marked-alt mr-1"></i> Ver Ubicación
+                                    <i class="fas fa-map-marked-alt mr-2"></i> Ver Ubicación
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
@@ -558,16 +530,16 @@
                                 </a>
                             </div>
                             <!-- Acciones Disponibles -->
-                            <div class="row">
-                                <div class="col-12 mb-2">
-                                <button type="button"
-                                        class="btn btn-info btn-block"
-                                        data-toggle="modal"
-                                        data-target="#hojaVidaModal"
-                                        data-role-allowed="Cuidador,Administrador">
+                           
+                                <div class="col-6 mb-2">
+                                <a href="#"
+                                   class="btn btn-info btn-block"
+                                   data-toggle="modal"
+                                   data-target="#hojaVidaModal"
+                                   data-role-allowed="Cuidador,Administrador">
                                     <i class="fas fa-clipboard-list mr-2"></i> Hoja de Vida
-                                </button>
-                            </div>
+                                </a>
+                            
                             </div>
                             
                             <!-- Modal Hoja de Vida -->
