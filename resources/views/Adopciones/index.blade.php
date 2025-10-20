@@ -160,7 +160,7 @@
                                 data-id="{{ $animal->id }}"
                                 data-nombre="{{ $animal->nombre }}"
                                 data-role-allowed="Administrador,Veterinario">
-                            Liberar Animal
+                            Liberar
                         </button>
                     </div>
                 </div>
@@ -186,7 +186,7 @@
         <div class="modal-content">
             <div class="modal-header bg-success">
                 <h4 class="modal-title text-white">
-                    <i class="fas fa-dove mr-2"></i>Liberar Animal
+                    <i class="fas fa-dove mr-2"></i>Liberar
                 </h4>
                 <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>

@@ -553,6 +553,124 @@
                                     <i class="fas fa-heart mr-2"></i> Tratamiento
                                 </a>
                             </div>
+                            <!-- Acciones Disponibles -->
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                <button type="button" 
+                                        class="btn btn-info btn-block"
+                                        data-toggle="modal"
+                                        data-target="#hojaVidaModal"
+                                        data-role-allowed="Cuidador,Administrador">
+                                    <i class="fas fa-clipboard-list mr-2"></i> Hoja de Vida
+                                </button>
+                            </div>
+                            </div>
+                            
+                            <!-- Modal Hoja de Vida -->
+                            <div class="modal fade" 
+                                     id="hojaVidaModal" 
+                                     tabindex="-1" 
+                                     aria-hidden="true" 
+                                     data-role-allowed="Cuidador,Administrador">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header bg-info">
+                                            <h5 class="modal-title text-white">
+                                                <i class="fas fa-clipboard-list mr-2"></i>
+                                                Hoja de Vida del Animal
+                                            </h5>
+                                            <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="hojaVidaForm">
+                                                <div class="form-group">
+                                                    <label for="fecha_registro">Fecha de Registro</label>
+                                                    <input type="date" class="form-control" id="fecha_registro" required>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="tipo_cuidado">Tipo de Cuidado</label>
+                                                    <select class="form-control" id="tipo_cuidado" required>
+                                                        <option value="">Seleccione...</option>
+                                                        <option value="Alimentación">Alimentación</option>
+                                                        <option value="Higiene">Higiene</option>
+                                                        <option value="Ejercicio">Ejercicio</option>
+                                                        <option value="Socialización">Socialización</option>
+                                                        <option value="Otro">Otro</option>
+                                                    </select>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="detalles_cuidado">Detalles del Cuidado</label>
+                                                    <textarea class="form-control" 
+                                                              id="detalles_cuidado" 
+                                                              rows="3" 
+                                                              placeholder="Describa los cuidados realizados..."
+                                                              required></textarea>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="comportamiento">Comportamiento Observado</label>
+                                                    <textarea class="form-control" 
+                                                              id="comportamiento" 
+                                                              rows="2" 
+                                                              placeholder="Describa el comportamiento del animal..."></textarea>
+                                                </div>
+                                                
+                                                <div class="form-group">
+                                                    <label for="notas_adicionales">Notas Adicionales</label>
+                                                    <textarea class="form-control" 
+                                                              id="notas_adicionales" 
+                                                              rows="2" 
+                                                              placeholder="Observaciones adicionales..."></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                                <i class="fas fa-times mr-1"></i>Cancelar
+                                            </button>
+                                            <button type="button" class="btn btn-info" id="guardarHojaVida">
+                                                <i class="fas fa-save mr-1"></i>Guardar Registro
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            @section('js')
+                            <script>
+                            // Mostrar/ocultar botón Liberar según tipo de animal
+                            function actualizarBotonesSegunTipo() {
+                                const tipo = $('#detalleAnimalModal').data('tipo');
+                                if (tipo === 'Doméstico') {
+                                    $('.liberar-btn').hide();
+                                } else {
+                                    $('.liberar-btn').show();
+                                }
+                            }
+                            
+                            // Actualizar al abrir modal
+                            $('#detalleAnimalModal').on('show.bs.modal', function() {
+                                actualizarBotonesSegunTipo();
+                            });
+                            
+                            // Guardar Hoja de Vida
+                            $('#guardarHojaVida').on('click', function() {
+                                if (!$('#hojaVidaForm')[0].checkValidity()) {
+                                    $('#hojaVidaForm')[0].reportValidity();
+                                    return;
+                                }
+                                
+                                // Aquí iría la lógica para guardar los datos
+                                $('#hojaVidaModal').modal('hide');
+                                // Mostrar confirmación
+                                toastr.success('Registro guardado correctamente');
+                            });
+                            </script>
+                            @endsection
                         </div>
                     </div>
                 </div>
