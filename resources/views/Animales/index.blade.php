@@ -539,8 +539,8 @@
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Brigadista,Administrador">
-                                    <i class="fas fa-map-marker-alt mr-2"></i> Ver Ubicación
+                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Brigadista,Veterinario,Administrador">
+                                    <i class="fas fa-map-marked-alt mr-1"></i> Ver Ubicación
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
