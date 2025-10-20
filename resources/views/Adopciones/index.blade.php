@@ -33,15 +33,7 @@
             'tipo' => 'Silvestre',
             'imagen' => asset('Fotos/OIP.jpg'),
         ],
-        (object)[
-            'id' => 3,
-            'nombre' => 'Max',
-            'especie' => 'Canino',
-            'raza' => 'Golden Retriever',
-            'estado_salud' => 'Excelente',
-            'tipo' => 'Doméstico',
-            'imagen' => asset('Fotos/Patota.png'),
-        ],
+        
     ]);
 @endphp
 
@@ -67,7 +59,7 @@
 
 <!-- Mantener liberación sólo Admin (ya configurado) y permitir búsqueda/listado para Ciudadano/Admin -->
 <section class="content" data-role-allowed="Ciudadano,Veterinario,Administrador">
-    <div class="container-fluid">
+    <div class="container-fluid pb-4">
 
     <div class="card card-primary card-outline">
         <div class="card-header">
