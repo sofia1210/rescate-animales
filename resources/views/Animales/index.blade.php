@@ -82,8 +82,9 @@
                     Búsqueda
                 </h3>
                 <!-- Botón (card-tools) para abrir Seleccionar Rescatista: sólo Brigadista/Admin -->
+                <!-- Abrir Seleccionar Rescatista: BS4 -->
+                <!-- Botón Agregar Animal (card-tools) -->
                 <div class="card-tools">
-                    <!-- Botón de apertura alterno: también restringido -->
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal" data-role-allowed="Brigadista,Administrador">
                         <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
@@ -186,11 +187,16 @@
             </div>
         @empty
                 <div class="col">
+                    <!-- Estado vacío: Agregar Primer Animal -->
                     <div class="alert alert-info text-center">
                         <i class="fas fa-paw fa-3x text-muted mb-3"></i>
                         <h4 class="text-muted">No hay animales para mostrar.</h4>
                         <p class="text-muted">Comienza agregando tu primer animal al sistema.</p>
-                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal">
+                        <button type="button"
+                                class="btn btn-success"
+                                data-toggle="modal"
+                                data-target="#seleccionarRescatistaModal"
+                                data-role-allowed="Brigadista,Veterinario,Administrador">
                             <i class="fas fa-plus mr-1"></i> Agregar Primer Animal
                         </button>
                     </div>

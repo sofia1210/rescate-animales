@@ -106,7 +106,9 @@
     </footer>
 </div>
 
+<!-- Librerías JS (asegurar Bootstrap antes de AdminLTE) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
@@ -130,8 +132,6 @@
 
     function applyRole(role) {
         if (roleBadge) roleBadge.textContent = role;
-
-        // Visibilidad por rol (data-role-allowed)
         document.querySelectorAll('[data-role-allowed]').forEach(el => {
             const allowed = parseAllowed(el);
             const visible = allowed.length === 0 || allowed.includes(role);
@@ -150,10 +150,31 @@
         }
         applyRole(saved);
     });
+
+    // Shim de compatibilidad para data-bs-* en Bootstrap 4
+    document.addEventListener('click', function(e) {
+        const trigger = e.target.closest('[data-bs-toggle="modal"],[data-toggle="modal"]');
+        if (!trigger) return;
+        const sel = trigger.getAttribute('data-bs-target') || trigger.getAttribute('data-target') || trigger.getAttribute('href');
+        if (sel && window.jQuery) {
+            e.preventDefault();
+            $(sel).modal('show');
+        }
+    });
+    document.addEventListener('click', function(e) {
+        const dismiss = e.target.closest('[data-bs-dismiss="modal"],[data-dismiss="modal"]');
+        if (!dismiss) return;
+        const modal = dismiss.closest('.modal');
+        if (modal && window.jQuery) {
+            e.preventDefault();
+            $(modal).modal('hide');
+        }
+    });
 })();
 </script>
 <style>
 .role-hidden { display: none !important; }
+/* Se quita todo el CSS de "colores según rol" */
 </style>
 
 @yield('js')

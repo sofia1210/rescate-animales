@@ -43,7 +43,7 @@
                     Búsqueda
                 </h3>
                 <div class="card-tools">
-                    <button type="button" class="btn btn-success btn-sm" id="btn-nuevo" data-bs-toggle="modal" data-bs-target="#modalCentro" data-role-allowed="Administrador">
+                    <button type="button" class="btn btn-success btn-sm" id="btn-nuevo" data-toggle="modal" data-target="#modalCentro" data-role-allowed="Administrador">
                         <i class="fas fa-plus mr-1"></i> Nuevo Centro
                     </button>
                     <button type="button" class="btn btn-secondary btn-sm" id="btn-restablecer">
@@ -481,3 +481,6 @@
 })();
 </script>
 @endsection
+
+<!-- En el modal: cierre con Bootstrap 4 (opcional) -->
+<button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>

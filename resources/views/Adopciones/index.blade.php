@@ -151,12 +151,12 @@
                         <p class="card-text mb-1"><strong>Tipo:</strong> {{ $animal->tipo }}</p>
                     
                     </div>
+                    <!-- Botón Liberar: usar Bootstrap 4 -->
                     <div class="card-footer">
-                        <!-- Card Footer: Liberar Animal, sin ícono y sólo Administrador -->
                         <button type="button"
                                 class="btn btn-primary btn-block liberar-btn"
-                                data-bs-toggle="modal"
-                                data-bs-target="#liberarAnimalModal"
+                                data-toggle="modal"
+                                data-target="#liberarAnimalModal"
                                 data-id="{{ $animal->id }}"
                                 data-nombre="{{ $animal->nombre }}"
                                 data-role-allowed="Administrador">
@@ -246,9 +246,10 @@
                 </div>
             </div>
 
+            <!-- Confirmar: cierre BS4 -->
             <div class="modal-footer justify-content-end">
                 <!-- Footer del modal: Confirmar Liberación sin icono -->
-                <button type="button" class="btn btn-success" id="confirmarLiberacion" data-bs-dismiss="modal" data-dismiss="modal">
+                <button type="button" class="btn btn-success" id="confirmarLiberacion" data-dismiss="modal">
                     Confirmar Liberación
                 </button>
             </div>
