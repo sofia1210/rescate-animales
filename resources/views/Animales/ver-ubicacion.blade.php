@@ -172,17 +172,17 @@
                     <div class="card-header p-0 pt-1">
                         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
                             <li class="nav-item">
-                                <a class="nav-link active" id="ubicacion-actual-tab" data-bs-toggle="tab" href="#ubicacion-actual" role="tab" aria-controls="ubicacion-actual" aria-selected="true">
+                                <a class="nav-link active" id="ubicacion-actual-tab" data-toggle="tab" href="#ubicacion-actual" role="tab" aria-controls="ubicacion-actual" aria-selected="true">
                                     <i class="fas fa-map mr-1"></i> Ubicación Actual
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="historial-traslados-tab" data-bs-toggle="tab" href="#historial-traslados" role="tab" aria-controls="historial-traslados" aria-selected="false">
+                                <a class="nav-link" id="historial-traslados-tab" data-toggle="tab" href="#historial-traslados" role="tab" aria-controls="historial-traslados" aria-selected="false">
                                     <i class="fas fa-truck-moving mr-1"></i> Historial de Traslados
                                 </a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" id="mapa-traslados-tab" data-bs-toggle="tab" href="#mapa-traslados" role="tab" aria-controls="mapa-traslados" aria-selected="false">
+                                <a class="nav-link" id="mapa-traslados-tab" data-toggle="tab" href="#mapa-traslados" role="tab" aria-controls="mapa-traslados" aria-selected="false">
                                     <i class="fas fa-route mr-1"></i> Mapa de Ruta
                                 </a>
                             </li>
@@ -731,30 +731,23 @@ $(document).ready(function() {
 
 @section('js')
 <script>
-document.addEventListener('DOMContentLoaded', function () {
-    $('#btn-actualizar-traslados').on('click', function () {
-        // Limpia y redibuja desde trasladosData
-        marcadoresTraslados.forEach(function(marcador) { mapaTraslados.removeLayer(marcador); });
-        rutasTraslados.forEach(function(ruta) { mapaTraslados.removeLayer(ruta); });
-        marcadoresTraslados = [];
-        rutasTraslados = [];
-        // Redibujar marcadores
-        trasladosData.forEach(function(traslado) {
-            var icono = L.divIcon({
-                className: 'custom-div-icon',
-                html: `<div style="background-color: ${traslado.color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;"><i class="${traslado.icono}"></i></div>`,
-                iconSize: [30, 42],
-                iconAnchor: [15, 42]
-            });
-            var marcador = L.marker([traslado.lat, traslado.lng], {icon: icono}).addTo(mapaTraslados);
-            marcadoresTraslados.push(marcador);
-        });
-        // Ajustar vista
-        var grupo = new L.featureGroup(marcadoresTraslados);
-        mapaTraslados.fitBounds(grupo.getBounds().pad(0.1));
+// Inicializar tabs
+$(document).ready(function() {
+    $('#custom-tabs-three-tab a').on('click', function(e) {
+        e.preventDefault();
+        $(this).tab('show');
     });
-    // Quitar alertas intrusivas de geolocalización
-    // Reemplazar llamadas a alert por console.warn en manejadores existentes
 });
 </script>
+
+<style>
+.nav-tabs .nav-link {
+    border: 0;
+    border-bottom: 3px solid transparent;
+}
+.nav-tabs .nav-link.active {
+    border-bottom-color: #28a745;
+    color: #28a745;
+}
+</style>
 @endsection

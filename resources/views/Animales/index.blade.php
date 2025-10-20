@@ -88,12 +88,16 @@
                     <button type="button"
                             class="btn btn-success"
                             data-toggle="modal"
-                            data-target="#seleccionarRescatistaModal"
-                            data-role-allowed="Brigadista,Veterinario,Administrador">
+                            data-target="#agregarAnimalModal"
+                            data-role-allowed="Brigadista">
                         <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
-                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
-                        <i class="fas fa-minus"></i>
+                    <button type="button"
+                            class="btn btn-success"
+                            data-toggle="modal"
+                            data-target="#seleccionarRescatistaModal"
+                            data-role-allowed="Veterinario,Administrador">
+                        <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
                 </div>
             </div>
@@ -556,7 +560,7 @@
                             <!-- Acciones Disponibles -->
                             <div class="row">
                                 <div class="col-12 mb-2">
-                                <button type="button" 
+                                <button type="button"
                                         class="btn btn-info btn-block"
                                         data-toggle="modal"
                                         data-target="#hojaVidaModal"
