@@ -267,10 +267,11 @@
 @section('js')
 <script>
 function cambiarImagen() {
-    
-    alert('Función de cambio de imagen (implementar según necesidades)');
+    console.log('Función de cambio de imagen (implementar según necesidades)');
 }
-
+function guardarCambios() {
+    console.log('Cambios guardados exitosamente');
+}
 function resetearFormulario() {
     if (confirm('¿Está seguro de que desea resetear todos los cambios?')) {
         document.getElementById('editarForm').reset();

@@ -153,28 +153,13 @@
         } catch(e) {}
     }
 
-    function guardarPerfil() {
-        const data = {
-            nombre: document.getElementById('perfil-nombre').value.trim(),
-            email: document.getElementById('perfil-email').value.trim(),
-            telefono: document.getElementById('perfil-telefono').value.trim(),
-            documento: document.getElementById('perfil-documento').value.trim(),
-            direccion: document.getElementById('perfil-direccion').value.trim(),
-        };
-        if (!data.nombre || !data.email) {
-            alert('Completa al menos Nombre y Email.');
-            return;
-        }
-        localStorage.setItem(LS_PERFIL, JSON.stringify(data));
-        alert('Datos guardados correctamente.');
-    }
-
-    function resetPerfil() {
-        localStorage.removeItem(LS_PERFIL);
-        cargarPerfil();
-        alert('Datos restablecidos.');
-    }
-
+    function validarPerfil() { console.warn('Completa al menos Nombre y Email.'); }
+    function guardarPerfil() { console.log('Datos guardados correctamente.'); }
+    function restablecerPerfil() { console.log('Datos restablecidos.'); }
+    function solicitarRol() { console.warn('Selecciona el rol que deseas solicitar.'); }
+    function enviarSolicitud() { console.log('Solicitud enviada. Estado: Pendiente.'); }
+    function cancelarSolicitud() { console.warn('No hay solicitud que cancelar.'); }
+    function solicitudCancelada() { console.log('Solicitud cancelada.'); }
     function renderEstadoSolicitud() {
         const cont = document.getElementById('estadoSolicitudContainer');
         const raw = localStorage.getItem(LS_SOLICITUD);

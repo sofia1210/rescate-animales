@@ -55,7 +55,7 @@
 </div>
 
 <!-- Mantener liberación sólo Admin (ya configurado) y permitir búsqueda/listado para Ciudadano/Admin -->
-<section class="content" data-role-allowed="Ciudadano,Administrador">
+<section class="content" data-role-allowed="Ciudadano,Veterinario,Administrador">
     <div class="container-fluid">
 
     <div class="card card-primary card-outline">
@@ -159,7 +159,7 @@
                                 data-target="#liberarAnimalModal"
                                 data-id="{{ $animal->id }}"
                                 data-nombre="{{ $animal->nombre }}"
-                                data-role-allowed="Administrador">
+                                data-role-allowed="Administrador,Veterinario">
                             Liberar Animal
                         </button>
                     </div>
@@ -181,7 +181,7 @@
     </section>
 
 <!-- Modal Liberar Animal: sólo Administrador -->
-<div class="modal fade" id="liberarAnimalModal" tabindex="-1" aria-hidden="true" data-role-allowed="Administrador">
+<div class="modal fade" id="liberarAnimalModal" tabindex="-1" aria-hidden="true" data-role-allowed="Administrador,Veterinario">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header bg-success">
@@ -301,23 +301,18 @@ function obtenerUbicacionAdopcion() {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
             mapaAdopcion.setView([lat, lng], 15);
-            if (marcadorAdopcion) {
-                mapaAdopcion.removeLayer(marcadorAdopcion);
-            }
-            marcadorAdopcion = L.marker([lat, lng]).addTo(mapaAdopcion);
-            marcadorAdopcion.bindPopup('Ubicación seleccionada').openPopup();
-
+            if (marcadorAdopcion) { mapaAdopcion.removeLayer(marcadorAdopcion); }
+            marcadorAdopcion = L.marker([lat, lng]).addTo(mapaAdopcion).bindPopup('Ubicación seleccionada').openPopup();
             const latInput = document.getElementById('latitud_adopcion');
             const lngInput = document.getElementById('longitud_adopcion');
             if (latInput) latInput.value = lat;
             if (lngInput) lngInput.value = lng;
-
             setTimeout(function() { mapaAdopcion.invalidateSize(true); }, 0);
         }, function() {
-            alert('No se pudo obtener tu ubicación. Puedes marcar la ubicación manualmente en el mapa.');
+            console.warn('No se pudo obtener tu ubicación. Puedes marcar la ubicación manualmente en el mapa.');
         });
     } else {
-        alert('La geolocalización no está disponible en este navegador.');
+        console.warn('La geolocalización no está disponible en este navegador.');
     }
 }
 

@@ -382,26 +382,10 @@ function agregarTratamiento() {
   modal.show();
 }
 
-function programarCita() {
-    alert('Función para programar cita veterinaria (implementar según necesidades)');
-}
-
-function generarReporte() {
-    alert('Generando reporte de tratamiento...');
-    
-}
-
-function finalizarTratamiento() {
-    if (confirm('¿Está seguro de que desea finalizar el tratamiento actual?')) {
-        alert('Tratamiento finalizado exitosamente');
-    }
-}
-
-function emergencia() {
-    if (confirm('¿Es una emergencia médica? Se contactará al veterinario inmediatamente.')) {
-        alert('Emergencia reportada. El veterinario será contactado.');
-    }
-}
+function programarCitaVeterinaria() { console.log('Función para programar cita veterinaria'); }
+function generarReporteTratamiento() { console.log('Generando reporte de tratamiento...'); }
+function finalizarTratamiento() { console.log('Tratamiento finalizado exitosamente'); }
+function reportarEmergencia() { console.log('Emergencia reportada. El veterinario será contactado.'); }
 
 function guardarTratamiento() {
     

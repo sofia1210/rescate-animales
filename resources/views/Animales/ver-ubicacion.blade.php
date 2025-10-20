@@ -429,7 +429,20 @@
         </div>
 
         <div class="row mt-3">
-            <div class="col-12 text-right">
+            <!-- Controles en Mapa de Traslados -->
+            <div class="row mb-2">
+                <div class="col-12 text-right">
+                    <button type="button"
+                            class="btn btn-success"
+                            id="btn-actualizar-traslados"
+                            data-role-allowed="Veterinario,Administrador">
+                        <i class="fas fa-sync-alt mr-1"></i> Actualizar Traslados
+                    </button>
+                </div>
+            </div>
+
+        <div class="row">
+            <div class="col-12">
                 <a href="{{ route('animales.index') }}" class="btn btn-secondary">
                     <i class="fas fa-arrow-left mr-2"></i> Volver a Animales
                 </a>
@@ -712,6 +725,36 @@ $(document).ready(function() {
 
     
     mostrarTodosLosPuntos(); 
+});
+</script>
+@endsection
+
+@section('js')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    $('#btn-actualizar-traslados').on('click', function () {
+        // Limpia y redibuja desde trasladosData
+        marcadoresTraslados.forEach(function(marcador) { mapaTraslados.removeLayer(marcador); });
+        rutasTraslados.forEach(function(ruta) { mapaTraslados.removeLayer(ruta); });
+        marcadoresTraslados = [];
+        rutasTraslados = [];
+        // Redibujar marcadores
+        trasladosData.forEach(function(traslado) {
+            var icono = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color: ${traslado.color}; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 14px;"><i class="${traslado.icono}"></i></div>`,
+                iconSize: [30, 42],
+                iconAnchor: [15, 42]
+            });
+            var marcador = L.marker([traslado.lat, traslado.lng], {icon: icono}).addTo(mapaTraslados);
+            marcadoresTraslados.push(marcador);
+        });
+        // Ajustar vista
+        var grupo = new L.featureGroup(marcadoresTraslados);
+        mapaTraslados.fitBounds(grupo.getBounds().pad(0.1));
+    });
+    // Quitar alertas intrusivas de geolocalización
+    // Reemplazar llamadas a alert por console.warn en manejadores existentes
 });
 </script>
 @endsection

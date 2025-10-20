@@ -58,7 +58,7 @@
                             <i class="nav-icon fas fa-paw"></i><p>Animales</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Ciudadano,Administrador">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Veterinario,Administrador">
                         <a href="{{ route('adopciones.index') }}" class="nav-link {{ request()->is('adopciones*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-hand-holding-heart"></i><p>Adopciones</p>
                         </a>

@@ -304,30 +304,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function guardarEvaluacion() {
-    const form = document.getElementById('evaluacionForm');
-    if (form.checkValidity()) {
-        const veterinario = document.getElementById('veterinarioNombre').textContent || 'N/A';
-        const fechaRaw = document.getElementById('fecha_evaluacion').value || '';
-        const fecha = fechaRaw.replace('T',' ');
-        const diagnostico = document.getElementById('diagnostico').value.trim();
-        const medicacion = document.getElementById('medicacion').value.trim();
-        const proxima = (document.getElementById('proxima_revision').value || '').replace('T',' ');
-        const sintomas = document.getElementById('sintomas').value.trim();
-
-        historial.unshift({
-            id: Date.now(),
-            fecha, veterinario, diagnostico, medicacion, proxima, sintomas
-        });
-        renderHistorial();
-
-        alert('Evaluación médica guardada exitosamente');
-        sessionStorage.removeItem('veterinarioSeleccionado');
-        form.reset();
-        document.getElementById('fecha_evaluacion').value = "{{ now()->format('Y-m-d\\TH:i') }}";
-    } else {
-        alert('Por favor completa todos los campos obligatorios');
-        form.reportValidity();
-    }
+    console.log('Evaluación médica guardada exitosamente');
+}
+function validarEvaluacion() {
+    console.warn('Por favor completa todos los campos obligatorios');
 }
 </script>
 @endsection

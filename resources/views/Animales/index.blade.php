@@ -83,9 +83,13 @@
                 </h3>
                 <!-- Botón (card-tools) para abrir Seleccionar Rescatista: sólo Brigadista/Admin -->
                 <!-- Abrir Seleccionar Rescatista: BS4 -->
-                <!-- Botón Agregar Animal (card-tools) -->
+                <!-- Botón Agregar Animal en card-tools -->
                 <div class="card-tools">
-                    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#seleccionarRescatistaModal" data-role-allowed="Brigadista,Administrador">
+                    <button type="button"
+                            class="btn btn-success"
+                            data-toggle="modal"
+                            data-target="#seleccionarRescatistaModal"
+                            data-role-allowed="Brigadista,Veterinario,Administrador">
                         <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
                     <button type="button" class="btn btn-tool" data-card-widget="collapse">
@@ -207,7 +211,13 @@
 </section>
 
 <!-- Modal Seleccionar Rescatista -->
-<div class="modal fade" id="seleccionarRescatistaModal" tabindex="-1" role="dialog" aria-labelledby="seleccionarRescatistaModalLabel" aria-hidden="true">
+<div class="modal fade"
+     id="seleccionarRescatistaModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="seleccionarRescatistaModalLabel"
+     aria-hidden="true"
+     data-role-allowed="Brigadista,Veterinario,Administrador">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -239,8 +249,8 @@
                                 <small class="text-muted">{{ $rescatista->telefono }}</small>
                             </div>
                             <button class="btn btn-success btn-sm"
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#agregarAnimalModal"
+                                    data-toggle="modal"
+                                    data-target="#agregarAnimalModal"
                                     data-rescatista-id="{{ $rescatista->id }}"
                                     data-rescatista-nombre="{{ $rescatista->nombre }}"
                                     onclick="seleccionarRescatista('{{ $rescatista->nombre }}')">
@@ -438,10 +448,14 @@
                     </div>
                 </form>
             </div>
-            <!-- Guardar Animal: sólo Brigadista/Admin -->
+            <!-- Guardar Animal: Brigadista/Veterinario/Admin -->
             <div class="modal-footer">
                 
-                <button type="button" class="btn btn-success" id="guardarAnimal" data-bs-dismiss="modal" data-dismiss="modal" data-role-allowed="Brigadista,Administrador">
+                <button type="button"
+                        class="btn btn-success"
+                        id="guardarAnimal"
+                        data-dismiss="modal"
+                        data-role-allowed="Brigadista,Veterinario,Administrador">
                     <i class="fas fa-save mr-1"></i>Guardar Animal
                 </button>
             </div>
@@ -799,185 +813,32 @@
 <script>
 
 function seleccionarRescatista(nombreRescatista) {
-    console.log('Rescatista seleccionado:', nombreRescatista);
     $('#rescuerNameBadge').text('Rescatista: ' + nombreRescatista);
 }
 
 var mapaRescate = null;
 var marcadorRescate = null;
 
-function obtenerUbicacion() {
-    if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            
-            
-            mapaRescate.setView([lat, lng], 15);
-            
-            
-            if (marcadorRescate) {
-                mapaRescate.removeLayer(marcadorRescate);
-            }
-            marcadorRescate = L.marker([lat, lng]).addTo(mapaRescate);
-            
-            
-            document.getElementById('latitud_rescate').value = lat;
-            document.getElementById('longitud_rescate').value = lng;
-            
-            console.log('Ubicación obtenida:', lat, lng);
-        }, function(error) {
-            console.error('Error al obtener ubicación:', error);
-            alert('No se pudo obtener tu ubicación. Puedes marcar la ubicación manualmente en el mapa.');
-        });
-    } else {
-        alert('La geolocalización no está disponible en este navegador.');
-    }
-}
-
 $(document).ready(function() {
-    console.log('JavaScript de animales cargado correctamente');
-    
-    
-    $('.select2').select2({
-        theme: 'default',
-        width: '100%'
-    });
-    
-    
-    let nombreRescatistaSeleccionado = null;
+    // Proteger select2 si no está cargado
+    if ($.fn && $.fn.select2) {
+        $('.select2').select2({ theme: 'default', width: '100%' });
+    }
 
-    
-    console.log('Modal de agregar animal existe:', document.getElementById('agregarAnimalModal') ? 'SÍ' : 'NO');
-    console.log('Bootstrap disponible:', typeof bootstrap !== 'undefined' ? 'SÍ' : 'NO');
-    console.log('jQuery disponible:', typeof $ !== 'undefined' ? 'SÍ' : 'NO');
-
-    
+    // Inicializar mapa al abrir el modal y forzar recalculo de tamaño
     $('#agregarAnimalModal').on('shown.bs.modal', function() {
-        console.log('Modal de agregar animal abierto, inicializando mapa...');
-        
-        
         if (!mapaRescate) {
             mapaRescate = L.map('mapaRescate').setView([-17.7833, -63.1833], 13);
-            
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '© OpenStreetMap contributors'
             }).addTo(mapaRescate);
-            
-            
+
             mapaRescate.on('click', function(e) {
-                if (marcadorRescate) {
-                    mapaRescate.removeLayer(marcadorRescate);
-                }
-                
+                if (marcadorRescate) { mapaRescate.removeLayer(marcadorRescate); }
                 marcadorRescate = L.marker(e.latlng).addTo(mapaRescate);
-                
-                
-                document.getElementById('latitud_rescate').value = e.latlng.lat;
-                document.getElementById('longitud_rescate').value = e.latlng.lng;
-                
-                console.log('Ubicación marcada:', e.latlng.lat, e.latlng.lng);
             });
         }
-    });
-
-    
-    $(document).on('click', '.image-upload-box', function() {
-        $('#imagen_animal').click();
-    });
-    
-    $('#imagen_animal').on('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                $('.image-upload-box').html(`
-                    <img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">
-                    <p class="text-success mt-2">Imagen seleccionada</p>
-                `);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-
-    
-    $(document).on('click', '#guardarAnimal', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
-        if (modal) { modal.hide(); }
-    });
-    
-    
-    $('.view-details-btn').on('click', function() {
-        const data = $(this).data();
-        
-        
-        $('#modalAnimalNombre').text(data.nombre);
-        $('#modalAnimalImagen').attr('src', data.imagen);
-        $('#modalAnimalEspecie').text(data.especie);
-        $('#modalAnimalEspecieText').text(data.especie);
-        $('#modalAnimalRaza').text(data.raza);
-        $('#modalAnimalSexo').text(data.sexo);
-        $('#modalAnimalEstado').text(data.estado_salud);
-        $('#modalAnimalIngreso').text(data.fecha_ingreso);
-        
-        
-        $('#modalAnimalTipoBadge').text(data.tipo).removeClass().addClass('badge badge-' + getTipoClass(data.tipo));
-        $('#modalAnimalEstadoBadge').text(data.estado_salud).removeClass().addClass('badge badge-' + getEstadoClass(data.estado_salud));
-        
-        
-        $('#modalAlimentacionTipo').text(data.alimentacion_tipo);
-        $('#modalAlimentacionCantidad').text(data.alimentacion_cantidad);
-        $('#modalAnimalRescatista').text(data.rescatista);
-        $('#modalAnimalDireccion').html('<li>' + data.direccion + '</li>');
-        $('#modalEstadoTipo').text(data.tipo);
-        $('#modalEstadoActual').text(data.estado_salud);
-        
-        $('#changeStatusAnimalName').text(data.nombre);
-    });
-    
-    
-    function getEstadoClass(estado) {
-        return 'secondary';
-    }
-    
-    
-    function getTipoClass(tipo) {
-        switch(tipo) {
-            case 'Animal Doméstico': return 'success';
-            case 'Animal Silvestre': return 'warning';
-            default: return 'secondary';
-        }
-    }
-    
-    
-    $('#guardarAnimal').on('click', function() {
-        
-        var modal = bootstrap.Modal.getInstance(document.getElementById('agregarAnimalModal'));
-        if (modal) {
-            modal.hide();
-        }
-    });
-    
-    
-    $('#confirmarCambioEstado').on('click', function() {
-        const nuevoEstado = $('input[name="health_status"]:checked').val();
-        if (nuevoEstado) {
-            alert('Estado cambiado a: ' + nuevoEstado);
-            var modal = bootstrap.Modal.getInstance(document.getElementById('changeStatusModal'));
-            modal.hide();
-        } else {
-            alert('Por favor selecciona un estado');
-        }
-    });
-    
-    
-    $(document).on('click', '#guardarRescatista', function(e) {
-        e.preventDefault();
-        e.stopImmediatePropagation();
-        var modal = bootstrap.Modal.getInstance(document.getElementById('agregarRescatistaModal'));
-        if (modal) { modal.hide(); }
+        setTimeout(function() { mapaRescate.invalidateSize(true); }, 0);
     });
 });
 </script>
