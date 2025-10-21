@@ -228,7 +228,8 @@
                 <h5 class="modal-title text-white" id="seleccionarRescatistaModalLabel">
                     <i class="fas fa-user-plus mr-2"></i>Seleccionar Rescatista
                 </h5>
-                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                <!-- Modal Seleccionar Rescatista: botón de cierre BS4 -->
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -276,7 +277,8 @@
                 <h5 class="modal-title text-white" id="agregarAnimalModalLabel">
                     <i class="fas fa-plus mr-2"></i>Agregar Nuevo Animal
                 </h5>
-                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                <!-- Modal Agregar Animal: botón de cierre BS4 -->
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -536,7 +538,7 @@
                                    class="btn btn-info btn-block"
                                    data-toggle="modal"
                                    data-target="#hojaVidaModal"
-                                   data-role-allowed="Cuidador,Administrador">
+                                   data-role-allowed="Cuidador,Veterinario,Administrador">
                                     <i class="fas fa-clipboard-list mr-2"></i> Hoja de Vida
                                 </a>
                             
@@ -547,7 +549,7 @@
                                      id="hojaVidaModal" 
                                      tabindex="-1" 
                                      aria-hidden="true" 
-                                     data-role-allowed="Cuidador,Administrador">
+                                     data-role-allowed="Cuidador,Veterinario,Administrador">
                                 <div class="modal-dialog modal-lg">
                                     <div class="modal-content">
                                         <div class="modal-header bg-info">

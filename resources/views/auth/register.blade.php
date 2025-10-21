@@ -23,46 +23,55 @@
 
                 <form action="#" method="post">
                     @csrf
+                    <!-- Nombre -->
                     <div class="input-group mb-3">
-                        <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" 
-                               placeholder="Nombre completo" value="{{ old('name') }}" required autofocus>
+                        <input type="text" name="nombre" class="form-control @error('nombre') is-invalid @enderror" 
+                               placeholder="Nombre" value="{{ old('nombre') }}" required autofocus>
                         <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user"></span>
-                            </div>
+                            <div class="input-group-text"><span class="fas fa-id-card"></span></div>
                         </div>
-                        @error('name')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                        @error('nombre')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <!-- Apellido -->
+                    <div class="input-group mb-3">
+                        <input type="text" name="apellido" class="form-control @error('apellido') is-invalid @enderror" 
+                               placeholder="Apellido" value="{{ old('apellido') }}" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text"><span class="fas fa-id-card-alt"></span></div>
+                        </div>
+                        @error('apellido')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <!-- Nombre de usuario -->
+                    <div class="input-group mb-3">
+                        <input type="text" name="usuario" class="form-control @error('usuario') is-invalid @enderror" 
+                               placeholder="Nombre de usuario" value="{{ old('usuario') }}" required>
+                        <div class="input-group-append">
+                            <div class="input-group-text"><span class="fas fa-user"></span></div>
+                        </div>
+                        @error('usuario')
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="input-group mb-3">
                         <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" 
                                placeholder="Correo electrónico" value="{{ old('email') }}" required>
                         <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
+                            <div class="input-group-text"><span class="fas fa-envelope"></span></div>
                         </div>
                         @error('email')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="input-group mb-3">
                         <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" 
                                placeholder="Contraseña" required>
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
+                        <div class="input-group-text"><span class="fas fa-lock"></span></div>
                         @error('password')
-                            <div class="invalid-feedback">
-                                {{ $message }}
-                            </div>
+                            <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
                     <div class="input-group mb-3">

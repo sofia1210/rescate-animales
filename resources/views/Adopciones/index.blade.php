@@ -33,7 +33,15 @@
             'tipo' => 'Silvestre',
             'imagen' => asset('Fotos/OIP.jpg'),
         ],
-        
+        (object)[
+            'id' => 3,
+            'nombre' => 'Luna',
+            'especie' => 'Canino',
+            'raza' => 'Mestizo',
+            'estado_salud' => 'Muy Bueno',
+            'tipo' => 'Doméstico',
+            'imagen' => asset('Fotos/R.jpg'),
+        ],
     ]);
 @endphp
 
@@ -196,9 +204,8 @@
             <!-- Dentro del modal #liberarAnimalModal, header -->
             <div class="modal-header bg-success">
                 <h4 class="modal-title text-white">
-                    <i class="fas fa-home mr-2 icon-domestico d-none"></i>
-                    <i class="fas fa-dove mr-2 icon-salvaje"></i>
-                    <span id="modalTitleText">Liberar</span>
+                   
+                    <span id="modalTitleText">Liberar o dar en Adopcion</span>
                 </h4>
                 <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
@@ -209,7 +216,6 @@
                 <div class="card card-info card-outline mb-3">
                     <div class="card-header">
                         <h3 class="card-title">
-                            <i class="fas fa-paw mr-2"></i><span id="modalSubtitleText">Animal a Liberar</span>
                         </h3>
                     </div>
                     <div class="card-body">
@@ -237,10 +243,7 @@
                         </h3>
                     </div>
                     <div class="card-body">
-                        <div class="alert alert-info">
-                            <i class="fas fa-info-circle mr-2"></i>
-                            <strong>Importante:</strong> Seleccione la ubicación exacta donde será liberado el animal.
-                        </div>
+                       
 
                         <!-- Botón Usar mi ubicación actual sin ícono -->
                         <button class="btn btn-primary mb-3 w-100" onclick="obtenerUbicacionAdopcion()">
@@ -281,31 +284,36 @@
 let mapaAdopcion = null;
 let marcadorAdopcion = null;
 
+// Dentro del <script> de Adopciones
+// función: actualizarModalSegunTipo(tipo)
 function actualizarModalSegunTipo(tipo) {
-    if (tipo === 'Doméstico') {
+    const t = (tipo || '').toString()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase().trim();
+
+    const esDomestico = t === 'domestico';
+
+    if (esDomestico) {
         $('.icon-domestico').removeClass('d-none');
         $('.icon-salvaje').addClass('d-none');
         $('#modalTitleText').text('Dar en Adopción');
         $('#modalSubtitleText').text('Animal a dar en Adopción');
-        $('#modalAnimalTipo').val(tipo);
     } else {
         $('.icon-domestico').addClass('d-none');
         $('.icon-salvaje').removeClass('d-none');
         $('#modalTitleText').text('Liberar');
         $('#modalSubtitleText').text('Animal a Liberar');
-        $('#modalAnimalTipo').val(tipo);
     }
+    $('#modalAnimalTipo').val(tipo || '');
 }
 
-function initMapaAdopcion() {
+// función: initMapaAdopcion(lat, lng)
+function initMapaAdopcion(lat = -17.7833, lng = -63.1833) {
     const container = document.getElementById('mapaAdopcion');
     if (!container) {
         console.error('Contenedor #mapaAdopcion no encontrado');
         return;
     }
-
-    const lat = parseFloat(document.getElementById('latitud_adopcion').value) || -17.7833;
-    const lng = parseFloat(document.getElementById('longitud_adopcion').value) || -63.1833;
 
     if (!mapaAdopcion) {
         mapaAdopcion = L.map('mapaAdopcion', {
@@ -330,14 +338,10 @@ function initMapaAdopcion() {
             document.getElementById('latitud_adopcion').value = ll.lat;
             document.getElementById('longitud_adopcion').value = ll.lng;
         });
-
-        console.log('Mapa Leaflet inicializado');
     } else {
-        // Redimensionar si el contenedor se reabre
         setTimeout(function() { mapaAdopcion.invalidateSize(true); }, 0);
         mapaAdopcion.setView([lat, lng], 13);
         if (marcadorAdopcion) marcadorAdopcion.setLatLng([lat, lng]);
-        console.log('Mapa Leaflet reusado y redimensionado');
     }
 }
 
@@ -352,21 +356,18 @@ function obtenerUbicacionAdopcion() {
             const lat = position.coords.latitude;
             const lng = position.coords.longitude;
 
-            if (!mapaAdopcion) initMapaAdopcion();
-
-            mapaAdopcion.setView([lat, lng], 15);
-            if (!marcadorAdopcion) {
-                marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
-            } else {
-                marcadorAdopcion.setLatLng([lat, lng]);
+            if (!mapaAdopcion) initMapaAdopcion(lat, lng);
+            else {
+                mapaAdopcion.setView([lat, lng], 15);
+                if (!marcadorAdopcion) {
+                    marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
+                } else {
+                    marcadorAdopcion.setLatLng([lat, lng]);
+                }
             }
 
             document.getElementById('latitud_adopcion').value = lat;
             document.getElementById('longitud_adopcion').value = lng;
-
-            // Popup breve
-            marcadorAdopcion.bindPopup('Ubicación actual').openPopup();
-            setTimeout(() => marcadorAdopcion.closePopup(), 2000);
         },
         function(error) {
             console.warn('Error al obtener la ubicación:', error.message);
@@ -375,50 +376,32 @@ function obtenerUbicacionAdopcion() {
     );
 }
 
-// Manejar eventos del modal con verificación de jQuery
+// eventos del modal: show.bs.modal / shown.bs.modal
 if (window.jQuery) {
     $('#liberarAnimalModal').on('show.bs.modal', function(e) {
         const button = $(e.relatedTarget);
         const tipo = button.data('tipo');
         const nombre = button.data('nombre');
-        const id = button.data('id');
-        
-        $('#modalAnimalTipo').val(tipo);
-        $('#modalAnimalNameBadge').text(nombre);
+
+        $('#modalAnimalNameBadge').text(nombre || '...');
         actualizarModalSegunTipo(tipo);
+
+        const lat = parseFloat(document.getElementById('latitud_adopcion').value) || -17.7833;
+        const lng = parseFloat(document.getElementById('longitud_adopcion').value) || -63.1833;
+        initMapaAdopcion(lat, lng);
     });
 
     $('#liberarAnimalModal').on('shown.bs.modal', function() {
-        if (!googleMapsLoaded) {
-            console.log('Cargando Google Maps API...');
-            loadGoogleMaps();
-            return;
-        }
+        // Sólo Leaflet: redimensiona correctamente en modal
+        if (mapaAdopcion) setTimeout(function(){ mapaAdopcion.invalidateSize(true); }, 0);
+    });
 
-        setTimeout(function() {
-            const mapContainer = document.getElementById('mapaAdopcion');
-            if (!mapContainer) {
-                console.error('Contenedor del mapa no encontrado');
-                return;
-            }
-            initMapaAdopcion();
-
-            if (mapaAdopcion) {
-                const lat = parseFloat($('#latitud_adopcion').val()) || -17.7833;
-                const lng = parseFloat($('#longitud_adopcion').val()) || -63.1833;
-                const latLng = new google.maps.LatLng(lat, lng);
-
-                google.maps.event.trigger(mapaAdopcion, 'resize');
-                mapaAdopcion.setCenter(latLng);
-                mapaAdopcion.setZoom(13);
-                if (marcadorAdopcion) marcadorAdopcion.setPosition(latLng);
-            }
-        }, 300);
+    $('#confirmarLiberacion').on('click', function() {
+        $('#liberarAnimalModal').modal('hide');
     });
 } else {
     console.warn('jQuery no disponible; inicialización básica sin eventos de Bootstrap.');
     document.addEventListener('DOMContentLoaded', function() {
-        // Inicializa el mapa por si el modal ya está visible
         initMapaAdopcion();
     });
 }

@@ -125,15 +125,11 @@
                                                 <label>¿Qué tipo de usuario es usted?</label>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="tipo_usuario" id="reportante" value="reportante" checked>
-                                                    <label class="form-check-label" for="reportante">
-                                                        Solo estoy reportando
-                                                    </label>
+                                                    <label class="form-check-label" for="reportante">Solo estoy reportando</label>
                                                 </div>
                                                 <div class="form-check">
                                                     <input class="form-check-input" type="radio" name="tipo_usuario" id="rescatista" value="rescatista">
-                                                    <label class="form-check-label" for="rescatista">
-                                                        Soy rescatista
-                                                    </label>
+                                                    <label class="form-check-label" for="rescatista">Soy rescatista</label>
                                                 </div>
                                             </div>
 
@@ -182,11 +178,26 @@
                                             <input type="hidden" id="latitud" name="latitud">
                                             <input type="hidden" id="longitud" name="longitud">
 
+                                            <!-- Llevar a un centro -->
+                                            <div class="form-group">
+                                                <div class="form-check">
+                                                    <input class="form-check-input" type="checkbox" id="llevarCentro" name="llevar_centro">
+                                                    <label class="form-check-label" for="llevarCentro">Estoy llevando al animal a un centro</label>
+                                                </div>
+                                            </div>
+                                            <div class="form-group d-none" id="centroDestinoGroup">
+                                                <label for="centro_destino">Centro de destino</label>
+                                                <select class="form-control" id="centro_destino" name="centro_destino">
+                                                    <option value="">Seleccione un centro</option>
+                                                    <option value="Centro de Rescate Animal Central">Centro de Rescate Animal Central</option>
+                                                    <option value="Centro Municipal de Bienestar Animal">Centro Municipal de Bienestar Animal</option>
+                                                    <option value="Refugio Amigos de los Animales">Refugio Amigos de los Animales</option>
+                                                </select>
+                                            </div>
+
                                             <!-- Botón de envío -->
                                             <div class="form-group">
-                                                <button type="submit" class="btn btn-danger btn-lg btn-block">
-                                                    Enviar Reporte
-                                                </button>
+                                                <button type="submit" class="btn btn-danger btn-lg btn-block">Enviar Reporte</button>
                                             </div>
                                         </form>
                                     </div>
@@ -289,19 +300,40 @@
     });
 
     
+    // Mostrar/ocultar selección de centro
+    document.getElementById('llevarCentro').addEventListener('change', function() {
+        const group = document.getElementById('centroDestinoGroup');
+        const select = document.getElementById('centro_destino');
+        if (this.checked) {
+            group.classList.remove('d-none');
+            select.required = true;
+        } else {
+            group.classList.add('d-none');
+            select.required = false;
+            select.value = '';
+        }
+    });
+    
+    // Validación antes de enviar + modal de confirmación (si hay jQuery)
     document.getElementById('reporteForm').addEventListener('submit', function(e) {
         const latitud = document.getElementById('latitud').value;
         const longitud = document.getElementById('longitud').value;
-        
         if (!latitud || !longitud) {
             e.preventDefault();
             alert('Por favor, marque la ubicación en el mapa antes de enviar el reporte.');
-            return false;
+            return;
         }
-        
-        
-        e.preventDefault();
-        $('#modal-default').modal('show');
+        const llevarCentro = document.getElementById('llevarCentro').checked;
+        const centro = document.getElementById('centro_destino').value;
+        if (llevarCentro && !centro) {
+            e.preventDefault();
+            alert('Seleccione el centro de destino.');
+            return;
+        }
+        if (window.jQuery) {
+            e.preventDefault();
+            $('#modal-default').modal('show');
+        }
     });
 
     

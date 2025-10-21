@@ -51,9 +51,10 @@
                         </div>
                     </div>
                     <div class="col-md-4">
-                    <button type="button" class="btn btn-success btn-block" data-bs-toggle="modal" data-bs-target="#agregarVeterinarioModal">
-    <i class="fas fa-plus me-2"></i> Agregar Veterinario
-</button>
+                    <!-- Botón que abre el modal: atributos BS4 -->
+                    <button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#agregarVeterinarioModal">
+                        <i class="fas fa-plus me-2"></i> Agregar Veterinario
+                    </button>
 
                     </div>
                 </div>
@@ -179,7 +180,8 @@
                 <h5 class="modal-title text-white" id="agregarVeterinarioModalLabel">
                     <i class="fas fa-user-plus mr-2"></i>Agregar Nuevo Veterinario
                 </h5>
-                <button type="button" class="close text-white" data-bs-dismiss="modal" aria-label="Close">
+                <!-- Modal Agregar Veterinario: botón de cierre BS4 -->
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
