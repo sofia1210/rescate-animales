@@ -81,7 +81,7 @@
                     <i class="fas fa-search mr-2"></i>
                     Búsqueda
                 </h3>
-                <!-- Botón (card-tools) para abrir Seleccionar Rescatista: sólo Brigadista/Admin -->
+                <!-- Botón (card-tools) para abrir Seleccionar Rescatista: sólo Rescatista/Admin -->
                 <!-- Abrir Seleccionar Rescatista: BS4 -->
                 <!-- Botón Agregar Animal en card-tools -->
                 <div class="card-tools">
@@ -89,7 +89,7 @@
                             class="btn btn-success"
                             data-toggle="modal"
                             data-target="#agregarAnimalModal"
-                            data-role-allowed="Brigadista">
+                            data-role-allowed="Rescatista">
                         <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
                     <button type="button"
@@ -204,7 +204,7 @@
                                 class="btn btn-success"
                                 data-toggle="modal"
                                 data-target="#seleccionarRescatistaModal"
-                                data-role-allowed="Brigadista,Veterinario,Administrador">
+                                data-role-allowed="Rescatista,Veterinario,Administrador">
                             <i class="fas fa-plus mr-1"></i> Agregar Primer Animal
                         </button>
                     </div>
@@ -221,7 +221,7 @@
      role="dialog"
      aria-labelledby="seleccionarRescatistaModalLabel"
      aria-hidden="true"
-     data-role-allowed="Brigadista,Veterinario,Administrador">
+     data-role-allowed="Rescatista,Veterinario,Administrador">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header bg-primary">
@@ -454,14 +454,14 @@
                     </div>
                 </form>
             </div>
-            <!-- Guardar Animal: Brigadista/Veterinario/Admin -->
+            <!-- Guardar Animal: Rescatista/Veterinario/Admin -->
             <div class="modal-footer">
                 
                 <button type="button"
                         class="btn btn-success"
                         id="guardarAnimal"
                         data-dismiss="modal"
-                        data-role-allowed="Brigadista,Veterinario,Administrador">
+                        data-role-allowed="Rescatista,Veterinario,Administrador">
                     <i class="fas fa-save mr-1"></i>Guardar Animal
                 </button>
             </div>
@@ -517,7 +517,7 @@
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Brigadista,Veterinario,Administrador">
+                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Rescatista,Veterinario,Administrador">
                                     <i class="fas fa-map-marked-alt mr-2"></i> Ver Ubicación
                                 </a>
                             </div>

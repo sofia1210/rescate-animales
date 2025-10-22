@@ -72,7 +72,7 @@
                         <select class="form-control" id="solicitud-rol">
                             <option value="">Selecciona un rol</option>
                             <option value="Ciudadano">Ciudadano</option>
-                            <option value="Brigadista">Brigadista</option>
+                            <option value="Rescatista">Rescatista</option>
                             <option value="Cuidador">Cuidador</option>
                             <option value="Veterinario">Veterinario</option>
                             <option value="Administrador">Administrador</option>

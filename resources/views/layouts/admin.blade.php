@@ -29,7 +29,7 @@
             <span class="mr-2">Rol:</span>
             <select id="roleSwitcher" class="form-control form-control-sm" style="width:auto;">
                 <option value="Ciudadano">Ciudadano</option>
-                <option value="Brigadista">Brigadista</option>
+                <option value="Rescatista">Rescatista</option>
                 <option value="Cuidador">Cuidador</option>
                 <option value="Veterinario">Veterinario</option>
                 <option value="Administrador">Administrador</option>
@@ -48,12 +48,12 @@
             <nav class="mt-2">
                 <!-- Menú lateral: ajustar visibilidad por rol según diagrama -->
                 <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                    <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Cuidador,Veterinario,Administrador">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Rescatista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('home') }}" class="nav-link {{ request()->is('home*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-home"></i><p>Inicio</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Brigadista,Cuidador,Veterinario,Administrador">
+                    <li class="nav-item" data-role-allowed="Rescatista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('animales.index') }}" class="nav-link {{ request()->is('animales*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-paw"></i><p>Animales</p>
                         </a>
@@ -73,7 +73,7 @@
                             <i class="nav-icon fas fa-building"></i><p>Centros</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Ciudadano,Brigadista,Cuidador,Veterinario,Administrador">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Rescatista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('perfil.index') }}" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-user"></i><p>Perfil</p>
                         </a>
