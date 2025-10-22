@@ -271,7 +271,7 @@
             <div class="modal-footer justify-content-end">
                 <!-- Footer del modal: Confirmar Liberación sin icono -->
                 <button type="button" class="btn btn-success" id="confirmarLiberacion" data-dismiss="modal">
-                    Confirmar Liberación
+                    Confirmar 
                 </button>
             </div>
         </div>

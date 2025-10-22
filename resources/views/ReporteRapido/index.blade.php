@@ -22,8 +22,8 @@
     
     <style>
         .map-container {
-            height: 400px;
-            border-radius: 8px;
+            height: 600px;
+            border-radius: 10px;
             border: 1px solid #dee2e6;
         }
         .emergency-header {
@@ -82,20 +82,27 @@
                         <div class="row">
                             <!-- Mapa -->
                             <div class="col-md-6">
-                                <div class="card">
+                                <div class="card h-100">
                                     <div class="card-header">
                                         <h3 class="card-title">Ubicación del Reporte</h3>
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body p-0 d-flex flex-column">
                                         <div id="map" class="map-container"></div>
-                                        <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta</small>
+                                        <div class="p-3 border-top">
+                                            <div class="alert alert-info mb-0" role="alert">
+                                                <i class="fas fa-info-circle mr-2"></i>
+                                                Haga clic en el mapa para marcar la ubicación exacta del reporte.
+                                                Puede arrastrar el marcador, hacer zoom y usar su ubicación actual
+                                                desde el botón del formulario.
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Formulario -->
                             <div class="col-md-6">
-                                <div class="card">
+                                <div class="card h-100">
                                     <div class="card-header">
                                         <h3 class="card-title">Información del Reporte</h3>
                                     </div>
