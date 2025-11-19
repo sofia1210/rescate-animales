@@ -507,6 +507,29 @@
                 
                 <hr class="my-3">
                 
+                <!-- Historial de Cambios -->
+                <div class="card card-primary card-outline">
+                  <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-clock mr-2"></i> Historial de Cambios</h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-4">
+                        <h6 class="text-primary">Traslados</h6>
+                        <ul id="hist-traslados" class="list-unstyled small mb-3"></ul>
+                      </div>
+                      <div class="col-md-4">
+                        <h6 class="text-primary">Evaluaciones Médicas</h6>
+                        <ul id="hist-evaluaciones" class="list-unstyled small mb-3"></ul>
+                      </div>
+                      <div class="col-md-4">
+                        <h6 class="text-primary">Cuidados</h6>
+                        <ul id="hist-cuidados" class="list-unstyled small mb-3"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
                 <div class="row">
                     <div class="col-md-6">
                         <h5 class="text-primary">Acciones Disponibles</h5>
@@ -517,7 +540,7 @@
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Rescatista,Veterinario,Administrador">
+                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Rescatista,Veterinario,Administrador,Cuidador">
                                     <i class="fas fa-map-marked-alt mr-2"></i> Ver Ubicación
                                 </a>
                             </div>
@@ -937,5 +960,132 @@ $(document).ready(function() {
         setTimeout(function() { mapaRescate.invalidateSize(true); }, 0);
     });
 });
+</script>
+@endsection
+
+@section('js')
+<script>
+// Integración con MockDB para Detalles del Animal y Historial de Cambios
+(function() {
+  function getNombreById(entity, id, field='nombre') {
+    const r = window.MockDB.find(entity, id);
+    return r ? r[field] : '';
+  }
+  function getTipoNombre(tipo_id) {
+    const r = window.MockDB.find('Tipo_Animal', tipo_id);
+    return r ? r.nombre : '';
+  }
+
+  // Guardar el animal clicado (si tu listado usa data-animal-id en el botón de ver detalles)
+  document.addEventListener('click', function(e) {
+    const btn = e.target.closest('[data-animal-id]');
+    if (btn) {
+      const val = parseInt(btn.getAttribute('data-animal-id'), 10);
+      if (!isNaN(val)) window.currentAnimalId = val;
+    }
+  });
+
+  $('#animalDetailsModal').on('show.bs.modal', function() {
+    const animals = window.MockDB.get('Hoja_Animal');
+    if (!animals.length) return;
+
+    const id = window.currentAnimalId || animals[0].hoja_animal_id;
+    const a = window.MockDB.find('Hoja_Animal', id) || animals[0];
+
+    // Rellenar encabezado y campos básicos
+    $('#modalAnimalNombre').html('<i class="fas fa-paw mr-2"></i>Detalles del Animal — ' + a.nombre);
+
+    const especieNom = getNombreById('Especie', a.especie_id);
+    const razaNom = getNombreById('Raza', a.raza_id);
+    const estadoNom = getNombreById('Estado_Animal', a.estado_id);
+    const tipoNom = getTipoNombre(a.tipo_id);
+
+    // Actualiza los elementos visibles en el panel superior del modal
+    const infoLeft = `
+      <p><strong>Especie:</strong> ${especieNom}</p>
+      <p><strong>Raza:</strong> ${razaNom}</p>
+      <p><strong>Sexo:</strong> Macho</p>`;
+    const infoRight = `
+      <p><strong>Estado de Salud:</strong> <span class="badge badge-${estadoNom === 'Malo' ? 'warning' : 'success'}">${estadoNom}</span></p>
+      <p><strong>Fecha de Ingreso:</strong> 01/09/2025</p>
+      <p><strong>Tipo:</strong> <span class="badge badge-${tipoNom === 'Doméstico' ? 'success' : 'info'}">${tipoNom}</span></p>`;
+
+    const cols = $('#animalDetailsModal .modal-body .row').first().find('.col-sm-6');
+    if (cols.length >= 2) {
+      $(cols[0]).html(infoLeft);
+      $(cols[1]).html(infoRight);
+    }
+
+    // Ajusta botones según tipo (mantiene tu lógica)
+    const tipo = (tipoNom || '').normalize('NFD').replace(/\p{Diacritic}/gu,'').toLowerCase();
+    if (tipo.includes('domestico')) {
+      $('.liberar-btn').hide();
+    } else {
+      $('.liberar-btn').show();
+    }
+
+    // Historial de Cambios: Traslados
+    const tras = (window.MockDB.get('Traslado') || []).filter(t => Number(t.hoja_animal_id) === Number(id));
+    const centros = window.MockDB.get('Centro') || [];
+    const nombreCentro = cid => (centros.find(c => Number(c.centro_id) === Number(cid)) || {}).nombre || '-';
+    const $t = $('#hist-traslados'); $t.empty();
+    tras.forEach(t => {
+      const lat = t.latitud != null ? Number(t.latitud).toFixed(4) : '0.0000';
+      const lng = t.longitud != null ? Number(t.longitud).toFixed(4) : '0.0000';
+      $t.append(`<li class="mb-2"><i class="fas fa-route text-info mr-1"></i> ${t.nombre} → ${nombreCentro(t.centro_id)} <span class="text-muted">(${lat}, ${lng})</span><br><span class="text-muted">${t.observaciones || ''}</span></li>`);
+    });
+    if (!tras.length) $t.append('<li class="text-muted">Sin traslados registrados</li>');
+
+    // Historial de Cambios: Evaluaciones Médicas
+    const evals = (window.MockDB.get('Evaluacion_Medica') || []).filter(e => Number(e.hoja_animal_id) === Number(id));
+    const tiposTrat = window.MockDB.get('Tipo_Tratamiento') || [];
+    const tipoTratNom = tid => (tiposTrat.find(t => Number(t.tratamiento_id) === Number(tid)) || {}).nombre || '-';
+    const $e = $('#hist-evaluaciones'); $e.empty();
+    evals.forEach(ev => {
+      const fecha = ev.fecha || '';
+      const desc = ev.descripcion || '';
+      const tipoN = tipoTratNom(ev.tratamiento_id);
+      $e.append(`<li class="mb-2"><i class="fas fa-stethoscope text-success mr-1"></i> ${fecha}: ${desc}<br><span class="badge badge-info">${tipoN}</span></li>`);
+    });
+    if (!evals.length) $e.append('<li class="text-muted">Sin evaluaciones registradas</li>');
+
+    // Historial de Cambios: Cuidados
+    const cuidados = (window.MockDB.get('Cuidado') || []).filter(c => Number(c.hoja_animal_id) === Number(id));
+    const tiposCuidado = window.MockDB.get('Tipo_Cuidado') || [];
+    const tipoCNom = tcid => (tiposCuidado.find(t => Number(t.tipo_cuidado_id) === Number(tcid)) || {}).nombre || '-';
+    const $c = $('#hist-cuidados'); $c.empty();
+    cuidados.forEach(c => {
+      const fecha = c.fecha || '';
+      const detalle = c.detalle || '';
+      const tipoN = tipoCNom(c.tipo_cuidado_id);
+      $c.append(`<li class="mb-2"><i class="fas fa-hand-holding-heart text-primary mr-1"></i> ${fecha}: ${tipoN} — ${detalle}</li>`);
+    });
+    if (!cuidados.length) $c.append('<li class="text-muted">Sin cuidados registrados</li>');
+  });
+
+  // Guardar registro de Hoja de Vida como Cuidado en MockDB
+  $('#guardarHojaVida').off('click').on('click', function() {
+    const animals = window.MockDB.get('Hoja_Animal') || [];
+    const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
+    if (!id) return;
+
+    const fecha = $('#fecha_registro').val() || new Date().toISOString().slice(0,10);
+    const tipoNomSel = $('#tipo_cuidado').val();
+    const tiposC = window.MockDB.get('Tipo_Cuidado') || [];
+    const tipoRow = tiposC.find(t => t.nombre === tipoNomSel) || tiposC[0];
+
+    window.MockDB.create('Cuidado', {
+      hoja_animal_id: id,
+      tipo_cuidado_id: tipoRow ? tipoRow.tipo_cuidado_id : null,
+      fecha: fecha,
+      detalle: $('#detalles_cuidado').val(),
+      cuidador_persona_id: 11
+    });
+
+    $('#hojaVidaModal').modal('hide');
+    setTimeout(() => (window.toastr && window.toastr.success) ? window.toastr.success('Cuidado registrado') : alert('Cuidado registrado'), 50);
+  });
+
+})();
 </script>
 @endsection

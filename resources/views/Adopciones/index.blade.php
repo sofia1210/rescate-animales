@@ -4,12 +4,10 @@
 
 @section('css')
     <style>
-        #mapaAdopcion {
-            height: 300px;
-            width: 100%;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
+        #mapaAdopcion { height: 340px; width: 100%; border: 1px solid #ddd; border-radius: 6px; }
+        .card .img-fluid { object-fit: cover; height: 220px; width: 100%; }
+        .modal-body .card { margin-bottom: .75rem; }
+        .modal-header.bg-success, .modal-header.bg-primary { align-items: center; }
     </style>
 @endsection
 
@@ -405,8 +403,62 @@ if (window.jQuery) {
         initMapaAdopcion();
     });
 }
-$('#confirmarLiberacion').on('click', function() {
-    $('#liberarAnimalModal').modal('hide');
+@section('js')
+<script>
+// Capturar el animal seleccionado cuando se abre el modal
+$('.liberar-btn').on('click', function() {
+  const id = parseInt($(this).data('id'), 10);
+  const nombre = $(this).data('nombre');
+  const tipo = $(this).data('tipo');
+  $('#liberarAnimalModal').data('animalId', id);
+  $('#modalAnimalNameBadge').text(nombre);
+  $('#modalAnimalTipo').val(tipo);
+});
+
+// Confirmar acción: crear Adopción o Liberación en MockDB y vincular en Hoja_Animal
+$('#confirmarLiberacion').off('click').on('click', function() {
+  const tipo = ($('#modalAnimalTipo').val() || '').trim();
+  const animalId = $('#liberarAnimalModal').data('animalId');
+  const lat = parseFloat($('#latitud_adopcion').val()) || -17.7833;
+  const lng = parseFloat($('#longitud_adopcion').val()) || -63.1833;
+
+  if (!window.MockDB || !animalId) {
+    console.warn('MockDB o AnimalID no disponible.');
+    return;
+  }
+
+  if (tipo === 'Doméstico') {
+    const adop = window.MockDB.create('Adopcion', {
+      direccion: 'Ubicación seleccionada',
+      latitud: lat,
+      longitud: lng,
+      detalle: 'Adopción simulada',
+      administrador_id: 1,
+      adoptante_id: 1
+    });
+    const hoja = window.MockDB.find('Hoja_Animal', animalId);
+    if (hoja) {
+      hoja.adopcion_id = adop.adopcion_id;
+      window.MockDB.update('Hoja_Animal', hoja);
+    }
+  } else {
+    const lib = window.MockDB.create('Liberacion', {
+      direccion: 'Ubicación seleccionada',
+      detalle: 'Liberación simulada',
+      latitud: lat,
+      longitud: lng,
+      aprobada: true
+    });
+    const hoja = window.MockDB.find('Hoja_Animal', animalId);
+    if (hoja) {
+      hoja.liberacion_id = lib.liberacion_id;
+      window.MockDB.update('Hoja_Animal', hoja);
+    }
+  }
+
+  // Cerrar modal y feedback simple
+  $('#liberarAnimalModal').modal('hide');
+  setTimeout(() => alert('Acción simulada registrada en MockDB.'), 100);
 });
 </script>
 <script>

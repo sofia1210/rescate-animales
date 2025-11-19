@@ -224,32 +224,39 @@
                lng >= SANTA_CRUZ_BOUNDS.minLng && lng <= SANTA_CRUZ_BOUNDS.maxLng;
     }
 
-    const defaultCentros = [
-        { id: 1, nombre: 'Centro Rescate Equipetrol', tipo: 'Rescate', capacidad: 40, telefono: '(3) 333-1111', lat: -17.7690, lng: -63.1880, direccion: 'Equipetrol' },
-        { id: 2, nombre: 'Refugio Pampa de la Isla', tipo: 'Refugio', capacidad: 60, telefono: '(3) 333-2222', lat: -17.7750, lng: -63.1200, direccion: 'Pampa de la Isla' },
-        { id: 3, nombre: 'Veterinaria Cristo Redentor', tipo: 'Veterinario', capacidad: 25, telefono: '(3) 333-3333', lat: -17.7600, lng: -63.1700, direccion: 'Av. Cristo Redentor' },
-    ];
+    // Cargar centros desde MockDB
+    function centrosDesdeMock() {
+        const rows = (window.MockDB ? window.MockDB.get('Centro') : []);
+        return rows.map(c => ({
+            id: c.centro_id,
+            nombre: c.nombre,
+            tipo: 'Refugio',            // placeholder
+            capacidad: 0,               // placeholder
+            telefono: c.contacto || '',
+            lat: Number(c.latitud),
+            lng: Number(c.longitud),
+            direccion: c.direccion || ''
+        })).filter(c => isFinite(c.lat) && isFinite(c.lng));
+    }
 
-    let centros = defaultCentros.filter(c => isInSantaCruz(c.lat, c.lng));
+    let centros = centrosDesdeMock();
 
     const map = L.map('centros-map').setView([SANTA_CRUZ_CENTER.lat, SANTA_CRUZ_CENTER.lng], 12);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
     setTimeout(() => map.invalidateSize(), 0);
     window.addEventListener('resize', () => { map.invalidateSize(); });
+    // Invalida tamaño si la página recupera visibilidad
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(() => map.invalidateSize(), 0); });
 
     const markers = new Map();
     const $tbody = $('#centros-tbody');
     const $search = $('#search-centros');
     const $zona = $('#filter-zona');
 
-    // Renderizar centros en mapa y tabla
     function renderCentros() {
-        // borrar marcadores
         markers.forEach(m => map.removeLayer(m));
         markers.clear();
-        // borrar tabla
         $tbody.empty();
-        // dibujar
         centros.forEach(c => {
             const marker = L.marker([c.lat, c.lng]).addTo(map).bindPopup(`<strong>${c.nombre}</strong><br>${c.direccion}`);
             markers.set(c.id, marker);
@@ -268,7 +275,6 @@
                 </tr>
             `);
         });
-        // ajustar vista si hay marcadores
         if (markers.size > 0) {
             const group = L.featureGroup(Array.from(markers.values()));
             map.fitBounds(group.getBounds().pad(0.1));
@@ -278,87 +284,81 @@
     function applyFilters() {
         const term = ($search.val() || '').toLowerCase();
         const zona = $zona.val() || '';
-        centros = defaultCentros
-            .filter(c => isInSantaCruz(c.lat, c.lng))
+        centros = centrosDesdeMock()
             .filter(c => !term || c.nombre.toLowerCase().includes(term) || c.tipo.toLowerCase().includes(term))
             .filter(c => !zona || c.direccion === zona);
         renderCentros();
     }
 
-    // Mapa dentro del modal de Centro
-    let modalMap = null;
-    let modalMarker = null;
-
-    function placeModalMarker(lat, lng) {
-        if (modalMarker) {
-            modalMarker.setLatLng([lat, lng]);
+    // Modal: cargar datos si viene con ID
+    $('#modalCentro').on('show.bs.modal', function(e) {
+        const btn = $(e.relatedTarget);
+        const id = parseInt(btn && btn.data('id'), 10);
+        if (Number.isFinite(id)) {
+            const row = window.MockDB.find('Centro', id);
+            if (row) {
+                $('#centro-id').val(row.centro_id);
+                $('#centro-nombre').val(row.nombre);
+                $('#centro-capacidad').val(0);
+                $('#centro-telefono').val(row.contacto || '');
+                $('#centro-direccion').val(row.direccion || '');
+                $('#centro-lat').val(row.latitud);
+                $('#centro-lng').val(row.longitud);
+            }
         } else {
-            modalMarker = L.marker([lat, lng]).addTo(modalMap);
+            $('#centro-id').val('');
+            $('#centro-nombre').val('');
+            $('#centro-capacidad').val('');
+            $('#centro-telefono').val('');
+            $('#centro-direccion').val('');
+            $('#centro-lat').val('');
+            $('#centro-lng').val('');
         }
-        modalMarker.bindPopup('Ubicación seleccionada').openPopup();
-    }
-
-    function updateLatLng(lat, lng) {
-        $('#centro-lat').val(lat);
-        $('#centro-lng').val(lng);
-        if (modalMap) {
-            placeModalMarker(lat, lng);
-            modalMap.setView([lat, lng], 14);
-        }
-    }
-
-    function initModalMap() {
-        const latVal = parseFloat($('#centro-lat').val());
-        const lngVal = parseFloat($('#centro-lng').val());
-        const hasCoords = Number.isFinite(latVal) && Number.isFinite(lngVal);
-        const center = hasCoords ? { lat: latVal, lng: lngVal } : SANTA_CRUZ_CENTER;
-
-        if (!modalMap) {
-            modalMap = L.map('modal-centro-map');
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(modalMap);
-
-            modalMap.on('click', function(e) {
-                updateLatLng(e.latlng.lat, e.latlng.lng);
-            });
-        }
-
-        modalMap.setView([center.lat, center.lng], hasCoords ? 14 : 12);
-        setTimeout(() => modalMap.invalidateSize(), 0);
-
-        if (hasCoords) {
-            placeModalMarker(latVal, lngVal);
-        } else if (modalMarker) {
-            modalMap.removeLayer(modalMarker);
-            modalMarker = null;
-        }
-    }
-
-    $('#modalCentro').on('shown.bs.modal', function() {
-        initModalMap();
-        setTimeout(() => modalMap.invalidateSize(), 0);
     });
 
+    // Guardar (create/update) en MockDB
+    $('#form-centro').on('submit', function(ev) {
+        ev.preventDefault();
+        const payload = {
+            nombre: $('#centro-nombre').val(),
+            direccion: $('#centro-direccion').val(),
+            latitud: parseFloat($('#centro-lat').val()) || SANTA_CRUZ_CENTER.lat,
+            longitud: parseFloat($('#centro-lng').val()) || SANTA_CRUZ_CENTER.lng,
+            contacto: $('#centro-telefono').val()
+        };
+        const idVal = parseInt($('#centro-id').val(), 10);
+        if (Number.isFinite(idVal) && idVal > 0) {
+            const prev = window.MockDB.find('Centro', idVal);
+            if (prev) window.MockDB.update('Centro', { ...prev, ...payload, centro_id: idVal });
+        } else {
+            const created = window.MockDB.create('Centro', payload);
+            $('#centro-id').val(created.centro_id);
+        }
+        centros = centrosDesdeMock();
+        renderCentros();
+        $('#modalCentro').modal('hide');
+    });
+
+    // Ubicación actual
     $('#btn-ubicacion').on('click', function() {
         if (!navigator.geolocation) {
             console.warn('Geolocalización no soportada por el navegador.');
             return;
         }
         navigator.geolocation.getCurrentPosition(
-            function(pos) { updateLatLng(pos.coords.latitude, pos.coords.longitude); },
+            function(pos) { $('#centro-lat').val(pos.coords.latitude); $('#centro-lng').val(pos.coords.longitude); },
             function() { console.warn('No se pudo obtener la ubicación actual.'); }
         );
     });
 
-    // Restablecer filtros (recargar)
+    // Restablecer filtros
     $('#btn-restablecer').on('click', function() {
         $('#search-centros').val('');
         $('#filter-zona').val('');
         applyFilters();
     });
 
-    // Render inicial
+    // Inicial
     renderCentros();
 })();
 </script>

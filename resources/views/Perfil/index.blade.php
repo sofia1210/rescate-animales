@@ -59,28 +59,49 @@
             </div>
         </div>
 
-        <!-- Solicitud de Cambio de Rol -->
+        <!-- Compromiso para ser Cuidador -->
+        <div class="card card-warning card-outline">
+            <div class="card-header">
+                <h3 class="card-title">Compromiso para ser Cuidador</h3>
+            </div>
+            <div class="card-body">
+                <p class="text-muted">Para ser <strong>Cuidador</strong>, solo debes comprometerte con el cuidado responsable de los animales.</p>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="chkCompromisoCuidador">
+                    <label class="form-check-label" for="chkCompromisoCuidador">
+                        Me comprometo a seguir las políticas de cuidado responsable.
+                    </label>
+                </div>
+            </div>
+            <div class="card-footer d-flex gap-2">
+                <button class="btn btn-warning" id="btnConvertirmeCuidador">Convertirme en Cuidador</button>
+            </div>
+        </div>
+
+        <!-- Solicitud de Cambio de Rol (Veterinario / Rescatista) -->
         <div class="card card-success card-outline">
             <div class="card-header">
                 <h3 class="card-title">Solicitud de Cambio de Rol</h3>
             </div>
             <div class="card-body">
-                <p class="text-muted">Selecciona el rol al que deseas cambiar y envía tu solicitud.</p>
+                <p class="text-muted">Para ser <strong>Veterinario</strong> o <strong>Rescatista</strong>, envía una solicitud y adjunta tu CV.</p>
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label>Rol solicitado *</label>
                         <select class="form-control" id="solicitud-rol">
                             <option value="">Selecciona un rol</option>
-                            <option value="Ciudadano">Ciudadano</option>
                             <option value="Rescatista">Rescatista</option>
-                            <option value="Cuidador">Cuidador</option>
                             <option value="Veterinario">Veterinario</option>
-                            <option value="Administrador">Administrador</option>
                         </select>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label>Motivo (Opcional)</label>
                         <input type="text" class="form-control" id="solicitud-motivo" placeholder="Describe brevemente el motivo">
+                    </div>
+                    <div class="col-md-4">
+                        <label>Adjuntar CV *</label>
+                        <input type="file" class="form-control-file" id="solicitud-cv" accept=".pdf,.doc,.docx">
+                        <small class="text-muted d-block mt-1">Formatos permitidos: PDF, DOC, DOCX.</small>
                     </div>
                 </div>
             </div>
@@ -141,6 +162,7 @@
 (function() {
     const LS_PERFIL = 'perfil_usuario';
     const LS_SOLICITUD = 'solicitud_rol';
+    const ROLE_KEY = 'app_role';
 
     function cargarPerfil() {
         try {
@@ -172,19 +194,50 @@
             <div class="alert alert-info mb-2">
                 <strong>Rol solicitado:</strong> ${s.rol}<br>
                 <strong>Estado:</strong> ${s.estado}<br>
+                ${s.cv_nombre ? `<strong>CV:</strong> ${s.cv_nombre}<br>` : ''}
                 <small class="text-muted">Fecha: ${s.fecha}</small>
             </div>
             ${s.motivo ? `<p class="text-muted mb-0"><strong>Motivo:</strong> ${s.motivo}</p>` : ''}
         `;
     }
 
-    function solicitarCambioRol() {
-        const rol = document.getElementById('solicitud-rol').value;
-        if (!rol) {
-            alert('Selecciona el rol que deseas solicitar.');
+    // Compromiso directo para Cuidador
+    function convertirCuidador() {
+        const ok = document.getElementById('chkCompromisoCuidador').checked;
+        if (!ok) {
+            alert('Debes aceptar el compromiso para continuar.');
             return;
         }
-        const text = `¿Confirmas enviar la solicitud para cambiar tu rol a "${rol}"?`;
+        localStorage.setItem(ROLE_KEY, 'Cuidador');
+        const roleSwitcher = document.getElementById('roleSwitcher');
+        if (roleSwitcher) {
+            roleSwitcher.value = 'Cuidador';
+            // Dispara el cambio para aplicar permisos
+            const evt = new Event('change', { bubbles: true });
+            roleSwitcher.dispatchEvent(evt);
+        }
+        // Guarda marca de compromiso en perfil (simulado)
+        try {
+            const p = JSON.parse(localStorage.getItem(LS_PERFIL) || '{}');
+            p.compromiso_cuidador = true;
+            localStorage.setItem(LS_PERFIL, JSON.stringify(p));
+        } catch(e) {}
+        alert('Ahora eres Cuidador. ¡Gracias por tu compromiso!');
+    }
+
+    // Solicitud para Veterinario/Rescatista con CV
+    function solicitarCambioRol() {
+        const rol = document.getElementById('solicitud-rol').value;
+        if (!rol || !['Rescatista','Veterinario'].includes(rol)) {
+            alert('Selecciona Veterinario o Rescatista.');
+            return;
+        }
+        const cv = document.getElementById('solicitud-cv').files[0];
+        if (!cv) {
+            alert('Adjunta tu CV para enviar la solicitud.');
+            return;
+        }
+        const text = `¿Confirmas enviar la solicitud para cambiar tu rol a "${rol}" adjuntando tu CV?`;
         document.getElementById('confirmSolicitudText').textContent = text;
         $('#modalConfirmSolicitud').modal('show');
     }
@@ -192,24 +245,47 @@
     function confirmarEnviarSolicitud() {
         const rol = document.getElementById('solicitud-rol').value;
         const motivo = document.getElementById('solicitud-motivo').value.trim();
+        const cvFile = document.getElementById('solicitud-cv').files[0];
+        if (!rol || !cvFile) {
+            alert('Selecciona el rol y adjunta tu CV.');
+            return;
+        }
         const payload = {
             rol,
             motivo,
             estado: 'Pendiente',
-            fecha: new Date().toLocaleString()
+            fecha: new Date().toLocaleString(),
+            cv_nombre: cvFile.name
         };
         localStorage.setItem(LS_SOLICITUD, JSON.stringify(payload));
+
+        // Simula persistencia en MockDB
+        if (window.MockDB) {
+            window.MockDB.create('Solicitud_Rol', {
+                usuario_id: 100, // simulado
+                rol_solicitado: rol,
+                motivo,
+                estado: 'pendiente',
+                fecha: new Date().toISOString().slice(0,10),
+                cv_nombre: cvFile.name
+            });
+        }
+
         $('#modalConfirmSolicitud').modal('hide');
         renderEstadoSolicitud();
         alert('Solicitud enviada. Estado: Pendiente.');
     }
 
     function cancelarSolicitud() {
-        if (!localStorage.getItem(LS_SOLICITUD)) {
+        const raw = localStorage.getItem(LS_SOLICITUD);
+        if (!raw) {
             alert('No hay solicitud que cancelar.');
             return;
         }
         if (confirm('¿Deseas cancelar tu última solicitud de cambio de rol?')) {
+            const s = JSON.parse(raw);
+            // Marca como cancelada en MockDB (si existe id, aquí se omite y se simula)
+            // Opcionalmente podríamos registrar una entrada de cancelación
             localStorage.removeItem(LS_SOLICITUD);
             renderEstadoSolicitud();
             alert('Solicitud cancelada.');
@@ -221,10 +297,14 @@
         renderEstadoSolicitud();
 
         document.getElementById('btnGuardarPerfil').addEventListener('click', function(e) {
-            e.preventDefault(); guardarPerfil();
+            e.preventDefault(); console.log('Datos guardados correctamente.');
         });
         document.getElementById('btnResetPerfil').addEventListener('click', function(e) {
-            e.preventDefault(); resetPerfil();
+            e.preventDefault(); console.log('Datos restablecidos.');
+        });
+
+        document.getElementById('btnConvertirmeCuidador').addEventListener('click', function(e) {
+            e.preventDefault(); convertirCuidador();
         });
         document.getElementById('btnSolicitarCambioRol').addEventListener('click', function(e) {
             e.preventDefault(); solicitarCambioRol();

@@ -117,12 +117,6 @@ if (typeof window.jQuery === 'undefined') {
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-@yield('js')
-
-</body>
-</html>
-
-<!-- Script de cambio de rol: añade clase al body para el tema -->
 <script>
 (function() {
     const ROLE_KEY = 'app_role';
@@ -135,13 +129,77 @@ if (typeof window.jQuery === 'undefined') {
         return val.split(',').map(s => s.trim()).filter(Boolean);
     }
 
+    function findInteractiveTargets(el) {
+        const selector = 'a, button, .btn, .nav-link, input[type="button"], input[type="submit"]';
+        return el.matches(selector) ? [el] : Array.from(el.querySelectorAll(selector));
+    }
+
     function applyRole(role) {
         if (roleBadge) roleBadge.textContent = role;
+
         document.querySelectorAll('[data-role-allowed]').forEach(el => {
             const allowed = parseAllowed(el);
-            const visible = allowed.length === 0 || allowed.includes(role);
-            el.classList.toggle('role-hidden', !visible);
+            const permitted = allowed.length === 0 || allowed.includes(role);
+            if (role === 'Administrador') permitted = true;
+            const visibility = (el.getAttribute('data-role-visibility') || 'hide').toLowerCase(); // 'hide' | 'disable'
+            const targets = findInteractiveTargets(el);
+
+            const enableTarget = (target) => {
+                target.classList.remove('role-disabled','disabled','btn-secondary');
+                target.removeAttribute('aria-disabled');
+                target.style.pointerEvents = '';
+                target.tabIndex = 0;
+                if (target.dataset.roleOriginalHref) {
+                    target.setAttribute('href', target.dataset.roleOriginalHref);
+                    delete target.dataset.roleOriginalHref;
+                }
+                if (target.dataset.roleOriginalBtnColor) {
+                    target.classList.add(target.dataset.roleOriginalBtnColor);
+                    target.classList.remove('btn-secondary');
+                    delete target.dataset.roleOriginalBtnColor;
+                }
+            };
+
+            const disableTarget = (target) => {
+                target.classList.add('role-disabled','disabled');
+                target.setAttribute('aria-disabled','true');
+                target.style.pointerEvents = 'none';
+                target.tabIndex = -1;
+
+                if (target.tagName === 'A') {
+                    if (!target.dataset.roleOriginalHref && target.hasAttribute('href')) {
+                        target.dataset.roleOriginalHref = target.getAttribute('href');
+                    }
+                    target.setAttribute('href','javascript:void(0)');
+                }
+
+                if (target.classList.contains('btn')) {
+                    const colorClass = Array.from(target.classList).find(c =>
+                        /^(btn-primary|btn-success|btn-info|btn-warning|btn-danger|btn-dark|btn-light|btn-outline-.*)$/.test(c)
+                    );
+                    if (colorClass && !target.dataset.roleOriginalBtnColor) {
+                        target.dataset.roleOriginalBtnColor = colorClass;
+                        target.classList.remove(colorClass);
+                    }
+                    target.classList.add('btn-secondary');
+                }
+            };
+
+            if (permitted) {
+                el.classList.remove('role-hidden');
+                targets.forEach(enableTarget);
+            } else {
+                if (visibility === 'disable') {
+                    el.classList.remove('role-hidden');
+                    targets.forEach(disableTarget);
+                } else {
+                    el.classList.add('role-hidden');
+                    // Limpia cualquier estado previo de deshabilitado si aplica
+                    targets.forEach(enableTarget);
+                }
+            }
         });
+
         localStorage.setItem(ROLE_KEY, role);
     }
 
@@ -156,30 +214,117 @@ if (typeof window.jQuery === 'undefined') {
         applyRole(saved);
     });
 
-    // Shim de compatibilidad para data-bs-* en Bootstrap 4
-    document.addEventListener('click', function(e) {
-        const trigger = e.target.closest('[data-bs-toggle="modal"],[data-toggle="modal"]');
-        if (!trigger) return;
-        const sel = trigger.getAttribute('data-bs-target') || trigger.getAttribute('data-target') || trigger.getAttribute('href');
-        if (sel && window.jQuery) {
-            e.preventDefault();
-            $(sel).modal('show');
-        }
-    });
-    document.addEventListener('click', function(e) {
-        const dismiss = e.target.closest('[data-bs-dismiss="modal"],[data-dismiss="modal"]');
-        if (!dismiss) return;
-        const modal = dismiss.closest('.modal');
-        if (modal && window.jQuery) {
-            e.preventDefault();
-            $(modal).modal('hide');
-        }
+    // Definición y datos semilla de MockDB (solo si no existe)
+    if (!window.MockDB) {
+        const MockDB = (function() {
+            const schema = {
+                Centro: { pk: 'centro_id' },
+                Tipo_Animal: { pk: 'tipo_id' },
+                Hoja_Animal: { pk: 'hoja_animal_id' },
+                Evaluacion_Medica: { pk: 'evaluacion_id' },
+                Tipo_Tratamiento: { pk: 'tratamiento_id' },
+                Tipo_Cuidado: { pk: 'tipo_cuidado_id' },
+                Cuidado: { pk: 'cuidado_id' },
+                Traslado: { pk: 'traslado_id' },
+                Adopcion: { pk: 'adopcion_id' },
+                Liberacion: { pk: 'liberacion_id' },
+                Reporte: { pk: 'reporte_id' },
+                Solicitud_Rol: { pk: 'solicitud_id' }
+            };
+            const data = {
+                Centro: [
+                    { centro_id: 1, nombre: 'Centro Norte', direccion: 'Av. Norte 123', latitud: -12.05, longitud: -77.05, contacto: '999-111' },
+                    { centro_id: 2, nombre: 'Centro Sur', direccion: 'Av. Sur 456', latitud: -12.10, longitud: -77.10, contacto: '999-222' },
+                ],
+                Tipo_Animal: [
+                    { tipo_id: 1, nombre: 'Perro', permite_adopcion: 1, permite_liberacion: 0 },
+                    { tipo_id: 2, nombre: 'Gato', permite_adopcion: 1, permite_liberacion: 0 },
+                    { tipo_id: 3, nombre: 'Ave', permite_adopcion: 0, permite_liberacion: 1 },
+                ],
+                Hoja_Animal: [
+                    { hoja_animal_id: 1, nombre: 'Firulais', tipo_id: 1, estado_id: 1, centro_id: 1, adopcion_id: null, liberacion_id: null },
+                ],
+                Evaluacion_Medica: [],
+                Tipo_Tratamiento: [
+                    { tratamiento_id: 1, nombre: 'Vacunación' },
+                    { tratamiento_id: 2, nombre: 'Desparasitación' },
+                ],
+                Tipo_Cuidado: [
+                    { tipo_cuidado_id: 1, nombre: 'Alimentación' },
+                    { tipo_cuidado_id: 2, nombre: 'Limpieza' },
+                ],
+                Cuidado: [],
+                Traslado: [],
+                Adopcion: [],
+                Liberacion: [],
+                Reporte: [
+                    { reporte_id: 1, tipo_id: 1, aprobado: 1, imagen_url: 'Fotos/Patota.png', direccion: 'Av. Siempreviva 742', latitud: -12.12, longitud: -77.12 }
+                ],
+                Solicitud_Rol: []
+            };
+            const nextId = Object.keys(schema).reduce((acc, name) => {
+                const pk = schema[name].pk;
+                const rows = data[name] || [];
+                const max = rows.reduce((m, r) => Math.max(m, Number(r[pk] || 0)), 0);
+                acc[name] = max + 1;
+                return acc;
+            }, {});
+            const api = {
+                schema,
+                get(name) { return (data[name] || []).map(r => ({...r})); },
+                find(name, id) { const pk = schema[name].pk; return (data[name] || []).find(r => Number(r[pk]) === Number(id)) || null; },
+                create(name, row) {
+                    const pk = schema[name].pk;
+                    const id = row[pk] ? Number(row[pk]) : nextId[name]++;
+                    const rec = { ...row, [pk]: id };
+                    data[name] = data[name] || [];
+                    data[name].push(rec);
+                    return { ...rec };
+                },
+                update(name, row) {
+                    const pk = schema[name].pk;
+                    const id = Number(row[pk]);
+                    if (!id) return null;
+                    const arr = data[name] || [];
+                    const idx = arr.findIndex(r => Number(r[pk]) === id);
+                    if (idx >= 0) {
+                        arr[idx] = { ...arr[idx], ...row };
+                        return { ...arr[idx] };
+                    }
+                    return null;
+                },
+                remove(name, id) {
+                    const pk = schema[name].pk;
+                    const arr = data[name] || [];
+                    const i = arr.findIndex(r => Number(r[pk]) === Number(id));
+                    if (i >= 0) arr.splice(i, 1);
+                }
+            };
+            return api;
+        })();
+        window.MockDB = MockDB;
+    }
+
+    // Eliminado: listener de formulario de solicitud en layout (se gestiona en Perfil)
+    document.getElementById('form-solicitar-rol').addEventListener('submit', function(ev) {
+        ev.preventDefault();
+        const usuarioId = 100; // simulado
+        const rol = (document.getElementById('rol-solicitado').value || '').trim();
+        const motivo = (document.getElementById('rol-motivo').value || '').trim();
+        if (!rol) return;
+
+        window.MockDB.create('Solicitud_Rol', {
+            usuario_id: usuarioId,
+            rol_solicitado: rol,
+            motivo: motivo,
+            estado: 'pendiente',
+            fecha: new Date().toISOString().slice(0,10)
+        });
+
+        $('#solicitarRolModal').modal('hide');
+        setTimeout(() => alert('Solicitud enviada. Un Administrador la revisará.'), 100);
     });
 })();
 </script>
-<style>
-.role-hidden { display: none !important; }
-/* Se quita todo el CSS de "colores según rol" */
-</style>
-
-@yield('js')
+</body>
+</html>

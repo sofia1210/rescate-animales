@@ -36,6 +36,7 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row">
+            <!-- Mantener métricas básicas; quitar salud y tipos -->
             <div class="col-lg-3 col-6"><div class="small-box bg-primary"><div class="inner"><h3>2</h3><p>Animales en Total</p></div><div class="icon"><i class="fas fa-paw"></i></div></div></div>
             <div class="col-lg-3 col-6"><div class="small-box bg-info"><div class="inner"><h3>1</h3><p>Con evaluaciones</p></div><div class="icon"><i class="fas fa-stethoscope"></i></div></div></div>
             <div class="col-lg-3 col-6"><div class="small-box bg-success"><div class="inner"><h3>1</h3><p>Buena salud</p></div><div class="icon"><i class="fas fa-heart"></i></div></div></div>
@@ -47,6 +48,7 @@
         </div>
 
         <div class="row">
+            <!-- quitar bloque “Distribución del Estado de Salud” -->
             <div class="col-md-6">
                 <div class="card card-success card-outline">
                     <div class="card-header"><h3 class="card-title"><i class="far fa-chart-bar"></i> Rescates últimos 6 meses</h3></div>
@@ -100,6 +102,71 @@
             </div>
         </div>
 
+        <!-- Listas de tablas (Administrador) -->
+        <div class="row" data-role-allowed="Administrador">
+          <div class="col-12">
+            <div class="card card-warning card-outline">
+              <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-database mr-2"></i> Listas de tablas (MockDB)</h3>
+              </div>
+              <div class="card-body" id="admin-tablas-list"></div>
+            </div>
+          </div>
+        </div>
     </div>
 </section>
+
+<!-- Modal datos -->
+<div class="modal fade" id="adminDataModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info">
+        <h5 class="modal-title text-white" id="adminDataModalTitle">Tabla</h5>
+        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="table-responsive">
+          <table class="table table-sm table-striped">
+            <thead><tr id="adminDataHead"></tr></thead>
+            <tbody id="adminDataBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="modal-footer"><button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button></div>
+    </div>
+  </div>
+</div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const cont = document.getElementById('admin-tablas-list');
+  if (!window.MockDB || !cont) return;
+  const schema = window.MockDB.schema;
+  const buildCard = (name, count) => `
+    <div class="d-flex justify-content-between align-items-center border rounded p-2 mb-2">
+      <strong>${name}</strong>
+      <div>
+        <span class="badge badge-primary mr-2">${count} filas</span>
+        <button class="btn btn-sm btn-info ver-tabla" data-name="${name}"><i class="fas fa-eye mr-1"></i> Ver</button>
+      </div>
+    </div>`;
+  cont.innerHTML = Object.keys(schema).map(n => buildCard(n, window.MockDB.get(n).length)).join('');
+
+  cont.querySelectorAll('.ver-tabla').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const name = this.dataset.name;
+      const rows = window.MockDB.get(name);
+      const fields = schema[name].fields;
+      document.getElementById('adminDataModalTitle').textContent = `Tabla: ${name}`;
+      const head = document.getElementById('adminDataHead');
+      const body = document.getElementById('adminDataBody');
+      head.innerHTML = fields.map(f => `<th>${f}</th>`).join('');
+      body.innerHTML = rows.map(r => `<tr>${fields.map(f => `<td>${r[f] != null ? r[f] : ''}</td>`).join('')}</tr>`).join('');
+      $('#adminDataModal').modal('show');
+    });
+  });
+});
+</script>
+@endpush
 @endsection

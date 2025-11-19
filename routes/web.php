@@ -192,3 +192,7 @@ Route::get('/animales/tratamiento', function () {
 Route::get('/centros', function () {
     return view('Centros.index');
 })->name('centros.index');
+
+Route::get('/prototipo', function () {
+    return view('Prototipo.index');
+})->name('prototipo.index');
