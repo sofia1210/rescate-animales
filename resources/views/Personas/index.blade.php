@@ -86,7 +86,7 @@
 									<th class="text-right">Acciones</th>
 								</tr>
 							</thead>
-							<tbody id="tablaSolicitudes" data-role-allowed="Administrador" data-role-visibility="disable"></tbody>
+							<tbody id="tablaSolicitudes" data-role-allowed="Administrador,Encargado" data-role-visibility="disable"></tbody>
 						</table>
 					</div>
 				</div>
@@ -187,8 +187,8 @@
 				<td>${r.rol_solicitado}</td>
 				<td><span class="badge ${r.estado === 'aprobada' ? 'badge-success' : r.estado === 'rechazada' ? 'badge-danger' : 'badge-warning'}">${r.estado}</span></td>
 				<td class="text-right">
-					<button class="btn btn-xs btn-success" data-action="aprobar" data-id="${r.solicitud_id}"><i class="fas fa-check"></i></button>
-					<button class="btn btn-xs btn-danger" data-action="rechazar" data-id="${r.solicitud_id}"><i class="fas fa-times"></i></button>
+					<button class="btn btn-xs btn-success" data-action="aprobar" data-id="${r.solicitud_id}" data-encargado-allowed><i class="fas fa-check"></i></button>
+					<button class="btn btn-xs btn-danger" data-action="rechazar" data-id="${r.solicitud_id}" data-encargado-allowed><i class="fas fa-times"></i></button>
 				</td>
 			</tr>
 		`).join('');

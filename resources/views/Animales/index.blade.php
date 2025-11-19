@@ -173,7 +173,7 @@
                         <p class="card-text mb-1"><strong>Tipo:</strong> {{ $animal->tipo }}</p>
                     </div>
                     <div class="card-footer bg-white border-0 pb-3">
-                        <button type="button" class="btn btn-primary w-100 view-details-btn" 
+                        <button type="button" class="btn btn-primary w-100 view-details-btn" data-encargado-allowed
                                 data-toggle="modal" 
                                 data-target="#animalDetailsModal"
                                 data-animal-id="{{ $animal->id }}"
@@ -565,7 +565,8 @@
                                    class="btn btn-info btn-block"
                                    data-toggle="modal"
                                    data-target="#hojaVidaModal"
-                                   data-role-allowed="Cuidador,Veterinario,Administrador">
+                                   data-role-allowed="Cuidador,Veterinario,Encargado,Administrador"
+                                   data-encargado-allowed>
                                     <i class="fas fa-clipboard-list mr-2"></i> Hoja de Vida
                                 </a>
                             

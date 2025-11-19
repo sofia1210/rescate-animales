@@ -63,8 +63,8 @@
     </div>
 </div>
 
-<!-- Mantener liberación sólo Admin (ya configurado) y permitir búsqueda/listado para Ciudadano/Admin -->
-<section class="content" data-role-allowed="Ciudadano,Veterinario,Administrador">
+<!-- Mantener liberación sólo Admin/Veterinario; permitir búsqueda/listado para roles visibles (incluye Encargado) -->
+<section class="content" data-role-allowed="Ciudadano,Cuidador,Rescatista,Veterinario,Encargado,Administrador">
     <div class="container-fluid pb-4">
 
     <div class="card card-primary card-outline">

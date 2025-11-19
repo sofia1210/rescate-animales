@@ -94,7 +94,7 @@
 								<th class="text-right">Acciones</th>
 							</tr>
 						</thead>
-						<tbody id="tablaHallazgos" data-role-allowed="Administrador" data-role-visibility="disable">
+						<tbody id="tablaHallazgos" data-role-allowed="Administrador,Encargado" data-role-visibility="disable">
 						</tbody>
 					</table>
 				</div>
@@ -167,8 +167,8 @@
 					'<span class="badge badge-warning">Pendiente</span>'
 				}</td>
 				<td class="text-right">
-					<button class="btn btn-xs btn-success" data-action="aprobar" data-id="${r.reporte_id}"><i class="fas fa-check"></i></button>
-					<button class="btn btn-xs btn-danger" data-action="rechazar" data-id="${r.reporte_id}"><i class="fas fa-times"></i></button>
+					<button class="btn btn-xs btn-success" data-action="aprobar" data-id="${r.reporte_id}" data-encargado-allowed><i class="fas fa-check"></i></button>
+					<button class="btn btn-xs btn-danger" data-action="rechazar" data-id="${r.reporte_id}" data-encargado-allowed><i class="fas fa-times"></i></button>
 					<button class="btn btn-xs btn-info" data-action="cargar" data-id="${r.reporte_id}"><i class="fas fa-pen"></i></button>
 				</td>
 			</tr>

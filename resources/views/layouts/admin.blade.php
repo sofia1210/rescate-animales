@@ -15,6 +15,9 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     @yield('css')
+    <style>
+        .role-hidden { display: none !important; }
+    </style>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -54,17 +57,12 @@
                             <i class="nav-icon fas fa-home"></i><p>Inicio</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Ciudadano">
-                        <a href="{{ route('mis-hallazgos.index') }}" class="nav-link {{ request()->is('mis-hallazgos*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-location-dot"></i><p>Mis Hallazgos</p>
-                        </a>
-                    </li>
-                    <li class="nav-item" data-role-allowed="Rescatista,Cuidador,Veterinario,Administrador">
+                    <li class="nav-item" data-role-allowed="Cuidador,Veterinario,Encargado,Administrador">
                         <a href="{{ route('animales.index') }}" class="nav-link {{ request()->is('animales*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-paw"></i><p>Animales</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Ciudadano,Veterinario,Administrador">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Cuidador,Rescatista,Veterinario,Encargado,Administrador">
                         <a href="{{ route('adopciones.index') }}" class="nav-link {{ request()->is('adopciones*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-hand-holding-heart"></i><p>Adopciones</p>
                         </a>
@@ -74,12 +72,12 @@
                             <i class="nav-icon fas fa-chart-line"></i><p>Reportes</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Administrador">
+                    <li class="nav-item" data-role-allowed="Administrador,Encargado">
                         <a href="{{ route('hallazgos.index') }}" class="nav-link {{ request()->is('hallazgos*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-location-dot"></i><p>Hallazgos</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Administrador">
+                    <li class="nav-item" data-role-allowed="Administrador,Encargado">
                         <a href="{{ route('personas.index') }}" class="nav-link {{ request()->is('personas*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-users"></i><p>Personas</p>
                         </a>
@@ -103,12 +101,12 @@
                     <li class="nav-item" data-role-allowed="Administrador">
                         <!-- Hoja de Vida fusionada en Gestión de Animales -->
                     </li>
-                    <li class="nav-item" data-role-allowed="Administrador">
+                    <li class="nav-item" data-role-allowed="Veterinario,Administrador">
                         <a href="{{ route('evaluaciones.index') }}" class="nav-link {{ request()->is('evaluaciones*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-stethoscope"></i><p>Evaluaciones Médicas</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Administrador">
+                    <li class="nav-item" data-role-allowed="Veterinario,Cuidador,Administrador">
                         <a href="{{ route('cuidados.index') }}" class="nav-link {{ request()->is('cuidados*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-hand-holding-heart"></i><p>Cuidados</p>
                         </a>
@@ -118,7 +116,7 @@
                             <i class="nav-icon fas fa-truck-medical"></i><p>Traslados</p>
                         </a>
                     </li>
-                    <li class="nav-item" data-role-allowed="Administrador">
+                    <li class="nav-item" data-role-allowed="Ciudadano,Cuidador,Rescatista,Veterinario,Encargado,Administrador">
                         <a href="{{ route('liberaciones.index') }}" class="nav-link {{ request()->is('liberaciones*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-dove"></i><p>Liberaciones</p>
                         </a>
@@ -126,6 +124,11 @@
                     <li class="nav-item" data-role-allowed="Ciudadano,Rescatista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('perfil.index') }}" class="nav-link {{ request()->is('perfil*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-user"></i><p>Perfil</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Ciudadano,Rescatista">
+                        <a href="{{ route('mis-hallazgos.index') }}" class="nav-link {{ request()->is('mis-hallazgos*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-location-dot"></i><p>Mis Hallazgos</p>
                         </a>
                     </li>
                 </ul>
@@ -371,11 +374,11 @@ if (typeof window.jQuery === 'undefined') {
                     { liberacion_id: 1, direccion: 'Reserva Natural Norte', detalle: 'Condiciones aptas', latitud: -12.20, longitud: -77.20, aprobada: 1 },
                 ],
                 Reporte: [
-                    { reporte_id: 1, tipo_id: 1, aprobado: 0, estado: 'pendiente', imagen_url: 'Fotos/Patota.png', direccion: 'Av. Siempreviva 742', latitud: -12.12, longitud: -77.12, observaciones: 'Animal herido', cantidad_animales: 1 },
-                    { reporte_id: 2, tipo_id: 2, aprobado: 1, estado: 'aprobado', imagen_url: 'Fotos/R.jpg', direccion: 'Plaza Central 100', latitud: -12.13, longitud: -77.13, observaciones: 'Gato abandonado', cantidad_animales: 1 },
-                    { reporte_id: 3, tipo_id: 3, aprobado: 0, estado: 'rechazado', imagen_url: 'Fotos/OIP.jpg', direccion: 'Parque del Este', latitud: -12.09, longitud: -77.07, observaciones: 'Ave lastimada', cantidad_animales: 2 },
-                    { reporte_id: 4, tipo_id: 1, aprobado: 0, estado: 'pendiente', imagen_url: 'Fotos/OIP.jpg', direccion: 'Av. Libertad 555', latitud: -12.15, longitud: -77.10, observaciones: 'Perro agresivo', cantidad_animales: 1 },
-                    { reporte_id: 5, tipo_id: 3, aprobado: 1, estado: 'aprobado', imagen_url: 'Fotos/R.jpg', direccion: 'Bosque de Pinos', latitud: -12.18, longitud: -77.22, observaciones: 'Ave rescatada', cantidad_animales: 1 },
+                    { reporte_id: 1, persona_id: 1, tipo_id: 1, aprobado: 0, estado: 'pendiente', imagen_url: 'Fotos/Patota.png', direccion: 'Av. Siempreviva 742', latitud: -12.12, longitud: -77.12, observaciones: 'Animal herido', cantidad_animales: 1 },
+                    { reporte_id: 2, persona_id: 2, tipo_id: 2, aprobado: 1, estado: 'aprobado', imagen_url: 'Fotos/R.jpg', direccion: 'Plaza Central 100', latitud: -12.13, longitud: -77.13, observaciones: 'Gato abandonado', cantidad_animales: 1 },
+                    { reporte_id: 3, persona_id: 3, tipo_id: 3, aprobado: 0, estado: 'rechazado', imagen_url: 'Fotos/OIP.jpg', direccion: 'Parque del Este', latitud: -12.09, longitud: -77.07, observaciones: 'Ave lastimada', cantidad_animales: 2 },
+                    { reporte_id: 4, persona_id: 1, tipo_id: 1, aprobado: 0, estado: 'pendiente', imagen_url: 'Fotos/OIP.jpg', direccion: 'Av. Libertad 555', latitud: -12.15, longitud: -77.10, observaciones: 'Perro agresivo', cantidad_animales: 1 },
+                    { reporte_id: 5, persona_id: 3, tipo_id: 3, aprobado: 1, estado: 'aprobado', imagen_url: 'Fotos/R.jpg', direccion: 'Bosque de Pinos', latitud: -12.18, longitud: -77.22, observaciones: 'Ave rescatada', cantidad_animales: 1 },
                 ],
                 Solicitud_Rol: [
                     { solicitud_id: 1, usuario_id: 200, rol_solicitado: 'Veterinario', motivo: 'Tengo experiencia clínica', estado: 'pendiente', fecha: new Date().toISOString().slice(0,10) },
