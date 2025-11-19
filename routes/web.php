@@ -13,8 +13,8 @@ Route::get('/login', function () {
 
 Route::post('/login', function (Request $request) {
     if ($request->email === 'admin@example.com' && $request->password === 'password') {
-        
-        return redirect()->route('home');
+        // Prototipo: marcar el rol Administrador vía flash para que el layout lo tome y lo escriba en localStorage
+        return redirect()->route('home')->with('set_role', 'Administrador');
     }
     return back()->withErrors('Credenciales incorrectas.');
 });
@@ -34,6 +34,73 @@ Route::get('/inicio', function () {
 Route::get('/perfil', function () {
     return view('Perfil.index');
 })->name('perfil.index');
+
+// ======================
+// Administración (stub)
+// ======================
+Route::get('/hallazgos', function () {
+    return view('Hallazgos.index');
+})->name('hallazgos.index');
+
+Route::get('/personas', function () {
+    return view('Personas.index');
+})->name('personas.index');
+
+Route::get('/veterinarios', function () {
+    return view('Veterinarios.index');
+})->name('veterinarios.index');
+
+Route::get('/veterinarios/crear', function () {
+    return view('Veterinarios.create');
+})->name('veterinarios.create');
+
+Route::get('/rescatistas', function () {
+    return view('Rescatistas.index');
+})->name('rescatistas.index');
+
+Route::get('/rescatistas/crear', function () {
+    return view('Rescatistas.create');
+})->name('rescatistas.create');
+
+Route::get('/cuidadores', function () {
+    return view('Cuidadores.index');
+})->name('cuidadores.index');
+
+Route::get('/hojavida', function () {
+    return view('HojaVida.index');
+})->name('hojavida.index');
+
+Route::get('/evaluaciones', function () {
+    return view('Evaluaciones.index');
+})->name('evaluaciones.index');
+
+Route::get('/evaluaciones/crear', function () {
+    return view('Evaluaciones.create');
+})->name('evaluaciones.create');
+
+Route::get('/traslados', function () {
+    return view('Traslados.index');
+})->name('traslados.index');
+
+Route::get('/traslados/crear', function () {
+    return view('Traslados.create');
+})->name('traslados.create');
+
+Route::get('/liberaciones', function () {
+    return view('Liberaciones.index');
+})->name('liberaciones.index');
+
+Route::get('/cuidados', function () {
+    return view('Cuidados.index');
+})->name('cuidados.index');
+
+Route::get('/cuidados/crear', function () {
+    return view('Cuidados.create');
+})->name('cuidados.create');
+
+Route::get('/mis-hallazgos', function () {
+    return view('Hallazgos.mis');
+})->name('mis-hallazgos.index');
 
 Route::get('/animales', function (Request $request) {
     $animales = [

@@ -54,6 +54,11 @@
                             <i class="nav-icon fas fa-home"></i><p>Inicio</p>
                         </a>
                     </li>
+                    <li class="nav-item" data-role-allowed="Ciudadano">
+                        <a href="{{ route('mis-hallazgos.index') }}" class="nav-link {{ request()->is('mis-hallazgos*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-location-dot"></i><p>Mis Hallazgos</p>
+                        </a>
+                    </li>
                     <li class="nav-item" data-role-allowed="Rescatista,Cuidador,Veterinario,Administrador">
                         <a href="{{ route('animales.index') }}" class="nav-link {{ request()->is('animales*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-paw"></i><p>Animales</p>
@@ -70,8 +75,52 @@
                         </a>
                     </li>
                     <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('hallazgos.index') }}" class="nav-link {{ request()->is('hallazgos*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-location-dot"></i><p>Hallazgos</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('personas.index') }}" class="nav-link {{ request()->is('personas*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-users"></i><p>Personas</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('veterinarios.index') }}" class="nav-link {{ request()->is('veterinarios*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-user-doctor"></i><p>Veterinarios</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('rescatistas.index') }}" class="nav-link {{ request()->is('rescatistas*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-people-carry-box"></i><p>Rescatistas</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
                         <a href="{{ route('centros.index') }}" class="nav-link {{ request()->is('centros*') ? 'active' : '' }}">
                             <i class="nav-icon fas fa-building"></i><p>Centros</p>
+                        </a>
+                    </li>
+                    <!-- Cuidadores ahora es un flag en Persona -->
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <!-- Hoja de Vida fusionada en Gestión de Animales -->
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('evaluaciones.index') }}" class="nav-link {{ request()->is('evaluaciones*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-stethoscope"></i><p>Evaluaciones Médicas</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('cuidados.index') }}" class="nav-link {{ request()->is('cuidados*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-hand-holding-heart"></i><p>Cuidados</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('traslados.index') }}" class="nav-link {{ request()->is('traslados*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-truck-medical"></i><p>Traslados</p>
+                        </a>
+                    </li>
+                    <li class="nav-item" data-role-allowed="Administrador">
+                        <a href="{{ route('liberaciones.index') }}" class="nav-link {{ request()->is('liberaciones*') ? 'active' : '' }}">
+                            <i class="nav-icon fas fa-dove"></i><p>Liberaciones</p>
                         </a>
                     </li>
                     <li class="nav-item" data-role-allowed="Ciudadano,Rescatista,Cuidador,Veterinario,Administrador">
@@ -124,6 +173,8 @@ if (typeof window.jQuery === 'undefined') {
     const DEFAULT_ROLE = 'Ciudadano';
     const roleSwitcher = document.getElementById('roleSwitcher');
     const roleBadge = document.getElementById('roleBadge');
+    // Bootstrap de rol desde la sesión del login (flash)
+    const INIT_ROLE = {!! json_encode(session('set_role')) !!};
 
     function parseAllowed(el) {
         const val = el.getAttribute('data-role-allowed') || '';
@@ -225,7 +276,11 @@ if (typeof window.jQuery === 'undefined') {
     }
 
     document.addEventListener('DOMContentLoaded', function() {
-        const saved = localStorage.getItem(ROLE_KEY) || DEFAULT_ROLE;
+        let saved = localStorage.getItem(ROLE_KEY) || DEFAULT_ROLE;
+        if (INIT_ROLE) {
+            saved = INIT_ROLE;
+            localStorage.setItem(ROLE_KEY, saved);
+        }
         if (roleSwitcher) {
             roleSwitcher.value = saved;
             roleSwitcher.addEventListener('change', function(e) {
@@ -241,6 +296,9 @@ if (typeof window.jQuery === 'undefined') {
             const schema = {
                 Centro: { pk: 'centro_id' },
                 Tipo_Animal: { pk: 'tipo_id' },
+                Especie: { pk: 'especie_id' },
+                Raza: { pk: 'raza_id' },
+                Estado_Animal: { pk: 'estado_id' },
                 Hoja_Animal: { pk: 'hoja_animal_id' },
                 Evaluacion_Medica: { pk: 'evaluacion_id' },
                 Tipo_Tratamiento: { pk: 'tratamiento_id' },
@@ -250,22 +308,46 @@ if (typeof window.jQuery === 'undefined') {
                 Adopcion: { pk: 'adopcion_id' },
                 Liberacion: { pk: 'liberacion_id' },
                 Reporte: { pk: 'reporte_id' },
-                Solicitud_Rol: { pk: 'solicitud_id' }
+                Solicitud_Rol: { pk: 'solicitud_id' },
+                Persona: { pk: 'persona_id' },
+                Veterinario: { pk: 'veterinario_id' },
+                Rescatista: { pk: 'rescatista_id' },
+                Cuidador: { pk: 'cuidador_id' }
             };
             const data = {
                 Centro: [
                     { centro_id: 1, nombre: 'Centro Norte', direccion: 'Av. Norte 123', latitud: -12.05, longitud: -77.05, contacto: '999-111' },
                     { centro_id: 2, nombre: 'Centro Sur', direccion: 'Av. Sur 456', latitud: -12.10, longitud: -77.10, contacto: '999-222' },
+                    { centro_id: 3, nombre: 'Centro Este', direccion: 'Av. Este 789', latitud: -12.08, longitud: -77.08, contacto: '999-333' },
                 ],
                 Tipo_Animal: [
                     { tipo_id: 1, nombre: 'Perro', permite_adopcion: 1, permite_liberacion: 0 },
                     { tipo_id: 2, nombre: 'Gato', permite_adopcion: 1, permite_liberacion: 0 },
                     { tipo_id: 3, nombre: 'Ave', permite_adopcion: 0, permite_liberacion: 1 },
                 ],
-                Hoja_Animal: [
-                    { hoja_animal_id: 1, nombre: 'Firulais', tipo_id: 1, estado_id: 1, centro_id: 1, adopcion_id: null, liberacion_id: null },
+                Especie: [
+                    { especie_id: 1, nombre: 'Canino' },
+                    { especie_id: 2, nombre: 'Felino' },
+                    { especie_id: 3, nombre: 'Ave' },
                 ],
-                Evaluacion_Medica: [],
+                Raza: [
+                    { raza_id: 1, especie_id: 1, nombre: 'Labrador' },
+                    { raza_id: 2, especie_id: 2, nombre: 'Siamés' },
+                    { raza_id: 3, especie_id: 3, nombre: 'Loro' },
+                ],
+                Estado_Animal: [
+                    { estado_id: 1, nombre: 'Malo' },
+                    { estado_id: 2, nombre: 'Bueno' },
+                ],
+                Hoja_Animal: [
+                    { hoja_animal_id: 1, nombre: 'Firulais', tipo_id: 1, especie_id: 1, raza_id: 1, estado_id: 2, centro_id: 1, adopcion_id: null, liberacion_id: null },
+                    { hoja_animal_id: 2, nombre: 'Luna', tipo_id: 2, especie_id: 2, raza_id: 2, estado_id: 2, centro_id: 2, adopcion_id: null, liberacion_id: null },
+                    { hoja_animal_id: 3, nombre: 'Lorito', tipo_id: 3, especie_id: 3, raza_id: 3, estado_id: 1, centro_id: 3, adopcion_id: null, liberacion_id: null },
+                ],
+                Evaluacion_Medica: [
+                    { evaluacion_id: 1, hoja_animal_id: 1, tratamiento_id: 1, descripcion: 'Vacunación anual', fecha: '2025-09-10', veterinario_id: 1 },
+                    { evaluacion_id: 2, hoja_animal_id: 2, tratamiento_id: 2, descripcion: 'Desparasitación inicial', fecha: '2025-09-12', veterinario_id: 2 },
+                ],
                 Tipo_Tratamiento: [
                     { tratamiento_id: 1, nombre: 'Vacunación' },
                     { tratamiento_id: 2, nombre: 'Desparasitación' },
@@ -274,14 +356,52 @@ if (typeof window.jQuery === 'undefined') {
                     { tipo_cuidado_id: 1, nombre: 'Alimentación' },
                     { tipo_cuidado_id: 2, nombre: 'Limpieza' },
                 ],
-                Cuidado: [],
-                Traslado: [],
-                Adopcion: [],
-                Liberacion: [],
-                Reporte: [
-                    { reporte_id: 1, tipo_id: 1, aprobado: 1, imagen_url: 'Fotos/Patota.png', direccion: 'Av. Siempreviva 742', latitud: -12.12, longitud: -77.12 }
+                Cuidado: [
+                    { cuidado_id: 1, hoja_animal_id: 1, tipo_cuidado_id: 1, fecha: '2025-09-11', detalle: 'Alimento balanceado 500g', cuidador_persona_id: 3 },
+                    { cuidado_id: 2, hoja_animal_id: 2, tipo_cuidado_id: 2, fecha: '2025-09-12', detalle: 'Baño y cepillado', cuidador_persona_id: 4 },
                 ],
-                Solicitud_Rol: []
+                Traslado: [
+                    { traslado_id: 1, rescastista_id: 1, nombre: 'Traslado inicial', centro_id: 1, latitud: -12.12, longitud: -77.12, observaciones: 'Ingreso a Centro Norte', hoja_animal_id: 1 },
+                    { traslado_id: 2, rescastista_id: 2, nombre: 'Derivación', centro_id: 2, latitud: -12.10, longitud: -77.11, observaciones: 'Derivado a Centro Sur', hoja_animal_id: 2 },
+                ],
+                Adopcion: [
+                    { adopcion_id: 1, direccion: 'Calle Flores 123', latitud: -12.11, longitud: -77.09, detalle: 'Familia con patio', administrador_id: 99, adoptante_id: 10 },
+                ],
+                Liberacion: [
+                    { liberacion_id: 1, direccion: 'Reserva Natural Norte', detalle: 'Condiciones aptas', latitud: -12.20, longitud: -77.20, aprobada: 1 },
+                ],
+                Reporte: [
+                    { reporte_id: 1, tipo_id: 1, aprobado: 0, estado: 'pendiente', imagen_url: 'Fotos/Patota.png', direccion: 'Av. Siempreviva 742', latitud: -12.12, longitud: -77.12, observaciones: 'Animal herido', cantidad_animales: 1 },
+                    { reporte_id: 2, tipo_id: 2, aprobado: 1, estado: 'aprobado', imagen_url: 'Fotos/R.jpg', direccion: 'Plaza Central 100', latitud: -12.13, longitud: -77.13, observaciones: 'Gato abandonado', cantidad_animales: 1 },
+                    { reporte_id: 3, tipo_id: 3, aprobado: 0, estado: 'rechazado', imagen_url: 'Fotos/OIP.jpg', direccion: 'Parque del Este', latitud: -12.09, longitud: -77.07, observaciones: 'Ave lastimada', cantidad_animales: 2 },
+                    { reporte_id: 4, tipo_id: 1, aprobado: 0, estado: 'pendiente', imagen_url: 'Fotos/OIP.jpg', direccion: 'Av. Libertad 555', latitud: -12.15, longitud: -77.10, observaciones: 'Perro agresivo', cantidad_animales: 1 },
+                    { reporte_id: 5, tipo_id: 3, aprobado: 1, estado: 'aprobado', imagen_url: 'Fotos/R.jpg', direccion: 'Bosque de Pinos', latitud: -12.18, longitud: -77.22, observaciones: 'Ave rescatada', cantidad_animales: 1 },
+                ],
+                Solicitud_Rol: [
+                    { solicitud_id: 1, usuario_id: 200, rol_solicitado: 'Veterinario', motivo: 'Tengo experiencia clínica', estado: 'pendiente', fecha: new Date().toISOString().slice(0,10) },
+                    { solicitud_id: 2, usuario_id: 201, rol_solicitado: 'Rescatista', motivo: 'Experiencia en campo', estado: 'pendiente', fecha: new Date().toISOString().slice(0,10) }
+                ],
+                Persona: [
+                    { persona_id: 1, usuario_id: 200, nombre: 'María', apellido: 'García', ci: '123456', telefono: '70000001' },
+                    { persona_id: 2, usuario_id: 201, nombre: 'Juan', apellido: 'Pérez', ci: '654321', telefono: '70000002' },
+                    { persona_id: 3, usuario_id: 202, nombre: 'Lucía', apellido: 'Ramos', ci: '789123', telefono: '70000003' },
+                    { persona_id: 4, usuario_id: 203, nombre: 'Carlos', apellido: 'Flores', ci: '987321', telefono: '70000004' },
+                    { persona_id: 5, usuario_id: 204, nombre: 'Ana', apellido: 'Suárez', ci: '222333', telefono: '70000005' },
+                    { persona_id: 6, usuario_id: 205, nombre: 'Pedro', apellido: 'Gómez', ci: '333444', telefono: '70000006' }
+                ],
+                Veterinario: [
+                    { veterinario_id: 1, persona_id: 3, especialidad: 'Clínica', cv_documentado: 1 },
+                    { veterinario_id: 2, persona_id: 4, especialidad: 'Fauna Silvestre', cv_documentado: 1 },
+                ],
+                Rescatista: [
+                    { rescatista_id: 1, persona_id: 1, cv_documentado: 1 },
+                    { rescatista_id: 2, persona_id: 2, cv_documentado: 1 }
+                ],
+                Cuidador: [
+                    { cuidador_id: 1, usuario_id: 300, fecha_compromiso: '2025-09-01' },
+                    { cuidador_id: 2, usuario_id: 301, fecha_compromiso: '2025-09-10' },
+                    { cuidador_id: 3, usuario_id: 302, fecha_compromiso: '2025-09-15' },
+                ]
             };
             const nextId = Object.keys(schema).reduce((acc, name) => {
                 const pk = schema[name].pk;
@@ -327,24 +447,26 @@ if (typeof window.jQuery === 'undefined') {
     }
 
     // Eliminado: listener de formulario de solicitud en layout (se gestiona en Perfil)
-    document.getElementById('form-solicitar-rol').addEventListener('submit', function(ev) {
-        ev.preventDefault();
-        const usuarioId = 100; // simulado
-        const rol = (document.getElementById('rol-solicitado').value || '').trim();
-        const motivo = (document.getElementById('rol-motivo').value || '').trim();
-        if (!rol) return;
-
-        window.MockDB.create('Solicitud_Rol', {
-            usuario_id: usuarioId,
-            rol_solicitado: rol,
-            motivo: motivo,
-            estado: 'pendiente',
-            fecha: new Date().toISOString().slice(0,10)
+    (function() {
+        const form = document.getElementById('form-solicitar-rol');
+        if (!form) return;
+        form.addEventListener('submit', function(ev) {
+            ev.preventDefault();
+            const usuarioId = 100; // simulado
+            const rol = (document.getElementById('rol-solicitado').value || '').trim();
+            const motivo = (document.getElementById('rol-motivo').value || '').trim();
+            if (!rol) return;
+            window.MockDB.create('Solicitud_Rol', {
+                usuario_id: usuarioId,
+                rol_solicitado: rol,
+                motivo: motivo,
+                estado: 'pendiente',
+                fecha: new Date().toISOString().slice(0,10)
+            });
+            $('#solicitarRolModal').modal('hide');
+            setTimeout(() => alert('Solicitud enviada. Un Administrador la revisará.'), 100);
         });
-
-        $('#solicitarRolModal').modal('hide');
-        setTimeout(() => alert('Solicitud enviada. Un Administrador la revisará.'), 100);
-    });
+    })();
 
     // Helper global: crea tile layer con fallback de proveedores
     window.createLeafletTileWithFallback = function(map) {
@@ -378,5 +500,6 @@ if (typeof window.jQuery === 'undefined') {
     };
 })();
 </script>
+@yield('js')
 </body>
 </html>

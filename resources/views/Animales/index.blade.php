@@ -544,9 +544,9 @@
                                 </a>
                             </div>
                             <div class="col-6 mb-2">
-                                <a href="{{ route('animales.ver-ubicacion') }}" class="btn btn-info btn-block" data-role-allowed="Rescatista,Veterinario,Administrador,Cuidador">
-                                    <i class="fas fa-map-marked-alt mr-2"></i> Ver Ubicación
-                                </a>
+                                <button type="button" class="btn btn-info btn-block" data-toggle="modal" data-target="#changeLocationModal" data-role-allowed="Rescatista,Veterinario,Administrador,Cuidador">
+                                    <i class="fas fa-map-marked-alt mr-2"></i> Actualizar Ubicación
+                                </button>
                             </div>
                             <div class="col-6 mb-2">
                                 <a href="{{ route('animales.editar-datos') }}" class="btn btn-warning btn-block" data-role-allowed="Administrador">
@@ -768,6 +768,36 @@
                 </button>
                 <button type="button" class="btn btn-warning" id="confirmarCambioEstado">
                     <i class="fas fa-save mr-1"></i>Cambiar Estado
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cambiar Ubicación (Centro) -->
+<div class="modal fade" id="changeLocationModal" tabindex="-1" role="dialog" aria-labelledby="changeLocationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        <div class="modal-content">
+            <div class="modal-header bg-info">
+                <h5 class="modal-title text-white" id="changeLocationModalLabel">
+                    <i class="fas fa-map-marker-alt mr-2"></i>Actualizar Ubicación (Centro)
+                </h5>
+                <button type="button" class="close text-white" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="selectCentro">Centro de Refugio</label>
+                    <select id="selectCentro" class="form-control"></select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    <i class="fas fa-times mr-1"></i>Cancelar
+                </button>
+                <button type="button" class="btn btn-info" id="confirmarCambioUbicacion">
+                    <i class="fas fa-save mr-1"></i>Actualizar
                 </button>
             </div>
         </div>
@@ -1102,6 +1132,65 @@ $(document).ready(function() {
 
     $('#hojaVidaModal').modal('hide');
     setTimeout(() => (window.toastr && window.toastr.success) ? window.toastr.success('Cuidado registrado') : alert('Cuidado registrado'), 50);
+  });
+
+  // Cambiar Estado (mapear a catálogo simple: Bueno=2, Malo=1)
+  $('#changeStatusModal').on('show.bs.modal', function() {
+    const animals = window.MockDB.get('Hoja_Animal') || [];
+    const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
+    const a = id ? window.MockDB.find('Hoja_Animal', id) : null;
+    $('#changeStatusAnimalName').text(a ? a.nombre : 'Animal');
+    // limpiar selección previa
+    $('input[name="health_status"]').prop('checked', false);
+  });
+  $('#confirmarCambioEstado').on('click', function() {
+    const sel = $('input[name="health_status"]:checked').val() || '';
+    const good = ['Muy Bueno','Bueno','Estable'];
+    const estadoId = good.includes(sel) ? 2 : 1; // 2=Bueno, 1=Malo
+    const animals = window.MockDB.get('Hoja_Animal') || [];
+    const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
+    if (!id) return;
+    window.MockDB.update('Hoja_Animal', { hoja_animal_id: id, estado_id: estadoId });
+    $('#changeStatusModal').modal('hide');
+    setTimeout(() => alert('Estado actualizado'), 50);
+  });
+
+  // Cambiar Ubicación (Centro)
+  $('#changeLocationModal').on('show.bs.modal', function() {
+    const $sel = $('#selectCentro');
+    const centros = window.MockDB.get('Centro') || [];
+    $sel.empty();
+    centros.forEach(c => $sel.append(`<option value="${c.centro_id}">${c.nombre}</option>`));
+    const animals = window.MockDB.get('Hoja_Animal') || [];
+    const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
+    const a = id ? window.MockDB.find('Hoja_Animal', id) : null;
+    if (a && a.centro_id) $sel.val(String(a.centro_id));
+  });
+  $('#confirmarCambioUbicacion').on('click', function() {
+    const centroId = Number($('#selectCentro').val() || 0);
+    const animals = window.MockDB.get('Hoja_Animal') || [];
+    const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
+    if (!id || !centroId) return;
+    window.MockDB.update('Hoja_Animal', { hoja_animal_id: id, centro_id: centroId });
+    $('#changeLocationModal').modal('hide');
+    setTimeout(() => alert('Ubicación actualizada'), 50);
+  });
+
+  // Guardar Animal (crear Hoja_Animal mínima)
+  $('#guardarAnimal').on('click', function() {
+    const nombre = ($('#nombre_animal').val() || '').trim();
+    const estadoTxt = $('#estado_salud').val() || '';
+    if (!nombre) { alert('Ingresa el nombre del animal'); return; }
+    const estadoId = ['Muy Bueno','Bueno','Estable'].includes(estadoTxt) ? 2 : 1;
+    const centros = window.MockDB.get('Centro') || [];
+    const centroId = (centros[0] && centros[0].centro_id) || null;
+    const rec = window.MockDB.create('Hoja_Animal', {
+      nombre: nombre,
+      estado_id: estadoId,
+      centro_id: centroId
+    });
+    $('#agregarAnimalModal').modal('hide');
+    setTimeout(() => alert('Animal registrado (Hoja de Vida creada)'), 50);
   });
 
 })();
