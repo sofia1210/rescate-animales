@@ -319,9 +319,8 @@ if (typeof window.jQuery === 'undefined') {
             };
             const data = {
                 Centro: [
-                    { centro_id: 1, nombre: 'Centro Norte', direccion: 'Av. Norte 123', latitud: -12.05, longitud: -77.05, contacto: '999-111' },
-                    { centro_id: 2, nombre: 'Centro Sur', direccion: 'Av. Sur 456', latitud: -12.10, longitud: -77.10, contacto: '999-222' },
-                    { centro_id: 3, nombre: 'Centro Este', direccion: 'Av. Este 789', latitud: -12.08, longitud: -77.08, contacto: '999-333' },
+                    { centro_id: 1, nombre: 'Centro Norte', direccion: 'Av. Beni 123', latitud: -17.7500, longitud: -63.2000, contacto: '999-111' },
+                    { centro_id: 2, nombre: 'Centro Sur', direccion: 'Av. Santos Dumont 456', latitud: -17.8400, longitud: -63.1700, contacto: '999-222' },
                 ],
                 Tipo_Animal: [
                     { tipo_id: 1, nombre: 'Perro', permite_adopcion: 1, permite_liberacion: 0 },

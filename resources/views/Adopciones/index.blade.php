@@ -249,9 +249,9 @@
                         </button>
 
                         <p class="text-center text-muted small mb-3">o haz clic en el mapa para seleccionar la ubicación</p>
-
-                        <!-- Contenedor del mapa -->
-                        <div id="mapaAdopcion"></div>
+                        <div id="mapaAdopcion" style="display: none;"></div>
+                        <img id="mapaAdopcionFallback" src="{{ asset('mapa.png') }}" alt="Mapa no disponible"
+                             style="height: 340px; width: 100%; border: 1px solid #ddd; border-radius: 6px; display: block;">
                         
                         <!-- Controles del mapa -->
                         <div class="mt-3">
@@ -305,11 +305,44 @@ function actualizarModalSegunTipo(tipo) {
     $('#modalAnimalTipo').val(tipo || '');
 }
 
-// función: initMapaAdopcion(lat, lng)
+// Fallback local de proveedores de tiles para mapas
+function addTileWithFallback(map) {
+  const providers = [
+    { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap contributors' },
+    { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', attr: '© OpenStreetMap France, HOT' },
+    { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', attr: '© OpenStreetMap DE' },
+    { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attr: '© Carto, © OpenStreetMap' },
+  ];
+  let idx = 0, layer = null, anyTileLoaded = false;
+  function use(i) {
+    if (layer) { try { map.removeLayer(layer); } catch(e) {} }
+    const p = providers[i];
+    layer = L.tileLayer(p.url, { attribution: p.attr });
+    layer.on('tileload', function() {
+      anyTileLoaded = true;
+      $('#mapaAdopcionFallback').hide();
+      $('#mapaAdopcion').show();
+    });
+    layer.on('tileerror', function() {
+      idx++;
+      if (idx < providers.length) {
+        use(idx);
+      } else if (!anyTileLoaded) {
+        $('#mapaAdopcion').hide();
+        $('#mapaAdopcionFallback').show();
+      }
+    });
+    layer.addTo(map);
+  }
+  use(0);
+  return layer;
+}
+
 function initMapaAdopcion(lat = -17.7833, lng = -63.1833) {
   const container = document.getElementById('mapaAdopcion');
   if (!container || typeof L === 'undefined') {
-    console.error('Contenedor #mapaAdopcion no encontrado o Leaflet no disponible');
+    $('#mapaAdopcion').hide();
+    $('#mapaAdopcionFallback').show();
     return;
   }
 
@@ -319,8 +352,7 @@ function initMapaAdopcion(lat = -17.7833, lng = -63.1833) {
       zoomControl: true,
     }).setView([lat, lng], 13);
 
-    // Fallback de proveedores de tiles
-    window.createLeafletTileWithFallback(mapaAdopcion);
+    addTileWithFallback(mapaAdopcion); // usar la versión local que alterna la imagen
 
     marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
     mapaAdopcion.on('click', function(e) {
@@ -402,6 +434,8 @@ if (window.jQuery) {
 }
 @section('js')
 <script>
+@section('js')
+<script>
 $('.liberar-btn').on('click', function() {
   const id = parseInt($(this).data('id'), 10);
   const nombre = $(this).data('nombre');
@@ -460,11 +494,13 @@ $('#confirmarLiberacion').off('click').on('click', function() {
   setTimeout(() => alert('Acción simulada registrada en MockDB.'), 100);
 });
 </script>
-<!-- Eliminado: llamada a función inexistente que rompe la carga de Leaflet -->
-<!--
-<script>
-document.addEventListener('DOMContentLoaded', loadGoogleMaps);
-</script>
--->
-<script>
+<!-- Fuerza mostrar la imagen y no usar Leaflet -->
+function initMapaAdopcion(lat, lng) {
+  // Fuerza mostrar la imagen y no usar Leaflet
+  var contenedorMapa = document.getElementById('mapaAdopcion');
+  var imagenMapa = document.getElementById('mapaAdopcionFallback');
+  if (contenedorMapa) contenedorMapa.style.display = 'none';
+  if (imagenMapa) imagenMapa.style.display = 'block';
+  return;
+}
 </script>

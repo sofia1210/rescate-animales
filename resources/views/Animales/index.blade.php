@@ -361,19 +361,15 @@
                                         <textarea class="form-control" id="ubicacion_rescate" name="ubicacion_rescate" rows="3" placeholder="Dirección completa del rescate" required></textarea>
                                     </div>
                                     <div class="form-group">
-                                        <label>Ubicación en el mapa</label>
-                                        <div class="input-group mb-2">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                    <i class="fas fa-map"></i>
-                                                </span>
-                                            </div>
-                                            <button type="button" class="btn btn-success" onclick="obtenerUbicacion()">
-                                                <i class="fas fa-location-arrow mr-2"></i>Mi ubicación
-                                            </button>
+                                        <label>Ubicación aproximada del rescate</label>
+                                        <div class="d-flex align-items-center mb-2">
+                                            <i class="fas fa-map"></i>
+                                            <small class="ml-2 text-muted">Referencia visual</small>
                                         </div>
-                                        <div id="mapaRescate" style="height: 200px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;">
-                                        </div>
+
+                                        <div id="mapaRescate" style="display: none; height: 200px; border-radius: 8px; border: 1px solid #dee2e6; overflow: hidden;"></div>
+                                        <img id="mapaRescateFallback" src="{{ asset('mapa.png') }}" alt="Mapa no disponible"
+                                             style="height: 200px; width: 100%; border-radius: 8px; border: 1px solid #dee2e6; display: block;">
                                         <small class="text-muted">Haga clic en el mapa para marcar la ubicación exacta del rescate</small>
                                         <input type="hidden" id="latitud_rescate" name="latitud_rescate">
                                         <input type="hidden" id="longitud_rescate" name="longitud_rescate">
@@ -790,8 +786,13 @@
             <div class="modal-body">
                 <div class="form-group">
                     <label for="selectCentro">Centro de Refugio</label>
-                    <select id="selectCentro" class="form-control"></select>
+                    <select id="selectCentro" class="form-control">
+                        <option value="">Selecciona un centro…</option>
+                        <option value="1">Norte</option>
+                        <option value="2">Sur</option>
+                    </select>
                 </div>
+                <div id="mapaCambioCentro" style="height: 250px; border-radius: 8px;"></div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">
@@ -984,19 +985,44 @@ $(document).ready(function() {
         $('.select2').select2({ theme: 'default', width: '100%' });
     }
 
-    // Inicializar mapa al abrir el modal de agregar animal
-    $('#agregarAnimalModal').on('shown.bs.modal', function() {
-        if (!mapaRescate) {
-            mapaRescate = L.map('mapaRescate').setView([-17.7833, -63.1833], 13);
-            // Fallback de proveedores de tiles
-            window.createLeafletTileWithFallback(mapaRescate);
+    // helper: tiles con fallback y toggle de imagen
+    function addTileWithFallbackRescate(map) {
+        const providers = [
+            { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap' },
+            { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', attr: '© OSM France HOT' },
+            { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', attr: '© OSM DE' },
+            { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attr: '© Carto, © OSM' }
+        ];
+        let idx = 0, layer = null, anyTileLoaded = false;
 
-            mapaRescate.on('click', function(e) {
-                if (marcadorRescate) { mapaRescate.removeLayer(marcadorRescate); }
-                marcadorRescate = L.marker(e.latlng).addTo(mapaRescate);
+        function use(i) {
+            if (layer) { try { map.removeLayer(layer); } catch(e) {} }
+            const p = providers[i];
+            layer = L.tileLayer(p.url, { attribution: p.attr });
+            layer.on('tileload', function() {
+                anyTileLoaded = true;
+                $('#mapaRescateFallback').hide();
+                $('#mapaRescate').show();
             });
+            layer.on('tileerror', function() {
+                idx++;
+                if (idx < providers.length) {
+                    use(idx);
+                } else if (!anyTileLoaded) {
+                    $('#mapaRescate').hide();
+                    $('#mapaRescateFallback').show();
+                }
+            });
+            layer.addTo(map);
         }
-        setTimeout(function() { mapaRescate.invalidateSize(true); }, 0);
+        use(0);
+    }
+
+    // Inicializar el mapa de rescate: forzar imagen y no Leaflet
+    $('#agregarAnimalModal').on('shown.bs.modal', function() {
+        $('#mapaRescate').hide();
+        $('#mapaRescateFallback').show();
+        return;
     });
 });
 </script>
@@ -1014,6 +1040,16 @@ $(document).ready(function() {
     const r = window.MockDB.find('Tipo_Animal', tipo_id);
     return r ? r.nombre : '';
   }
+
+  // Lista estática de centros (solo Norte y Sur)
+  const CENTROS_STATIC = [
+    { centro_id: 1, nombre: 'Norte', latitud: -17.7500, longitud: -63.2000 },
+    { centro_id: 2, nombre: 'Sur',   latitud: -17.8400, longitud: -63.1700 }
+  ];
+
+  // Mapa para cambio de centro
+  let mapaCambioCentro = null;
+  let marcadorCambioCentro = null;
 
   // Guardar el animal clicado (soporta data-animal-id y data-id)
   document.addEventListener('click', function(e) {
@@ -1037,6 +1073,16 @@ $(document).ready(function() {
 
     const id = window.currentAnimalId || animals[0].hoja_animal_id;
     const a = window.MockDB.find('Hoja_Animal', id) || animals[0];
+
+    // Poblar selector de cambio de centro dentro del modal de detalles (si existe)
+    const $selNuevoCentro = $('#selectCentroNuevo');
+    if ($selNuevoCentro && $selNuevoCentro.length) {
+      $selNuevoCentro.empty().append('<option value="">Selecciona un centro…</option>');
+      CENTROS_STATIC.forEach(c => {
+        $selNuevoCentro.append(`<option value="${c.centro_id}">${c.nombre}</option>`);
+      });
+      if (a && a.centro_id) $selNuevoCentro.val(String(a.centro_id));
+    }
 
     // Rellenar encabezado y campos básicos
     $('#modalAnimalNombre').html('<i class="fas fa-paw mr-2"></i>Detalles del Animal — ' + a.nombre);
@@ -1156,25 +1202,62 @@ $(document).ready(function() {
     setTimeout(() => alert('Estado actualizado'), 50);
   });
 
-  // Cambiar Ubicación (Centro)
+  // Cambiar Ubicación (Centro): preselección y mapa
   $('#changeLocationModal').on('show.bs.modal', function() {
     const $sel = $('#selectCentro');
-    const centros = window.MockDB.get('Centro') || [];
-    $sel.empty();
-    centros.forEach(c => $sel.append(`<option value="${c.centro_id}">${c.nombre}</option>`));
+
     const animals = window.MockDB.get('Hoja_Animal') || [];
     const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
     const a = id ? window.MockDB.find('Hoja_Animal', id) : null;
     if (a && a.centro_id) $sel.val(String(a.centro_id));
+
+    if (!mapaCambioCentro) {
+      mapaCambioCentro = L.map('mapaCambioCentro').setView([-17.7833, -63.1833], 12);
+      window.createLeafletTileWithFallback(mapaCambioCentro);
+    }
+    setTimeout(() => mapaCambioCentro.invalidateSize(true), 0);
+
+    const setMarkerToCentro = (centroId) => {
+      const c = CENTROS_STATIC.find(x => Number(x.centro_id) === Number(centroId));
+      if (!c) return;
+      const ll = [c.latitud, c.longitud];
+      if (marcadorCambioCentro) mapaCambioCentro.removeLayer(marcadorCambioCentro);
+      marcadorCambioCentro = L.marker(ll).addTo(mapaCambioCentro).bindPopup(c.nombre);
+      mapaCambioCentro.setView(ll, 14);
+    };
+
+    const initialId = Number($sel.val() || 0);
+    if (initialId) setMarkerToCentro(initialId);
+
+    $sel.off('change').on('change', function() {
+      const val = Number($(this).val() || 0);
+      if (val) setMarkerToCentro(val);
+    });
   });
-  $('#confirmarCambioUbicacion').on('click', function() {
+
+  $('#confirmarCambioUbicacion').off('click').on('click', function() {
     const centroId = Number($('#selectCentro').val() || 0);
     const animals = window.MockDB.get('Hoja_Animal') || [];
     const id = window.currentAnimalId || (animals[0] && animals[0].hoja_animal_id);
-    if (!id || !centroId) return;
+    if (!id || !centroId) { alert('Selecciona un centro válido.'); return; }
+
+    // Actualizar centro en Hoja_Animal
     window.MockDB.update('Hoja_Animal', { hoja_animal_id: id, centro_id: centroId });
+
+    // Registrar traslado con lat/lng del centro usando lista estática
+    const destino = CENTROS_STATIC.find(c => Number(c.centro_id) === Number(centroId)) || {};
+    window.MockDB.create('Traslado', {
+      hoja_animal_id: id,
+      centro_id: centroId,
+      nombre: 'Cambio de centro',
+      latitud: destino.latitud || -17.7833,
+      longitud: destino.longitud || -63.1833,
+      observaciones: `Actualización de ubicación hacia ${destino.nombre || 'Centro'}`,
+      fecha: new Date().toISOString().slice(0, 10)
+    });
+
     $('#changeLocationModal').modal('hide');
-    setTimeout(() => alert('Ubicación actualizada'), 50);
+    setTimeout(() => alert('Ubicación y centro actualizados. Se registró el traslado.'), 50);
   });
 
   // Guardar Animal (crear Hoja_Animal mínima)
