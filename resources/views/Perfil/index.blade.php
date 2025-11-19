@@ -204,41 +204,32 @@
     // Compromiso directo para Cuidador
     function convertirCuidador() {
         const ok = document.getElementById('chkCompromisoCuidador').checked;
-        if (!ok) {
-            alert('Debes aceptar el compromiso para continuar.');
-            return;
-        }
+        if (!ok) { alert('Debes aceptar el compromiso para continuar.'); return; }
         localStorage.setItem(ROLE_KEY, 'Cuidador');
         const roleSwitcher = document.getElementById('roleSwitcher');
         if (roleSwitcher) {
             roleSwitcher.value = 'Cuidador';
-            // Dispara el cambio para aplicar permisos
-            const evt = new Event('change', { bubbles: true });
-            roleSwitcher.dispatchEvent(evt);
+            roleSwitcher.dispatchEvent(new Event('change', { bubbles: true }));
         }
-        // Guarda marca de compromiso en perfil (simulado)
         try {
             const p = JSON.parse(localStorage.getItem(LS_PERFIL) || '{}');
             p.compromiso_cuidador = true;
             localStorage.setItem(LS_PERFIL, JSON.stringify(p));
         } catch(e) {}
+        if (window.MockDB) {
+            // Registro simple para listarlo en Reportes
+            window.MockDB.create('Cuidador', { usuario_id: 100, fecha_compromiso: new Date().toISOString().slice(0,10) });
+        }
         alert('Ahora eres Cuidador. ¡Gracias por tu compromiso!');
     }
 
-    // Solicitud para Veterinario/Rescatista con CV
     function solicitarCambioRol() {
         const rol = document.getElementById('solicitud-rol').value;
-        if (!rol || !['Rescatista','Veterinario'].includes(rol)) {
-            alert('Selecciona Veterinario o Rescatista.');
-            return;
-        }
         const cv = document.getElementById('solicitud-cv').files[0];
-        if (!cv) {
-            alert('Adjunta tu CV para enviar la solicitud.');
-            return;
-        }
-        const text = `¿Confirmas enviar la solicitud para cambiar tu rol a "${rol}" adjuntando tu CV?`;
-        document.getElementById('confirmSolicitudText').textContent = text;
+        if (!rol || !['Rescatista','Veterinario'].includes(rol)) { alert('Selecciona Veterinario o Rescatista.'); return; }
+        if (!cv) { alert('Adjunta tu CV para enviar la solicitud.'); return; }
+        document.getElementById('confirmSolicitudText').textContent =
+            `¿Confirmas enviar la solicitud para cambiar tu rol a "${rol}" adjuntando tu CV?`;
         $('#modalConfirmSolicitud').modal('show');
     }
 
@@ -246,50 +237,18 @@
         const rol = document.getElementById('solicitud-rol').value;
         const motivo = document.getElementById('solicitud-motivo').value.trim();
         const cvFile = document.getElementById('solicitud-cv').files[0];
-        if (!rol || !cvFile) {
-            alert('Selecciona el rol y adjunta tu CV.');
-            return;
-        }
-        const payload = {
-            rol,
-            motivo,
-            estado: 'Pendiente',
-            fecha: new Date().toLocaleString(),
-            cv_nombre: cvFile.name
-        };
+        if (!rol || !cvFile) { alert('Selecciona el rol y adjunta tu CV.'); return; }
+        const payload = { rol, motivo, estado: 'Pendiente', fecha: new Date().toLocaleString(), cv_nombre: cvFile.name };
         localStorage.setItem(LS_SOLICITUD, JSON.stringify(payload));
-
-        // Simula persistencia en MockDB
         if (window.MockDB) {
             window.MockDB.create('Solicitud_Rol', {
-                usuario_id: 100, // simulado
-                rol_solicitado: rol,
-                motivo,
-                estado: 'pendiente',
-                fecha: new Date().toISOString().slice(0,10),
-                cv_nombre: cvFile.name
+                usuario_id: 100, rol_solicitado: rol, motivo, estado: 'pendiente',
+                fecha: new Date().toISOString().slice(0,10), cv_nombre: cvFile.name
             });
         }
-
         $('#modalConfirmSolicitud').modal('hide');
         renderEstadoSolicitud();
         alert('Solicitud enviada. Estado: Pendiente.');
-    }
-
-    function cancelarSolicitud() {
-        const raw = localStorage.getItem(LS_SOLICITUD);
-        if (!raw) {
-            alert('No hay solicitud que cancelar.');
-            return;
-        }
-        if (confirm('¿Deseas cancelar tu última solicitud de cambio de rol?')) {
-            const s = JSON.parse(raw);
-            // Marca como cancelada en MockDB (si existe id, aquí se omite y se simula)
-            // Opcionalmente podríamos registrar una entrada de cancelación
-            localStorage.removeItem(LS_SOLICITUD);
-            renderEstadoSolicitud();
-            alert('Solicitud cancelada.');
-        }
     }
 
     document.addEventListener('DOMContentLoaded', function() {

@@ -118,43 +118,7 @@
         </div>
 
         <!-- Charts Row -->
-        <div class="row">
-            <!-- Estado de Salud Chart -->
-            <div class="col-lg-6">
-                <div class="card card-primary card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-pie mr-2"></i>
-                            Estado de Salud de los Animales
-                        </h3>
-                        <div class="card-tools">
-                            
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="estadoSaludChart" style="height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Tipos de Animales Chart -->
-            <div class="col-lg-6">
-                <div class="card card-success card-outline">
-                    <div class="card-header">
-                        <h3 class="card-title">
-                            <i class="fas fa-chart-bar mr-2"></i>
-                            Distribución por Tipo
-                        </h3>
-                        <div class="card-tools">
-                            
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <canvas id="tiposAnimalesChart" style="height: 300px;"></canvas>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
 
         <!-- Rescates por Mes Chart -->
        

@@ -32,6 +32,7 @@
                 <option value="Rescatista">Rescatista</option>
                 <option value="Cuidador">Cuidador</option>
                 <option value="Veterinario">Veterinario</option>
+                <option value="Encargado">Encargado</option>
                 <option value="Administrador">Administrador</option>
             </select>
             <span id="roleBadge" class="badge badge-info ml-2">Ciudadano</span>
@@ -139,9 +140,9 @@ if (typeof window.jQuery === 'undefined') {
 
         document.querySelectorAll('[data-role-allowed]').forEach(el => {
             const allowed = parseAllowed(el);
-            const permitted = allowed.length === 0 || allowed.includes(role);
+            let permitted = allowed.length === 0 || allowed.includes(role);
             if (role === 'Administrador') permitted = true;
-            const visibility = (el.getAttribute('data-role-visibility') || 'hide').toLowerCase(); // 'hide' | 'disable'
+            const visibility = (el.getAttribute('data-role-visibility') || 'hide').toLowerCase();
             const targets = findInteractiveTargets(el);
 
             const enableTarget = (target) => {
@@ -199,6 +200,26 @@ if (typeof window.jQuery === 'undefined') {
                 }
             }
         });
+
+        // Restricción global por defecto para Encargado (solo lectura),
+        // exceptuando elementos marcados explícitamente como permitidos.
+        if (role === 'Encargado') {
+            const interactive = Array.from(document.querySelectorAll('button, .btn, input[type="submit"], input[type="button"]'));
+            interactive.forEach(target => {
+                if (target.closest('.navbar') || target.closest('.main-sidebar')) return;
+                if (target.hasAttribute('data-encargado-allowed')) return;
+                target.classList.add('role-disabled','disabled');
+                target.setAttribute('aria-disabled','true');
+                target.style.pointerEvents = 'none';
+                target.tabIndex = -1;
+                const colorClass = Array.from(target.classList).find(c => /^(btn-primary|btn-success|btn-info|btn-warning|btn-danger|btn-dark|btn-light|btn-outline-.*)$/.test(c));
+                if (colorClass) {
+                    if (!target.dataset.roleOriginalBtnColor) target.dataset.roleOriginalBtnColor = colorClass;
+                    target.classList.remove(colorClass);
+                    target.classList.add('btn-secondary');
+                }
+            });
+        }
 
         localStorage.setItem(ROLE_KEY, role);
     }
@@ -324,6 +345,37 @@ if (typeof window.jQuery === 'undefined') {
         $('#solicitarRolModal').modal('hide');
         setTimeout(() => alert('Solicitud enviada. Un Administrador la revisará.'), 100);
     });
+
+    // Helper global: crea tile layer con fallback de proveedores
+    window.createLeafletTileWithFallback = function(map) {
+        const providers = [
+            { url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', attr: '© OpenStreetMap contributors' },
+            { url: 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', attr: '© OpenStreetMap France, HOT' },
+            { url: 'https://{s}.tile.openstreetmap.de/{z}/{x}/{y}.png', attr: '© OpenStreetMap DE' },
+            { url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', attr: '© Carto, © OpenStreetMap' }
+        ];
+        let idx = 0;
+        let layer = null;
+
+        function use(i) {
+            if (layer) { try { map.removeLayer(layer); } catch(e) {} }
+            const p = providers[i];
+            layer = L.tileLayer(p.url, { attribution: p.attr });
+            layer.on('tileerror', function() {
+                idx++;
+                if (idx < providers.length) {
+                    console.warn('Proveedor de mapas falló, cambiando al siguiente:', p.url);
+                    use(idx);
+                } else {
+                    console.error('No se pudo cargar ningún proveedor de mapas');
+                }
+            });
+            layer.addTo(map);
+        }
+
+        use(0);
+        return layer;
+    };
 })();
 </script>
 </body>

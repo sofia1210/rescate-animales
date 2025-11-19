@@ -307,40 +307,37 @@ function actualizarModalSegunTipo(tipo) {
 
 // función: initMapaAdopcion(lat, lng)
 function initMapaAdopcion(lat = -17.7833, lng = -63.1833) {
-    const container = document.getElementById('mapaAdopcion');
-    if (!container) {
-        console.error('Contenedor #mapaAdopcion no encontrado');
-        return;
-    }
+  const container = document.getElementById('mapaAdopcion');
+  if (!container || typeof L === 'undefined') {
+    console.error('Contenedor #mapaAdopcion no encontrado o Leaflet no disponible');
+    return;
+  }
 
-    if (!mapaAdopcion) {
-        mapaAdopcion = L.map('mapaAdopcion', {
-            zoomControl: true,
-            scrollWheelZoom: true
-        }).setView([lat, lng], 13);
+  if (!mapaAdopcion) {
+    mapaAdopcion = L.map('mapaAdopcion', {
+      scrollWheelZoom: true,
+      zoomControl: true,
+    }).setView([lat, lng], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(mapaAdopcion);
+    // Fallback de proveedores de tiles
+    window.createLeafletTileWithFallback(mapaAdopcion);
 
-        marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
-
-        mapaAdopcion.on('click', function(e) {
-            marcadorAdopcion.setLatLng(e.latlng);
-            document.getElementById('latitud_adopcion').value = e.latlng.lat;
-            document.getElementById('longitud_adopcion').value = e.latlng.lng;
-        });
-
-        marcadorAdopcion.on('dragend', function(e) {
-            const ll = e.target.getLatLng();
-            document.getElementById('latitud_adopcion').value = ll.lat;
-            document.getElementById('longitud_adopcion').value = ll.lng;
-        });
+    marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
+    mapaAdopcion.on('click', function(e) {
+      const { lat, lng } = e.latlng;
+      document.getElementById('latitud_adopcion').value = lat.toFixed(6);
+      document.getElementById('longitud_adopcion').value = lng.toFixed(6);
+      marcadorAdopcion.setLatLng([lat, lng]);
+    });
+  } else {
+    setTimeout(function() { mapaAdopcion.invalidateSize(true); }, 0);
+    mapaAdopcion.setView([lat, lng], 13);
+    if (!marcadorAdopcion) {
+      marcadorAdopcion = L.marker([lat, lng], { draggable: true }).addTo(mapaAdopcion);
     } else {
-        setTimeout(function() { mapaAdopcion.invalidateSize(true); }, 0);
-        mapaAdopcion.setView([lat, lng], 13);
-        if (marcadorAdopcion) marcadorAdopcion.setLatLng([lat, lng]);
+      marcadorAdopcion.setLatLng([lat, lng]);
     }
+  }
 }
 
 function obtenerUbicacionAdopcion() {
@@ -394,7 +391,7 @@ if (window.jQuery) {
         if (mapaAdopcion) setTimeout(function(){ mapaAdopcion.invalidateSize(true); }, 0);
     });
 
-    $('#confirmarLiberacion').on('click', function() {
+    $('#confirmarLiberacion').off('click').on('click', function() {
         $('#liberarAnimalModal').modal('hide');
     });
 } else {
@@ -405,7 +402,6 @@ if (window.jQuery) {
 }
 @section('js')
 <script>
-// Capturar el animal seleccionado cuando se abre el modal
 $('.liberar-btn').on('click', function() {
   const id = parseInt($(this).data('id'), 10);
   const nombre = $(this).data('nombre');
@@ -413,6 +409,9 @@ $('.liberar-btn').on('click', function() {
   $('#liberarAnimalModal').data('animalId', id);
   $('#modalAnimalNameBadge').text(nombre);
   $('#modalAnimalTipo').val(tipo);
+
+  // Abrir el modal de forma explícita para compatibilidad
+  $('#liberarAnimalModal').modal('show');
 });
 
 // Confirmar acción: crear Adopción o Liberación en MockDB y vincular en Hoja_Animal
@@ -461,9 +460,11 @@ $('#confirmarLiberacion').off('click').on('click', function() {
   setTimeout(() => alert('Acción simulada registrada en MockDB.'), 100);
 });
 </script>
+<!-- Eliminado: llamada a función inexistente que rompe la carga de Leaflet -->
+<!--
 <script>
-// Cargar el API cuando el documento esté listo
 document.addEventListener('DOMContentLoaded', loadGoogleMaps);
 </script>
+-->
 <script>
 </script>

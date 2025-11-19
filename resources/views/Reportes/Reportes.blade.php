@@ -113,8 +113,143 @@
             </div>
           </div>
         </div>
+        <div class="row">
+            <!-- Solicitudes de cambio de rol -->
+            <div class="col-md-6" data-role-allowed="Encargado,Administrador">
+                <div class="card card-success card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-id-card mr-2"></i> Solicitudes de cambio de rol</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="solicitudesRolContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hallazgos de animales (Reportes) -->
+            <div class="col-md-6" data-role-allowed="Encargado,Administrador">
+                <div class="card card-warning card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-binoculars mr-2"></i> Hallazgos de animales</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="hallazgosContainer"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cuidadores voluntarios -->
+        <div class="card card-info card-outline" data-role-allowed="Encargado,Administrador">
+            <div class="card-header">
+                <h3 class="card-title"><i class="fas fa-users mr-2"></i> Cuidadores voluntarios</h3>
+            </div>
+            <div class="card-body">
+                <div id="cuidadoresContainer"></div>
+            </div>
+        </div>
     </div>
 </section>
+
+@section('js')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    function renderSolicitudes() {
+        const cont = document.getElementById('solicitudesRolContainer');
+        if (!cont) return;
+        const rows = (window.MockDB ? window.MockDB.get('Solicitud_Rol') : []);
+        if (!rows.length) { cont.innerHTML = '<div class="alert alert-secondary mb-0">No hay solicitudes.</div>'; return; }
+        cont.innerHTML = `
+            <table class="table table-sm">
+                <thead><tr><th>Usuario</th><th>Rol</th><th>CV</th><th>Estado</th><th>Fecha</th><th>Acciones</th></tr></thead>
+                <tbody>
+                    ${rows.map(r => `
+                        <tr>
+                            <td>${r.usuario_id ?? '-'}</td>
+                            <td>${r.rol_solicitado}</td>
+                            <td>${r.cv_nombre ?? '-'}</td>
+                            <td>${r.estado}</td>
+                            <td>${r.fecha}</td>
+                            <td>
+                                <button class="btn btn-success btn-sm" data-encargado-allowed="true" data-action="aprobar-solicitud" data-id="${r.solicitud_id}">Aprobar</button>
+                                <button class="btn btn-danger btn-sm" data-encargado-allowed="true" data-action="rechazar-solicitud" data-id="${r.solicitud_id}">Rechazar</button>
+                            </td>
+                        </tr>
+                    ).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    function renderHallazgos() {
+        const cont = document.getElementById('hallazgosContainer');
+        if (!cont) return;
+        const rows = (window.MockDB ? window.MockDB.get('Reporte') : []);
+        if (!rows.length) { cont.innerHTML = '<div class="alert alert-secondary mb-0">No hay hallazgos reportados.</div>'; return; }
+        cont.innerHTML = `
+            <table class="table table-sm">
+                <thead><tr><th>Tipo</th><th>Dirección</th><th>Lat/Lon</th><th>Aprobado</th><th>Acciones</th></tr></thead>
+                <tbody>
+                    ${rows.map(r => `
+                        <tr>
+                            <td>${r.tipo_id ?? '-'}</td>
+                            <td>${r.direccion ?? '-'}</td>
+                            <td>${r.latitud ?? '-'}, ${r.longitud ?? '-'}</td>
+                            <td>${r.aprobado ? 'Sí' : 'No'}</td>
+                            <td>
+                                <button class="btn btn-success btn-sm" data-encargado-allowed="true" data-action="aprobar-reporte" data-id="${r.reporte_id}">Aprobar</button>
+                                <button class="btn btn-danger btn-sm" data-encargado-allowed="true" data-action="rechazar-reporte" data-id="${r.reporte_id}">Rechazar</button>
+                            </td>
+                        </tr>
+                    ).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    function renderCuidadores() {
+        const cont = document.getElementById('cuidadoresContainer');
+        if (!cont) return;
+        const rows = (window.MockDB ? (window.MockDB.get('Cuidador') || []) : []);
+        if (!rows.length) { cont.innerHTML = '<div class="alert alert-secondary mb-0">No hay cuidadores registrados (comprometidos).</div>'; return; }
+        cont.innerHTML = `
+            <table class="table table-sm">
+                <thead><tr><th>Usuario</th><th>Fecha de Compromiso</th></tr></thead>
+                <tbody>
+                    ${rows.map(r => `<tr><td>${r.usuario_id ?? '-'}</td><td>${r.fecha_compromiso ?? '-'}</td></tr>`).join('')}
+                </tbody>
+            </table>
+        `;
+    }
+
+    document.body.addEventListener('click', function(e) {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn || !window.MockDB) return;
+        const act = btn.getAttribute('data-action');
+        const id = Number(btn.getAttribute('data-id'));
+        if (act === 'aprobar-solicitud' || act === 'rechazar-solicitud') {
+            const row = window.MockDB.find('Solicitud_Rol', id);
+            if (!row) return;
+            row.estado = (act === 'aprobar-solicitud') ? 'aprobado' : 'rechazado';
+            window.MockDB.update('Solicitud_Rol', row);
+            renderSolicitudes();
+            alert(`Solicitud ${row.estado}.`);
+        } else if (act === 'aprobar-reporte' || act === 'rechazar-reporte') {
+            const row = window.MockDB.find('Reporte', id);
+            if (!row) return;
+            row.aprobado = (act === 'aprobar-reporte') ? 1 : 0;
+            window.MockDB.update('Reporte', row);
+            renderHallazgos();
+            alert(`Reporte ${row.aprobado ? 'aprobado' : 'rechazado'}.`);
+        }
+    });
+
+    renderSolicitudes();
+    renderHallazgos();
+    renderCuidadores();
+});
+</script>
+@endsection
 
 <!-- Modal datos -->
 <div class="modal fade" id="adminDataModal" tabindex="-1" aria-hidden="true">

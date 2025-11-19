@@ -34,7 +34,7 @@
 </div>
 
 <!-- Sección Centros: acceso y acciones sólo para Administrador -->
-<section class="content" data-role-allowed="Administrador">
+<section class="content" data-role-allowed="Encargado,Administrador" data-role-visibility="disable">
     <div class="container-fluid">
         <div class="card card-primary card-outline mb-3">
             <div class="card-header">
@@ -241,11 +241,11 @@
 
     let centros = centrosDesdeMock();
 
+    // Inicialización del mapa principal de Centros con fallback
     const map = L.map('centros-map').setView([SANTA_CRUZ_CENTER.lat, SANTA_CRUZ_CENTER.lng], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{ attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
+    window.createLeafletTileWithFallback(map);
     setTimeout(() => map.invalidateSize(), 0);
     window.addEventListener('resize', () => { map.invalidateSize(); });
-    // Invalida tamaño si la página recupera visibilidad
     document.addEventListener('visibilitychange', () => { if (!document.hidden) setTimeout(() => map.invalidateSize(), 0); });
 
     const markers = new Map();
@@ -361,5 +361,35 @@
     // Inicial
     renderCentros();
 })();
+</script>
+let modalMap = null;
+let modalMarker = null;
+
+// Mapa dentro del modal Centro con fallback
+$('#modalCentro').on('shown.bs.modal', function() {
+    const container = document.getElementById('modal-centro-map');
+    if (!container || typeof L === 'undefined') return;
+
+    const lat = parseFloat($('#centro-lat').val()) || -17.7833;
+    const lng = parseFloat($('#centro-lng').val()) || -63.1833;
+
+    if (!modalMap) {
+        modalMap = L.map('modal-centro-map').setView([lat, lng], 13);
+        window.createLeafletTileWithFallback(modalMap);
+
+        modalMap.on('click', function(e) {
+            const { lat, lng } = e.latlng;
+            $('#centro-lat').val(lat.toFixed(6));
+            $('#centro-lng').val(lng.toFixed(6));
+            if (modalMarker) { modalMap.removeLayer(modalMarker); }
+            modalMarker = L.marker([lat, lng]).addTo(modalMap);
+        });
+    }
+
+    setTimeout(function(){ modalMap.invalidateSize(true); }, 0);
+    if (modalMarker) { modalMap.removeLayer(modalMarker); }
+    modalMarker = L.marker([lat, lng]).addTo(modalMap);
+    modalMap.setView([lat, lng], 13);
+});
 </script>
 @endsection

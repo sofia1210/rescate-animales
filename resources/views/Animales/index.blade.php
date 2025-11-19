@@ -92,12 +92,13 @@
                             data-role-allowed="Rescatista">
                         <i class="fas fa-plus mr-1"></i> Agregar Animal
                     </button>
+                    <!-- Cambiado: este botón abre selección de rescatista -->
                     <button type="button"
-                            class="btn btn-success"
+                            class="btn btn-info"
                             data-toggle="modal"
                             data-target="#seleccionarRescatistaModal"
                             data-role-allowed="Veterinario,Administrador">
-                        <i class="fas fa-plus mr-1"></i> Agregar Animal
+                        <i class="fas fa-user-check mr-1"></i> Seleccionar Rescatista
                     </button>
                 </div>
             </div>
@@ -173,8 +174,9 @@
                     </div>
                     <div class="card-footer bg-white border-0 pb-3">
                         <button type="button" class="btn btn-primary w-100 view-details-btn" 
-                                data-bs-toggle="modal" 
-                                data-bs-target="#animalDetailsModal"
+                                data-toggle="modal" 
+                                data-target="#animalDetailsModal"
+                                data-animal-id="{{ $animal->id }}"
                                 data-id="{{ $animal->id }}"
                                 data-nombre="{{ $animal->nombre }}"
                                 data-especie="{{ $animal->especie }}"
@@ -482,6 +484,8 @@
                 </button>
             </div>
             <div class="modal-body p-3">
+                <!-- Id actual del animal para handlers JS -->
+                <input type="hidden" id="animalIdActual" value="">
                 <div class="row">
                     <div class="col-md-5">
                         <div class="text-center mb-2">
@@ -685,6 +689,11 @@
                             <p class="mb-0">Animal rescatado en mal estado de salud. Requiere atención veterinaria inmediata. Se encuentra en observación para determinar el tratamiento adecuado.</p>
                         </div>
                     </div>
+                </div>
+
+                <!-- Solicitar revisión veterinaria: Cuidador/Rescatista/Veterinario/Encargado/Admin -->
+                <div class="mt-3" data-role-allowed="Cuidador,Rescatista,Veterinario,Encargado,Administrador" data-role-visibility="disable">
+                    <button class="btn btn-info" id="btnSolicitarRevision" data-encargado-allowed="true">Solicitar revisión veterinaria</button>
                 </div>
             </div>
             <!-- Botón Cambiar Estado: sólo Admin -->
@@ -944,13 +953,12 @@ $(document).ready(function() {
         $('.select2').select2({ theme: 'default', width: '100%' });
     }
 
-    // Inicializar mapa al abrir el modal y forzar recalculo de tamaño
+    // Inicializar mapa al abrir el modal de agregar animal
     $('#agregarAnimalModal').on('shown.bs.modal', function() {
         if (!mapaRescate) {
             mapaRescate = L.map('mapaRescate').setView([-17.7833, -63.1833], 13);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(mapaRescate);
+            // Fallback de proveedores de tiles
+            window.createLeafletTileWithFallback(mapaRescate);
 
             mapaRescate.on('click', function(e) {
                 if (marcadorRescate) { mapaRescate.removeLayer(marcadorRescate); }
@@ -976,17 +984,24 @@ $(document).ready(function() {
     return r ? r.nombre : '';
   }
 
-  // Guardar el animal clicado (si tu listado usa data-animal-id en el botón de ver detalles)
+  // Guardar el animal clicado (soporta data-animal-id y data-id)
   document.addEventListener('click', function(e) {
-    const btn = e.target.closest('[data-animal-id]');
+    const btn = e.target.closest('[data-animal-id],[data-id]');
     if (btn) {
-      const val = parseInt(btn.getAttribute('data-animal-id'), 10);
+      const val = parseInt(btn.getAttribute('data-animal-id') || btn.getAttribute('data-id'), 10);
       if (!isNaN(val)) window.currentAnimalId = val;
     }
   });
 
-  $('#animalDetailsModal').on('show.bs.modal', function() {
-    const animals = window.MockDB.get('Hoja_Animal');
+  // Poblar modal de detalles leyendo el botón que lo disparó
+  $('#animalDetailsModal').on('show.bs.modal', function(e) {
+    const triggerBtn = $(e.relatedTarget);
+    if (triggerBtn && triggerBtn.length) {
+      const val = parseInt(triggerBtn.data('animal-id') || triggerBtn.data('id'), 10);
+      if (!isNaN(val)) window.currentAnimalId = val;
+    }
+
+    const animals = window.MockDB.get('Hoja_Animal') || [];
     if (!animals.length) return;
 
     const id = window.currentAnimalId || animals[0].hoja_animal_id;
@@ -1024,6 +1039,9 @@ $(document).ready(function() {
       $('.liberar-btn').show();
     }
 
+    // Establecer id actual en input oculto para otros handlers
+    $('#animalIdActual').val(id);
+
     // Historial de Cambios: Traslados
     const tras = (window.MockDB.get('Traslado') || []).filter(t => Number(t.hoja_animal_id) === Number(id));
     const centros = window.MockDB.get('Centro') || [];
@@ -1051,7 +1069,7 @@ $(document).ready(function() {
 
     // Historial de Cambios: Cuidados
     const cuidados = (window.MockDB.get('Cuidado') || []).filter(c => Number(c.hoja_animal_id) === Number(id));
-    const tiposCuidado = window.MockDB.get('Tipo_Cuidado') || [];
+    const tiposCuidado = (window.MockDB.get('Tipo_Cuidado') || []);
     const tipoCNom = tcid => (tiposCuidado.find(t => Number(t.tipo_cuidado_id) === Number(tcid)) || {}).nombre || '-';
     const $c = $('#hist-cuidados'); $c.empty();
     cuidados.forEach(c => {
@@ -1087,5 +1105,27 @@ $(document).ready(function() {
   });
 
 })();
+
+// Solicitud de revisión veterinaria desde el modal del animal
+document.addEventListener('DOMContentLoaded', function() {
+  const btnRev = document.getElementById('btnSolicitarRevision');
+  if (btnRev) {
+    btnRev.addEventListener('click', function(e) {
+      e.preventDefault();
+      const animalId = Number(document.getElementById('animalIdActual')?.value || window.currentAnimalId || 0);
+      if (!window.MockDB || !animalId) {
+        alert('No se pudo registrar la solicitud.');
+        return;
+      }
+      window.MockDB.create('Solicitud_Revision', {
+        hoja_animal_id: animalId,
+        usuario_id: 100,
+        estado: 'pendiente',
+        fecha: new Date().toISOString().slice(0,10)
+      });
+      alert('Solicitud de revisión enviada al equipo veterinario.');
+    });
+  }
+});
 </script>
 @endsection
