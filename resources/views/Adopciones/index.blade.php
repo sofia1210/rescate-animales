@@ -494,13 +494,5 @@ $('#confirmarLiberacion').off('click').on('click', function() {
   setTimeout(() => alert('Acción simulada registrada en MockDB.'), 100);
 });
 </script>
-<!-- Fuerza mostrar la imagen y no usar Leaflet -->
-function initMapaAdopcion(lat, lng) {
-  // Fuerza mostrar la imagen y no usar Leaflet
-  var contenedorMapa = document.getElementById('mapaAdopcion');
-  var imagenMapa = document.getElementById('mapaAdopcionFallback');
-  if (contenedorMapa) contenedorMapa.style.display = 'none';
-  if (imagenMapa) imagenMapa.style.display = 'block';
-  return;
-}
+
 </script>
